@@ -1,56 +1,30 @@
-﻿using SDL2;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Collections.Generic;
 
 
 class Game
 {
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(640, 480);
+    private List<Entity> entities = new List<Entity>();
 
-    
-
-    //public Game()
-    //{
-
-    //}
-
-    //public void Update() { }
-
-
+    Player x;
+    Map map;
+    Blocks floor;
     public Game()
     {
-        playerPosition = new Vector2(100, 100); // Initial position
-        playerVelocity = new Vector2(0, 0);     // Initial velocity
+        Vector2 playerPosition = new Vector2(100, 100); // Initial position
+        Vector2 playerVelocity = new Vector2(0, 0);     // Initial velocity
+        map = new Map();
+        x = new Player(playerPosition, playerVelocity, entities);
+        floor = new Blocks(new Vector2(300, 400), new Vector2(50, 50), GameColor.Block1);
+        entities.Add(x);
+        entities.Add(floor);
     }
 
     public void Update()
     {
-        HandleInput();
-
-        // Apply gravity
-        playerVelocity.Y += GRAVITY;
-
-        // Update player position
-        playerPosition += playerVelocity;
-
-        // Collision detection for the floor
-        if (playerPosition.Y > 500) // Assuming 500 is ground level
-        {
-            playerPosition.Y = 500;
-            playerVelocity.Y = 0; // Stop downward movement
-        }
-
-        // Collision detection for the walls (placeholder logic)
-        if (playerPosition.X < 0 || playerPosition.X + PLAYER_WIDTH > 800) // Assuming screen width is 800
-        {
-            playerVelocity.X = 0; // Stop horizontal movement
-        }
-
-        Render();
+        map.setBackgroundColor();
+        floor.Render();
+        x.playerLoop();
     }
-
-
-
 }
