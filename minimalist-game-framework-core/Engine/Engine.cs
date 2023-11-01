@@ -11,6 +11,13 @@ static partial class Engine
     private static Texture RenderTarget;
     private static Game Game;
 
+    public static IntPtr Renderer2
+    {
+        get
+        { return Renderer; }
+        private set { Renderer = value; }
+    }
+
     /// <summary>
     /// The amount of time (in seconds) since the last frame.
     /// </summary>
@@ -36,7 +43,7 @@ static partial class Engine
 
         string targetBase = Directory.GetCurrentDirectory();
         string sourceBase = targetBase;
-        
+
         while (true)
         {
             // Figure out if we're in the project's base directory:
