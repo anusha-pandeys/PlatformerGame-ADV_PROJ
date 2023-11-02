@@ -21,7 +21,7 @@ class Game
         moving = new MovingBlock(new Vector2(100, 100), new Vector2(50, 50), GameColor.Block1);
         entities.Add(x);
         entities.Add(floor);
-        entities.Add(moving);
+        //entities.Add(moving);
     }
 
     public void Update()
@@ -29,7 +29,6 @@ class Game
         map.setBackgroundColor();
         floor.Render();
         x.playerLoop();
-        List<Vector2> updated = moving.getCoordinates();
-        moving.updateCoordinates(new Vector2(updated[0].X + 1f, updated[0].Y));
+        moving.updateCoordinates();
     }
 }

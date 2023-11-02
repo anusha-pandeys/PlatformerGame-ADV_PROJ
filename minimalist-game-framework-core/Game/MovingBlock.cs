@@ -8,15 +8,18 @@ internal class MovingBlock : Entity
     private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
     private Vector2 position;
     private Vector2 size;
+    private Vector2 velocity;
     private GameColor color;
+    private int direction;
 
     public MovingBlock(Vector2 position, Vector2 size, GameColor color)
     {
         this.position = position;
         this.size = size;
         this.color = color;
+        this.direction = 1;
+        this.velocity = new Vector2(1, 0);
     }
-
     public List<Vector2> getCoordinates()
     {
         List<Vector2> result = new List<Vector2>();
@@ -29,13 +32,17 @@ internal class MovingBlock : Entity
         DrawRectangle(position, size, GameColor.Block1);
     }
 
-    public void updateCoordinates(Vector2 positionNew)
+    public void updateCoordinates()
     {
-        if (positionNew.X > 400)
+        if (position.X > 400)
         {
-            positionNew.X = positionNew.X * -1f;
+            this.direction = -1;
+        } 
+        if (position.X < 100)
+        {
+            this.direction = 1;
         }
-        position = positionNew;
+        position.X += velocity.X * this.direction;
         Render();
     }
     public void DrawRectangle(Vector2 position, Vector2 size, GameColor color)
