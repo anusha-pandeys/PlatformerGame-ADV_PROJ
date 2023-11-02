@@ -46,12 +46,12 @@ using System.Drawing;
             HandleInput();
 
             // Apply gravity
-            if (detectCollision(entities, playerVelocity))
+            if (detectCollision(entities, new Vector2(playerVelocity.X + 1f, playerVelocity.Y + 1f)))
             {
                 System.Console.WriteLine("hi");
                 NORMALF = -0.25f;
                 playerVelocity.Y = 0;
-                playerPosition.Y -= 0.5f;
+                //playerPosition.Y -= 0.5f;
             }
             else
             {
@@ -108,7 +108,7 @@ using System.Drawing;
                 {
                     System.Console.WriteLine("Hi");
                     playerVelocity.X = 0;
-                    playerPosition.X += 0.1f;
+                    //playerPosition.X += 0.1f;
                 }
                 else
                 {
@@ -123,7 +123,7 @@ using System.Drawing;
                 {
                     System.Console.WriteLine("hi");
                     playerVelocity.X = 0;
-                    playerPosition.X -= 0.1f;
+                    //playerPosition.X -= 0.1f;
                 }
                 else
                 {
