@@ -24,13 +24,16 @@ using System.Drawing;
         private List<Entity> entities;
         private Vector2 playerPosition;
         private Vector2 playerVelocity;
-        //to test
+        private TextRenderer text;
+        Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
+    //to test
 
-        public Player (Vector2 playerPosition, Vector2 playerVelocity, List<Entity> entities)
+    public Player (Vector2 playerPosition, Vector2 playerVelocity, List<Entity> entities)
         {
             this.entities = entities;
             this.playerPosition = playerPosition;
             this.playerVelocity = playerVelocity;
+            text = new TextRenderer();
         }
                
         public List<Vector2> getCoordinates() {
@@ -103,6 +106,7 @@ using System.Drawing;
             // Check LEFT arrow key.
             if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
             {
+                text.displayText("left", new Vector2(10, 30), Color.Black, font);
                 Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
                 if (detectCollision(entities, prospectiveVelocity))
                 {
@@ -118,6 +122,7 @@ using System.Drawing;
             // Check RIGHT arrow key.
             else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
             {
+                text.displayText("right", new Vector2(10, 30), Color.Black, font);
                 Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
                 if(detectCollision(entities, prospectiveVelocity))
                 {
@@ -134,6 +139,7 @@ using System.Drawing;
             // You can also add other key checks here, e.g., for jumping:
             if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
             {
+                text.displayText("jump", new Vector2(10, 30), Color.Black, font);
                 Jump();
             }
         }
