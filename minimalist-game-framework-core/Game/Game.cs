@@ -12,6 +12,7 @@ class Game
     Player x;
     Map map;
     Blocks floor;
+    MovingBlock moving;
     public Game()
     {
         Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
@@ -20,9 +21,11 @@ class Game
         map = new Map();
         x = new Player(playerPosition, playerVelocity, entities);
         floor = new Blocks(new Vector2(300, 400), new Vector2(50, 50), GameColor.Block1);
+        moving = new MovingBlock(new Vector2(100, 100), new Vector2(50, 50), GameColor.Block1);
         entities.Add(x);
         entities.Add(floor);
         textRenderer = new TextRenderer();
+        //entities.Add(moving);
     }
 
     public void Update()
@@ -30,8 +33,8 @@ class Game
         map.setBackgroundColor();
         floor.Render();
         x.playerLoop();
-
         DisplayPlayerCoordinates();
+        moving.updateCoordinates();
     }
 
     public void DisplayPlayerCoordinates()
