@@ -32,7 +32,7 @@ using System.Drawing;
             this.playerPosition = playerPosition;
             this.playerVelocity = playerVelocity;
         }
-
+               
         public List<Vector2> getCoordinates() {
 
             List<Vector2> result = new List<Vector2>();
@@ -42,16 +42,16 @@ using System.Drawing;
         }
 
         public void playerLoop() {
-            
-            HandleInput();
 
+            HandleInput();
+            
             // Apply gravity
-            if (detectCollision(entities, playerVelocity))
+            if (detectCollision(entities, new Vector2(playerVelocity.X, playerVelocity.Y + 1f)))
             {
                 System.Console.WriteLine("hi");
                 NORMALF = -0.25f;
                 playerVelocity.Y = 0;
-                playerPosition.Y -= 0.5f;
+                //playerPosition.Y -= 0.5f;
             }
             else
             {
@@ -108,7 +108,7 @@ using System.Drawing;
                 {
                     System.Console.WriteLine("Hi");
                     playerVelocity.X = 0;
-                    playerPosition.X += 0.1f;
+                    //playerPosition.X += 0.1f;
                 }
                 else
                 {
@@ -123,7 +123,7 @@ using System.Drawing;
                 {
                     System.Console.WriteLine("hi");
                     playerVelocity.X = 0;
-                    playerPosition.X -= 0.1f;
+                    //playerPosition.X -= 0.1f;
                 }
                 else
                 {
@@ -132,7 +132,7 @@ using System.Drawing;
             }
 
             // You can also add other key checks here, e.g., for jumping:
-            if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_SPACE] == 1)
+            if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
             {
                 Jump();
             }
@@ -154,27 +154,7 @@ using System.Drawing;
         {
             int numKeys;
             IntPtr keyStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
-
-            // Draw background
-            //DrawRectangle(new Vector2(0, 0), new Vector2(800, 600), GameColor.Background);
-
-            // Draw player
             DrawRectangle(playerPosition, new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT), GameColor.Player);
-
-            // Display player X, Y coordinates and inputs
-            /*DrawText($"X: {playerPosition.X}, Y: {playerPosition.Y}", new Vector2(10, 10), GameColor.White);
-            if (Marshal.ReadByte(keyStatePtr, (int)SDL.SDL_Scancode.SDL_SCANCODE_LEFT) == 1)
-                DrawText("Left Arrow Pressed", new Vector2(10, 30), GameColor.White);
-            if (Marshal.ReadByte(keyStatePtr, (int)SDL.SDL_Scancode.SDL_SCANCODE_RIGHT) == 1)
-                DrawText("Right Arrow Pressed", new Vector2(10, 50), GameColor.White);
-            if (Marshal.ReadByte(keyStatePtr, (int)SDL.SDL_Scancode.SDL_SCANCODE_SPACE) == 1)
-                DrawText("Space Key Pressed", new Vector2(10, 70), GameColor.White);
-
-            // Placeholder logic for drawing blocks (assuming they're spread out horizontally for simplicity)
-            /*for (int i = 0; i < 800; i += BLOCK_SIZE * 2)
-            {
-                DrawRectangle(new Vector2(i, 500 - BLOCK_SIZE), new Vector2(BLOCK_SIZE, BLOCK_SIZE), GameColor.Block1);
-            }*/
         }
 
 
@@ -215,69 +195,6 @@ using System.Drawing;
             }
             return true;
         }
-
-    /*private void DrawText(string text, Vector2 position, GameColor color)
-        {
-            if (Font == IntPtr.Zero)
-            {
-                Console.WriteLine("Font is not loaded. Error: {0}", SDL.SDL_GetError());
-                return;
-            }
-
-            if (Renderer == IntPtr.Zero)
-            {
-                Console.WriteLine("Renderer is not initialized. Error: {0}", SDL.SDL_GetError());
-                return;
-            }
-
-            SDL.SDL_Color sdlColor;
-
-            switch (color)
-            {
-                case GameColor.Background:
-                    sdlColor = new SDL.SDL_Color { r = 50, g = 50, b = 50 };
-                    break;
-                case GameColor.Player:
-                    sdlColor = new SDL.SDL_Color { r = 255, g = 0, b = 0 };
-                    break;
-                case GameColor.Block1:
-                    sdlColor = new SDL.SDL_Color { r = 0, g = 255, b = 0 };
-                    break;
-                default:
-                    sdlColor = new SDL.SDL_Color { r = 255, g = 255, b = 255 };
-                    break;
-            }
-
-            IntPtr surface = SDL_ttf.TTF_RenderText_Solid(Font, text, sdlColor);
-            if (surface == IntPtr.Zero)
-            {
-                Console.WriteLine("Failed to render text. Error: {0}", SDL.SDL_GetError());
-                return;
-            }
-
-            IntPtr texture = SDL.SDL_CreateTextureFromSurface(Renderer, surface);
-            if (texture == IntPtr.Zero)
-            {
-                SDL.SDL_FreeSurface(surface); // Clean up the surface before exiting
-                Console.WriteLine("Failed to create texture from surface. Error: {0}", SDL.SDL_GetError());
-                return;
-            }
-
-            int textWidth, textHeight;
-            SDL.SDL_QueryTexture(texture, out _, out _, out textWidth, out textHeight);
-            SDL.SDL_Rect renderQuad = new SDL.SDL_Rect()
-            {
-                x = (int)position.X,
-                y = (int)position.Y,
-                w = textWidth,
-                h = textHeight
-            };
-
-            SDL.SDL_RenderCopy(Renderer, texture, IntPtr.Zero, ref renderQuad);
-
-            SDL.SDL_DestroyTexture(texture);
-            SDL.SDL_FreeSurface(surface);
-        }*/
     }
 
 internal enum GameColor

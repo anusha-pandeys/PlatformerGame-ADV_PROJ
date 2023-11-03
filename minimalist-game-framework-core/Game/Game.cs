@@ -10,6 +10,7 @@ class Game
     Player x;
     Map map;
     Blocks floor;
+    MovingBlock moving;
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 100); // Initial position
@@ -17,8 +18,10 @@ class Game
         map = new Map();
         x = new Player(playerPosition, playerVelocity, entities);
         floor = new Blocks(new Vector2(300, 400), new Vector2(50, 50), GameColor.Block1);
+        moving = new MovingBlock(new Vector2(100, 100), new Vector2(50, 50), GameColor.Block1);
         entities.Add(x);
         entities.Add(floor);
+        //entities.Add(moving);
     }
 
     public void Update()
@@ -26,5 +29,6 @@ class Game
         map.setBackgroundColor();
         floor.Render();
         x.playerLoop();
+        moving.updateCoordinates();
     }
 }
