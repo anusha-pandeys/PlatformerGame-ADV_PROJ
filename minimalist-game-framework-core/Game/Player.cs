@@ -6,34 +6,41 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using Game.entity;
+using Game.Game.Collision;
 
-
-    
-    internal class Player : Entity {
+namespace Game.Player
+{
+    internal class Player : Entity
+    {
         private IntPtr Renderer => Engine.Renderer2;  // Gets the SDL Renderer from the Engine class
 
         //private IntPtr Renderer;  // SDL Renderer
         //private IntPtr Font;      // SDL Font (using SDL_ttf)
 
-        private const int PLAYER_WIDTH = 50;
-        private const int PLAYER_HEIGHT = 70;
+        private const float PLAYER_WIDTH = 50f;
+        private const float PLAYER_HEIGHT = 70f;
         private const int BLOCK_SIZE = 50;
         private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
         private float NORMALF = -0.25f;
         private const float JUMP_STRENGTH = -9.0f;
-        private List<Entity> entities;
         private Vector2 playerPosition;
         private Vector2 playerVelocity;
         //to test
 
-        public Player (Vector2 playerPosition, Vector2 playerVelocity, List<Entity> entities)
+        public Player(Vector2 playerPosition, Vector2 playerVelocity)
         {
-            this.entities = entities;
             this.playerPosition = playerPosition;
             this.playerVelocity = playerVelocity;
         }
-               
-        public List<Vector2> getCoordinates() {
+
+        protected override Rectangle CalculateBound()
+        {
+            return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_WIDTH + 0.1f), (int)(PLAYER_HEIGHT + 0.1f));
+        }
+
+        public List<Vector2> getCoordinates()
+        {
 
             List<Vector2> result = new List<Vector2>();
             result.Add(playerPosition);
@@ -41,12 +48,13 @@ using System.Drawing;
             return result;
         }
 
-        public void playerLoop() {
+        public void playerLoop()
+        {
 
             HandleInput();
-            
+
             // Apply gravity
-            if (detectCollision(entities, new Vector2(playerVelocity.X, playerVelocity.Y + 1f)))
+            /*if (detectCollision(entities, new Vector2(playerVelocity.X, playerVelocity.Y + 1f)))
             {
                 System.Console.WriteLine("hi");
                 NORMALF = -0.25f;
@@ -56,7 +64,7 @@ using System.Drawing;
             else
             {
                 playerVelocity.Y += (GRAVITY - NORMALF);
-            }
+            }*/
 
             // Update player position
             playerPosition += playerVelocity;
@@ -77,12 +85,6 @@ using System.Drawing;
             Render();
         }
 
-        //to test
-        public void TestDrawRectangle()
-        {
-            DrawRectangle(new Vector2(100, 100), new Vector2(100, 100), GameColor.Player);
-        }
-
         public void getHandleInput()
         {
             HandleInput();
@@ -99,12 +101,12 @@ using System.Drawing;
 
             // Reset the horizontal velocity to 0.
             playerVelocity.X = 0.0f;
-            
+
             // Check LEFT arrow key.
             if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
             {
                 Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
-                if (detectCollision(entities, prospectiveVelocity))
+                if (!CollisionManager.checkCollisions())
                 {
                     System.Console.WriteLine("Hi");
                     playerVelocity.X = 0;
@@ -119,7 +121,7 @@ using System.Drawing;
             else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
             {
                 Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
-                if(detectCollision(entities, prospectiveVelocity))
+                if (detectCollision(entities, prospectiveVelocity))
                 {
                     System.Console.WriteLine("hi");
                     playerVelocity.X = 0;
@@ -141,7 +143,7 @@ using System.Drawing;
         private void Jump()
         {
 
-            
+
             if (playerVelocity.Y == 0)
             {
                 //GRAVITY = 0.25f;
@@ -161,7 +163,7 @@ using System.Drawing;
 
         public void DrawRectangle(Vector2 position, Vector2 size, GameColor color)
         {
-        // Set the drawing color based on the enum (placeholder RGB values)
+            // Set the drawing color based on the enum (placeholder RGB values)
             SDL.SDL_SetRenderDrawColor(Renderer, 255, 0, 0, 255); // red
 
             SDL.SDL_Rect rect = new SDL.SDL_Rect()
@@ -180,7 +182,7 @@ using System.Drawing;
             float thisLeft = (int)playerPosition.X + prospectiveVelocity.X;
             float thisRight = (int)playerPosition.X + prospectiveVelocity.X + PLAYER_WIDTH;
             float thisTop = (int)playerPosition.Y + prospectiveVelocity.Y;
-            float thisBottom = (int)playerPosition.Y + prospectiveVelocity.Y + PLAYER_HEIGHT;        
+            float thisBottom = (int)playerPosition.Y + prospectiveVelocity.Y + PLAYER_HEIGHT;
             for (int i = 1; i < entities.Count; i++)
             {
                 float otherLeft = (int)entities[i].getCoordinates()[0].X;
@@ -196,6 +198,7 @@ using System.Drawing;
             return true;
         }
     }
+}
 
 internal enum GameColor
 {
