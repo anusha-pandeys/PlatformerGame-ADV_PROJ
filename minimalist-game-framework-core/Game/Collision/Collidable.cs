@@ -1,9 +1,8 @@
-﻿using Game.entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Game.Game.Collision
+namespace Game.Game
 {
     internal interface ICollidable : IDisposable
     {

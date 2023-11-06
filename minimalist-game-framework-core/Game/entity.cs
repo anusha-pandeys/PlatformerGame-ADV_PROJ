@@ -5,7 +5,7 @@ using System.Text;
 using Game;
 
 
-namespace Game.entity
+namespace Game.Game
 {
     internal abstract class Entity : IDisposable
     {

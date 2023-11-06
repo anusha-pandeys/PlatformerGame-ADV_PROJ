@@ -6,10 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
-using Game.entity;
 using Game.Game.Collision;
 
-namespace Game.Player
+namespace Game.Game
 {
     internal class Player : Entity
     {
@@ -26,8 +25,9 @@ namespace Game.Player
         private const float JUMP_STRENGTH = -9.0f;
         private Vector2 playerPosition;
         private Vector2 playerVelocity;
+        //private Game.Game.Collision.CollisionManager collisions;
         //to test
-
+        
         public Player(Vector2 playerPosition, Vector2 playerVelocity)
         {
             this.playerPosition = playerPosition;
@@ -106,7 +106,7 @@ namespace Game.Player
             if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
             {
                 Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
-                if (!CollisionManager.checkCollisions())
+                if (CollisionManager.) 
                 {
                     System.Console.WriteLine("Hi");
                     playerVelocity.X = 0;

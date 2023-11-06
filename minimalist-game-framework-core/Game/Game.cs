@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Game
+namespace Game.Game
 {
     class Game
     {

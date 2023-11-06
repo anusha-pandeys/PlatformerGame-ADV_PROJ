@@ -1,11 +1,9 @@
-﻿using Game.entity;
-using Game.Game.Collision;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace Game.Game.Collision
+namespace Game.Game
 {
     internal class CollisionManager
     {

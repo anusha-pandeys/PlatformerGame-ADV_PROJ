@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace Game.Map
+namespace Game.Game
 {
     internal class Map
     {

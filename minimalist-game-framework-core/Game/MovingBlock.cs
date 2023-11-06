@@ -1,9 +1,8 @@
-﻿    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using SDL2;
+﻿using SDL2;
+using System;
+using System.Collections.Generic;
 
-namespace Game.MovingBlock
+namespace Game.Game
 {
     internal class MovingBlock : Entity
     {
