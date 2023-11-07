@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Game.Game
-{
+
     /*internal class MovingBlock : Entity
     {
         private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
@@ -64,5 +63,4 @@ namespace Game.Game
             return true;
         }
     }*/
-}
 
