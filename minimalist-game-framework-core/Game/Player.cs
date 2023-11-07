@@ -13,10 +13,6 @@ namespace Game.Game
     internal class Player : Entity
     {
         private IntPtr Renderer => Engine.Renderer2;  // Gets the SDL Renderer from the Engine class
-
-        //private IntPtr Renderer;  // SDL Renderer
-        //private IntPtr Font;      // SDL Font (using SDL_ttf)
-
         private const float PLAYER_WIDTH = 50f;
         private const float PLAYER_HEIGHT = 70f;
         private const int BLOCK_SIZE = 50;
@@ -25,8 +21,6 @@ namespace Game.Game
         private const float JUMP_STRENGTH = -9.0f;
         private Vector2 playerPosition;
         private Vector2 playerVelocity;
-        //private Game.Game.Collision.CollisionManager collisions;
-        //to test
         
         public Player(Vector2 playerPosition, Vector2 playerVelocity)
         {
@@ -110,11 +104,10 @@ namespace Game.Game
                 {
                     System.Console.WriteLine("Hi");
                     playerVelocity.X = 0;
-                    //playerPosition.X += 0.1f;
                 }
                 else
                 {
-                    playerVelocity.X = -2.0f;// -5.0f;
+                    playerVelocity.X = -2.0f;
                 }
             }
             // Check RIGHT arrow key.
@@ -125,11 +118,10 @@ namespace Game.Game
                 {
                     System.Console.WriteLine("hi");
                     playerVelocity.X = 0;
-                    //playerPosition.X -= 0.1f;
                 }
                 else
                 {
-                    playerVelocity.X = 2.0f;// -5.0f;
+                    playerVelocity.X = 2.0f;
                 }
             }
 
