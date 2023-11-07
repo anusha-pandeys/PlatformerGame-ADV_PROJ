@@ -18,7 +18,7 @@ namespace Game.Game
             map = new Map();
             player = new Player(playerPosition, playerVelocity);
             floor = new Blocks(new Vector2(300, 400), new Vector2(50, 50), GameColor.Block1);
-            CollisionManager.addBlock(floor);
+            CollisionManager.addBlock(floor);//
         }
 
         public void Update()
