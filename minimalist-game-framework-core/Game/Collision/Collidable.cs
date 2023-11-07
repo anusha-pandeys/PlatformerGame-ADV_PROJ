@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Game.Game
+namespace Game.Game.Collision
 {
     internal interface ICollidable : IDisposable
     {

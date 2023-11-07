@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Game.Game
 {
-    internal class MovingBlock : Entity
+    /*internal class MovingBlock : Entity
     {
         private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
         private Vector2 position;
@@ -63,6 +63,6 @@ namespace Game.Game
         {
             return true;
         }
-    }
+    }*/
 }
 

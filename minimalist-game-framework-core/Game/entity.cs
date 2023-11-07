@@ -17,7 +17,7 @@ namespace Game.Game
 
         protected abstract Rectangle CalculateBound();
         protected abstract void Render();
-        protected abstract void Draw();
+        protected abstract void Draw(Vector2 position, Vector2 size);
         //public abstract List<Vector2> getCoordinates();
         //public abstract void Render();
         //public abstract void DrawRectangle(Vector2 position, Vector2 size, GameColor color);

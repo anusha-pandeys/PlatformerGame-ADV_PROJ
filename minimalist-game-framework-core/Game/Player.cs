@@ -106,7 +106,7 @@ namespace Game.Game
             if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
             {
                 Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
-                if (CollisionManager.) 
+                if (CollisionManager.checkBlockCollision(this, new Vector2(-2.0f, 0))) 
                 {
                     System.Console.WriteLine("Hi");
                     playerVelocity.X = 0;
@@ -121,7 +121,7 @@ namespace Game.Game
             else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
             {
                 Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
-                if (detectCollision(entities, prospectiveVelocity))
+                if (CollisionManager.checkBlockCollision(this, new Vector2(2.0f, 0)))
                 {
                     System.Console.WriteLine("hi");
                     playerVelocity.X = 0;
@@ -152,18 +152,17 @@ namespace Game.Game
             }
         }
 
-        public void Render()
+
+
+        protected override void Render()
         {
             int numKeys;
             IntPtr keyStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
-            DrawRectangle(playerPosition, new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT), GameColor.Player);
+            Draw(playerPosition, new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT));
         }
 
-
-
-        public void DrawRectangle(Vector2 position, Vector2 size, GameColor color)
+        protected override void Draw(Vector2 position, Vector2 size)
         {
-            // Set the drawing color based on the enum (placeholder RGB values)
             SDL.SDL_SetRenderDrawColor(Renderer, 255, 0, 0, 255); // red
 
             SDL.SDL_Rect rect = new SDL.SDL_Rect()
@@ -175,27 +174,6 @@ namespace Game.Game
             };
 
             SDL.SDL_RenderFillRect(Renderer, ref rect);
-        }
-
-        public Boolean detectCollision(List<Entity> entities, Vector2 prospectiveVelocity)
-        {
-            float thisLeft = (int)playerPosition.X + prospectiveVelocity.X;
-            float thisRight = (int)playerPosition.X + prospectiveVelocity.X + PLAYER_WIDTH;
-            float thisTop = (int)playerPosition.Y + prospectiveVelocity.Y;
-            float thisBottom = (int)playerPosition.Y + prospectiveVelocity.Y + PLAYER_HEIGHT;
-            for (int i = 1; i < entities.Count; i++)
-            {
-                float otherLeft = (int)entities[i].getCoordinates()[0].X;
-                float otherRight = (int)entities[i].getCoordinates()[0].X + entities[i].getCoordinates()[1].X;
-                float otherTop = (int)entities[i].getCoordinates()[0].Y;
-                float otherBottom = (int)entities[i].getCoordinates()[0].Y + entities[i].getCoordinates()[1].Y;
-
-                if (thisRight < otherLeft || thisLeft > otherRight || thisBottom < otherTop || thisTop > otherBottom)
-                {
-                    return false;
-                }
-            }
-            return true;
         }
     }
 }
