@@ -3,11 +3,13 @@
 
 class Game
 {
+
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(640, 480);
     private List<Entity> entities = new List<Entity>();
     private TextRenderer textRenderer;
     Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
+    StartMenu startMenu;
 
     Player x;
     Map map;
@@ -25,16 +27,26 @@ class Game
         entities.Add(x);
         entities.Add(floor);
         textRenderer = new TextRenderer();
+        startMenu = new StartMenu();
         //entities.Add(moving);
     }
 
     public void Update()
     {
-        map.setBackgroundColor();
-        floor.Render();
-        x.playerLoop();
-        DisplayPlayerCoordinates();
-        moving.updateCoordinates();
+        if (true)  // Add a condition to check when the start menu should be visible
+        {
+            startMenu.Update();
+            startMenu.Draw(font);
+        }
+        else
+        {
+            // Update game logic here (e.g., player movement, collisions, etc.)
+            map.setBackgroundColor();
+            floor.Render();
+            x.playerLoop();
+            DisplayPlayerCoordinates();
+            moving.updateCoordinates();
+        }
     }
 
     public void DisplayPlayerCoordinates()
