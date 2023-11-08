@@ -25,6 +25,7 @@ internal class Player : Entity
         this.playerVelocity = playerVelocity;
     }
 
+
     protected override Rectangle CalculateBound()
     {
         return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_WIDTH), (int)(PLAYER_HEIGHT));
@@ -100,6 +101,7 @@ internal class Player : Entity
         // Check LEFT arrow key.
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
         {
+            text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
             string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
             if (collisionDetected.Contains("left")) 
@@ -111,10 +113,12 @@ internal class Player : Entity
             {
                 playerVelocity.X = -2.0f;
             }
-        }
+        }    
+        // Check RIGHT arrow key.
         // Check RIGHT arrow key.
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
+            text.displayText("right", new Vector2(10, 30), Color.Black, font);
             Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
             string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
             if (collisionDetected.Contains("right"))
@@ -137,8 +141,6 @@ internal class Player : Entity
 
     private void Jump()
     {
-
-
         if (playerVelocity.Y == 0)
         {
             //GRAVITY = 0.25f;
