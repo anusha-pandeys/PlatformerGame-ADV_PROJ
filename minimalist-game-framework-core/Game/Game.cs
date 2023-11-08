@@ -55,13 +55,13 @@ class Game
                        
             
             DisplayPlayerCoordinates();
-            moving.updateCoordinates();
+            //moving.updateCoordinates();
         }
     }
 
     public void DisplayPlayerCoordinates()
     {
-        string playerCoordinates = string.Format("{0}, {1}", x.getCoordinates()[0].X, x.getCoordinates()[0].Y);
+        string playerCoordinates = string.Format("{0}, {1}", player.getCoordinates()[0].X, player.getCoordinates()[0].Y);
         textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
 
     }
