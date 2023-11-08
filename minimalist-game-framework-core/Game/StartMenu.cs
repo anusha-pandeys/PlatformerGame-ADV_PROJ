@@ -63,7 +63,7 @@ internal class StartMenu
                 w = (int)button.getSize().X,
                 h = (int)button.getSize().Y
             };
-            SDL.SDL_RenderFillRect(Renderer, ref rect);
+            SDL.SDL_RenderFillRect(Renderer, ref rect);//
 
             // Draw button text
             Vector2 textPosition = new Vector2(button.getPosition().X + 10, button.getPosition().Y + 10); // Adjust text position for padding
