@@ -1,8 +1,8 @@
 ﻿using SDL2;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
-
 
 internal class Blocks : Entity
 {
@@ -17,6 +17,11 @@ internal class Blocks : Entity
         this.color = color;
     }
 
+    public void blockLoop()
+    {
+        Render();
+    }
+
     public List<Vector2> getCoordinates()
     {
         List<Vector2> result = new List<Vector2>();
@@ -24,11 +29,17 @@ internal class Blocks : Entity
         result.Add(size);
         return result;
     }
-    public void Render()
+    protected override Rectangle CalculateBound()
     {
-        DrawRectangle(position, size, GameColor.Block1);
+        return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
     }
-    public void DrawRectangle(Vector2 position, Vector2 size, GameColor color)
+
+    protected override void Render()
+    {
+        Draw(position, size);
+    }
+
+    protected override void Draw(Vector2 position, Vector2 size)
     {
         SDL.SDL_SetRenderDrawColor(Renderer, 0, 255, 0, 255); // green
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
@@ -40,10 +51,4 @@ internal class Blocks : Entity
         };
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
-
-    public Boolean detectCollision(List<Entity> entities, Vector2 prospectiveVelocity)
-    {
-        return true;
-    }
-
 }

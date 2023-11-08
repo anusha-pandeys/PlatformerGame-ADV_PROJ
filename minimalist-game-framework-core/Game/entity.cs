@@ -1,11 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
-internal interface Entity
+internal abstract class Entity : IDisposable
 {
-    List<Vector2> getCoordinates();
-    void Render();
-    void DrawRectangle(Vector2 position, Vector2 size, GameColor color);
-    Boolean detectCollision(List<Entity> entities, Vector2 prospectiveVelocity);
+    string name;
+    Vector2 position;
+    public Rectangle Bound { get { return CalculateBound(); } }
+    public string Name { get { return name; } }
+    public Vector2 Position { get { return position; } set { position = value; } }
+
+    protected abstract Rectangle CalculateBound();
+    protected abstract void Render();
+    protected abstract void Draw(Vector2 position, Vector2 size);
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
+    }
 }
