@@ -14,7 +14,7 @@ internal class Player : Entity
     private const float PLAYER_HEIGHT = 70f;
     private const int BLOCK_SIZE = 50;
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
-    private float NORMALF = -0.25f;
+    private float NORMALF = 0.25f;
     private const float JUMP_STRENGTH = -9.0f;
     private Vector2 playerPosition;
     private Vector2 playerVelocity;
@@ -48,18 +48,18 @@ internal class Player : Entity
         string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
         if (collisionDetected.Contains("down")) 
         {
-            //NORMALF = -0.25f;
-            System.Console.WriteLine("left");
-            playerVelocity.Y = 0;
+            NORMALF = -0.25f;
+            System.Console.WriteLine("down");
+
         } else if (collisionDetected.Contains("up"))
         {
+            NORMALF = 0f;
             System.Console.WriteLine("up");
             playerVelocity.Y = playerVelocity.Y * -1;
         }
-        else
-        {
-            playerVelocity.Y += (GRAVITY);
-        }
+        
+        playerVelocity.Y += (GRAVITY-NORMALF);
+        
 
         // Update player position
         playerPosition += playerVelocity;

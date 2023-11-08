@@ -18,14 +18,14 @@ class Game
         floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
         floor2 = new Blocks(new Vector2(200, 250), new Vector2(50, 50), GameColor.Block1);
         CollisionManager.addBlock(floor);
-        CollisionManager.addBlock(floor2);
+        //CollisionManager.addBlock(floor2);
     }
 
     public void Update()
     {
         map.setBackgroundColor();
         floor.blockLoop();
-        floor2.blockLoop();
+        //floor2.blockLoop();
         player.playerLoop();
     }
 }
