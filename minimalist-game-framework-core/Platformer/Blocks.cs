@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-public class Blocks : Entity
+internal class Blocks : Entity
 {
     private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
     private Vector2 position;

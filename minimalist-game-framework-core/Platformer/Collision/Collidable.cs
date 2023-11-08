@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 
 
-public interface ICollidable : IDisposable
+internal interface ICollidable : IDisposable
 {
     Entity GameObject { get; }
     string Tag { get; }
 
 
 }
-public class Collidable : ICollidable
+internal class Collidable : ICollidable
 {
     public Entity GameObject { get; set; }
     public string Tag { get; set; }

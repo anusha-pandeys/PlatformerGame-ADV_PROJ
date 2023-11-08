@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
 
-public class Player : Entity
+internal class Player : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;  // Gets the SDL Renderer from the Engine class
     private const float PLAYER_WIDTH = 50f;
@@ -27,7 +27,7 @@ public class Player : Entity
 
     protected override Rectangle CalculateBound()
     {
-        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_WIDTH + 0.1f), (int)(PLAYER_HEIGHT + 0.1f));
+        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_WIDTH), (int)(PLAYER_HEIGHT));
     }
 
     public List<Vector2> getCoordinates()
@@ -45,17 +45,21 @@ public class Player : Entity
         HandleInput();
 
         // Apply gravity
-        /*if (detectCollision(entities, new Vector2(playerVelocity.X, playerVelocity.Y + 1f)))
+        string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
+        if (collisionDetected.Contains("down")) 
         {
-            System.Console.WriteLine("hi");
-            NORMALF = -0.25f;
+            //NORMALF = -0.25f;
+            System.Console.WriteLine("left");
             playerVelocity.Y = 0;
-            //playerPosition.Y -= 0.5f;
+        } else if (collisionDetected.Contains("up"))
+        {
+            System.Console.WriteLine("up");
+            playerVelocity.Y = playerVelocity.Y * -1;
         }
         else
         {
-            playerVelocity.Y += (GRAVITY - NORMALF);
-        }*/
+            playerVelocity.Y += (GRAVITY);
+        }
 
         // Update player position
         playerPosition += playerVelocity;
@@ -97,9 +101,10 @@ public class Player : Entity
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
         {
             Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
-            if (CollisionManager.checkBlockCollision(this, new Vector2(-2.0f, 0))) 
+            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
+            if (collisionDetected.Contains("left")) 
             {
-                System.Console.WriteLine("Hi");
+                System.Console.WriteLine("left");
                 playerVelocity.X = 0;
             }
             else
@@ -111,9 +116,10 @@ public class Player : Entity
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
             Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
-            if (CollisionManager.checkBlockCollision(this, new Vector2(2.0f, 0)))
+            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
+            if (collisionDetected.Contains("right"))
             {
-                System.Console.WriteLine("hi");
+                System.Console.WriteLine("right");
                 playerVelocity.X = 0;
             }
             else
@@ -165,7 +171,7 @@ public class Player : Entity
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
 }
-}
+
 
 internal enum GameColor
 {

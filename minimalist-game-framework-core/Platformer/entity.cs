@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using Game;
 
-
-
-public abstract class Entity : IDisposable
+internal abstract class Entity : IDisposable
 {
     string name;
     Vector2 position;
@@ -17,10 +14,6 @@ public abstract class Entity : IDisposable
     protected abstract Rectangle CalculateBound();
     protected abstract void Render();
     protected abstract void Draw(Vector2 position, Vector2 size);
-    //public abstract List<Vector2> getCoordinates();
-    //public abstract void Render();
-    //public abstract void DrawRectangle(Vector2 position, Vector2 size, GameColor color);
-    // public abstract bool DetectCollision(List<Entity> entities, Vector2 prospectiveVelocity);
 
     public void Dispose()
     {
