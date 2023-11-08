@@ -44,7 +44,7 @@ class Game
         //floor2.blockLoop();
         player.playerLoop();
 
-        if (true)  // Add a condition to check when the start menu should be visible
+        /*if (true)  // Add a condition to check when the start menu should be visible
         {
             startMenu.Update();
             startMenu.Draw(font);
@@ -56,7 +56,7 @@ class Game
             
             DisplayPlayerCoordinates();
             //moving.updateCoordinates();
-        }
+        }*/
     }
 
     public void DisplayPlayerCoordinates()
