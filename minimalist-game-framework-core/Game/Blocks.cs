@@ -10,11 +10,13 @@ internal class Blocks : Entity
     private Vector2 position;
     private Vector2 size;
     private GameColor color;
+    private string sidesInContact;
     public Blocks(Vector2 position, Vector2 size, GameColor color)
     {
         this.position = position;
         this.size = size;
         this.color = color;
+        sidesInContact = "";
     }
 
     public void blockLoop()

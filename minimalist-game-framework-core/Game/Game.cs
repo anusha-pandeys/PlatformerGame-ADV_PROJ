@@ -26,7 +26,7 @@ class Game
         floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
         floor2 = new Blocks(new Vector2(200, 250), new Vector2(50, 50), GameColor.Block1);
         CollisionManager.addBlock(floor);
-        //CollisionManager.addBlock(floor2);
+        CollisionManager.addBlock(floor2);
 
         Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
         
@@ -41,7 +41,7 @@ class Game
 
         map.setBackgroundColor();
         floor.blockLoop();
-        //floor2.blockLoop();
+        floor2.blockLoop();
         player.playerLoop();
 
         /*if (true)  // Add a condition to check when the start menu should be visible
