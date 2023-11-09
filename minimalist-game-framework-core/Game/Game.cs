@@ -24,7 +24,7 @@ class Game
         map = new Map();
         player = new Player(playerPosition, playerVelocity);
         floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
-        floor2 = new Blocks(new Vector2(200, 250), new Vector2(50, 50), GameColor.Block1);
+        floor2 = new Blocks(new Vector2(300, 250), new Vector2(50, 50), GameColor.Block1);
         CollisionManager.addBlock(floor);
         CollisionManager.addBlock(floor2);
 

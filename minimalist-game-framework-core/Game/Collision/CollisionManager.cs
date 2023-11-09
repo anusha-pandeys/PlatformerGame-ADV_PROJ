@@ -34,16 +34,17 @@ internal class CollisionManager
                 returnStr += "up";
             } else if(ret.ContainsValue(true) && ret.ContainsKey("down"))
             {
-                returnStr += "down";////
+                returnStr += "down";
             }
             if(ret.ContainsValue(true) && ret.ContainsKey("right"))
             {
                 returnStr += "right";
-            } else if (ret.ContainsValue(true) && ret.ContainsKey("left"))
+            } else if (ret.ContainsValue(true) && ret.ContainsKey("left") )
             {
                 returnStr += "left";
             }
-            return returnStr;
+            if (!returnStr.Equals("")) return returnStr;
+            else continue;
         }
         return "na";
     }
@@ -105,7 +106,7 @@ internal class CollisionManager
             upOrDown = false;
         }
 
-        if(rectA.X < rectB.X)
+        else if(rectA.X < rectB.X)
         {
             retMap["right"] = true;
             rightLeft = true;
@@ -125,7 +126,7 @@ internal class CollisionManager
             {
                 retMap["up"] = false;
             }
-            if(rightLeft && retMap.ContainsKey("right")) {
+            else if(rightLeft && retMap.ContainsKey("right")) {
                 retMap["right"] = false;
             } else if (!rightLeft && retMap.ContainsKey("left"))
             {
@@ -142,7 +143,7 @@ internal class CollisionManager
             {
                 retMap["up"] = true;
             }
-            if (rightLeft && retMap.ContainsKey("right"))
+            else if (rightLeft && retMap.ContainsKey("right"))
             {
                 retMap["right"] = true;
             }

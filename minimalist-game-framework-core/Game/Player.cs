@@ -42,30 +42,32 @@ internal class Player : Entity
 
     public void playerLoop()
     {
-
-        HandleInput();
+        string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
+        HandleJump();
+        HandleInput(collisionDetected);
 
         // Apply gravity
-        
-        string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
+
+
         if (collisionDetected.Contains("down")) 
         {
-            NORMALF = -0.25f;
             playerVelocity.Y = 0;
+            playerVelocity.Y -= (GRAVITY);
             System.Console.WriteLine("down");
 
         } else if (collisionDetected.Contains("up"))
         {
-            NORMALF = 0f;
             System.Console.WriteLine("up");
             playerVelocity.Y = playerVelocity.Y * -1;
         }
-        
-        playerVelocity.Y += (GRAVITY+NORMALF);
+        //collisionDetected = "";
+        playerVelocity.Y += (GRAVITY);
         
 
         // Update player position
         playerPosition += playerVelocity;
+
+        
 
         // Collision detection for the floor
         if (playerPosition.Y > 400) // Assuming 500 is ground level
@@ -83,12 +85,23 @@ internal class Player : Entity
         Render();
     }
 
-    public void getHandleInput()
+
+    private void HandleJump()
     {
-        HandleInput();
+        int numKeys;
+        IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
+
+        // Convert IntPtr to byte array
+        byte[] keys = new byte[numKeys];
+        Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
+
+        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
+        {
+            Jump();
+        }
     }
 
-    private void HandleInput()
+    private void HandleInput(string collisionDetected)
     {
         int numKeys;
         IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
@@ -105,7 +118,7 @@ internal class Player : Entity
         {
             //text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
-            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
+            ///string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
             if (collisionDetected.Contains("left")) 
             {
                 System.Console.WriteLine("left");
@@ -122,7 +135,7 @@ internal class Player : Entity
         {
             //text.displayText("right", new Vector2(10, 30), Color.Black, font);
             Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
-            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
+            //string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
             if (collisionDetected.Contains("right"))
             {
                 System.Console.WriteLine("right");
@@ -135,10 +148,6 @@ internal class Player : Entity
         }
 
         // You can also add other key checks here, e.g., for jumping:
-        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
-        {
-            Jump();
-        }
     }
 
     private void Jump()
