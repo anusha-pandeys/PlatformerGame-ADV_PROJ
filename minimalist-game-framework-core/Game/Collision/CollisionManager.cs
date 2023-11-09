@@ -34,7 +34,7 @@ internal class CollisionManager
                 returnStr += "up";
             } else if(ret.ContainsValue(true) && ret.ContainsKey("down"))
             {
-                returnStr += "down";//
+                returnStr += "down";////
             }
             if(ret.ContainsValue(true) && ret.ContainsKey("right"))
             {
