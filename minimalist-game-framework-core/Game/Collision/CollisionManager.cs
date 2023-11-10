@@ -117,7 +117,7 @@ internal class CollisionManager
         }
 
         if (boundARight.X < boundBLeft.X || boundBRight.X < boundALeft.X ||
-                boundARight.Y < boundBLeft.Y || boundBRight.Y < boundALeft.Y)
+                boundARight.Y < boundBLeft.Y || boundBRight.Y < boundALeft.Y)//
         {
             if(upOrDown && retMap.ContainsKey("down"))
             {
