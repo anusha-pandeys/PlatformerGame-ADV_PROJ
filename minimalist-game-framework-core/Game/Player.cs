@@ -18,11 +18,15 @@ internal class Player : Entity
     private const float JUMP_STRENGTH = -9.0f;
     private Vector2 playerPosition;
     private Vector2 playerVelocity;
+    private TextRenderer text;
+    private Font font;
         
-    public Player(Vector2 playerPosition, Vector2 playerVelocity)
+    public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
         this.playerVelocity = playerVelocity;
+        this.text = text;
+        this.font = font;
     }
 
 
@@ -43,23 +47,23 @@ internal class Player : Entity
     public void playerLoop()
     {
         string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
-        HandleJump();
-        HandleInput(collisionDetected);
+        
+        HandleInput();
 
         // Apply gravity
 
-
-        if (collisionDetected.Contains("down")) 
+        HandleJump();
+        if (collisionDetected.Contains("down") && !keyPressed()) 
         {
             playerVelocity.Y = 0;
             playerVelocity.Y -= (GRAVITY);
             System.Console.WriteLine("down");
-
         } else if (collisionDetected.Contains("up"))
         {
             System.Console.WriteLine("up");
             playerVelocity.Y = playerVelocity.Y * -1;
         }
+        
         //collisionDetected = "";
         playerVelocity.Y += (GRAVITY);
         
@@ -85,7 +89,7 @@ internal class Player : Entity
         Render();
     }
 
-    private void HandleInput(string collisionDetected)
+    private void HandleInput()
     {
         int numKeys;
         IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
@@ -97,15 +101,16 @@ internal class Player : Entity
         // Reset the horizontal velocity to 0.
         playerVelocity.X = 0.0f;
 
+
         // Check LEFT arrow key.
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
         {
-            //text.displayText("left", new Vector2(10, 30), Color.Black, font);     
+            text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
-            ///string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
+            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
             if (collisionDetected.Contains("left")) 
             {
-                System.Console.WriteLine("left");
+                //System.Console.WriteLine("left");
                 playerVelocity.X = 0;
             }
             else
@@ -117,9 +122,9 @@ internal class Player : Entity
         // Check RIGHT arrow key.
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
-            //text.displayText("right", new Vector2(10, 30), Color.Black, font);
+            text.displayText("right", new Vector2(10, 30), Color.Black, font);
             Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
-            //string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
+            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
             if (collisionDetected.Contains("right"))
             {
                 System.Console.WriteLine("right");
@@ -134,6 +139,21 @@ internal class Player : Entity
         // You can also add other key checks here, e.g., for jumping:
     }
 
+    private bool keyPressed()
+    {
+        int numKeys;
+        IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
+
+        // Convert IntPtr to byte array
+        byte[] keys = new byte[numKeys];
+        Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
+        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
+        {
+
+            return true;
+        }
+        return false;
+    }
     private void HandleJump()
     {
         int numKeys;
@@ -145,8 +165,10 @@ internal class Player : Entity
 
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
         {
+
             Jump();
         }
+
     }
     private void Jump()
     {
