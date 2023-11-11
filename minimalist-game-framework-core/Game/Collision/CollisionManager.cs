@@ -34,16 +34,18 @@ internal class CollisionManager
                 returnStr += "up";
             } else if(ret.ContainsValue(true) && ret.ContainsKey("down"))
             {
-                returnStr += "down";////
+                returnStr += "down";
             }
             if(ret.ContainsValue(true) && ret.ContainsKey("right"))
             {
                 returnStr += "right";
-            } else if (ret.ContainsValue(true) && ret.ContainsKey("left"))
+            } else if (ret.ContainsValue(true) && ret.ContainsKey("left") )
             {
+                
                 returnStr += "left";
             }
-            return returnStr;
+            if (!returnStr.Equals("")) return returnStr;
+            else continue;
         }
         return "na";
     }
@@ -99,24 +101,25 @@ internal class CollisionManager
         {
             retMap["down"] = true;
             upOrDown = true;
-        } else if (rectA.Y > rectB.Y)
+        } 
+        if (rectA.Y > rectB.Y)
         {
             retMap["up"] = true;
             upOrDown = false;
         }
-
         if(rectA.X < rectB.X)
         {
             retMap["right"] = true;
             rightLeft = true;
-        } else if (rectA.X > rectB.X)
+        } 
+        if (rectA.X > rectB.X)
         {
             retMap["left"] = true;
             rightLeft = false;
         }
 
         if (boundARight.X < boundBLeft.X || boundBRight.X < boundALeft.X ||
-                boundARight.Y < boundBLeft.Y || boundBRight.Y < boundALeft.Y)
+                boundARight.Y < boundBLeft.Y || boundBRight.Y < boundALeft.Y)//
         {
             if(upOrDown && retMap.ContainsKey("down"))
             {
@@ -144,10 +147,12 @@ internal class CollisionManager
             }
             if (rightLeft && retMap.ContainsKey("right"))
             {
+                System.Console.WriteLine("left");
                 retMap["right"] = true;
             }
             else if (!rightLeft && retMap.ContainsKey("left"))
             {
+                
                 retMap["left"] = true;
             }
         }

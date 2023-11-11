@@ -18,17 +18,21 @@ internal class Player : Entity
     private const float JUMP_STRENGTH = -9.0f;
     private Vector2 playerPosition;
     private Vector2 playerVelocity;
+    private TextRenderer text;
+    private Font font;
         
-    public Player(Vector2 playerPosition, Vector2 playerVelocity)
+    public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
         this.playerVelocity = playerVelocity;
+        this.text = text;
+        this.font = font;
     }
 
 
     protected override Rectangle CalculateBound()
     {
-        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_WIDTH), (int)(PLAYER_HEIGHT));
+        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_HEIGHT), (int)(PLAYER_WIDTH));
     }
 
     public List<Vector2> getCoordinates()
@@ -42,30 +46,32 @@ internal class Player : Entity
 
     public void playerLoop()
     {
-
+        string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
+        
         HandleInput();
 
         // Apply gravity
-        
-        string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
-        if (collisionDetected.Contains("down")) 
-        {
-            NORMALF = -0.25f;
-            playerVelocity.Y = 0;
-            System.Console.WriteLine("down");
 
+        HandleJump();
+        if (collisionDetected.Contains("down") && !keyPressed()) 
+        {
+            playerVelocity.Y = 0;
+            playerVelocity.Y -= (GRAVITY);
+            System.Console.WriteLine("down");
         } else if (collisionDetected.Contains("up"))
         {
-            NORMALF = 0f;
             System.Console.WriteLine("up");
             playerVelocity.Y = playerVelocity.Y * -1;
         }
         
-        playerVelocity.Y += (GRAVITY+NORMALF);
+        //collisionDetected = "";
+        playerVelocity.Y += (GRAVITY);
         
 
         // Update player position
         playerPosition += playerVelocity;
+
+        
 
         // Collision detection for the floor
         if (playerPosition.Y > 400) // Assuming 500 is ground level
@@ -83,11 +89,6 @@ internal class Player : Entity
         Render();
     }
 
-    public void getHandleInput()
-    {
-        HandleInput();
-    }
-
     private void HandleInput()
     {
         int numKeys;
@@ -100,15 +101,16 @@ internal class Player : Entity
         // Reset the horizontal velocity to 0.
         playerVelocity.X = 0.0f;
 
+
         // Check LEFT arrow key.
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
         {
-            //text.displayText("left", new Vector2(10, 30), Color.Black, font);     
+            text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
             string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
             if (collisionDetected.Contains("left")) 
             {
-                System.Console.WriteLine("left");
+                //System.Console.WriteLine("left");
                 playerVelocity.X = 0;
             }
             else
@@ -120,7 +122,7 @@ internal class Player : Entity
         // Check RIGHT arrow key.
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
-            //text.displayText("right", new Vector2(10, 30), Color.Black, font);
+            text.displayText("right", new Vector2(10, 30), Color.Black, font);
             Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
             string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
             if (collisionDetected.Contains("right"))
@@ -135,18 +137,45 @@ internal class Player : Entity
         }
 
         // You can also add other key checks here, e.g., for jumping:
-        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
-        {
-            Jump();
-        }
     }
 
+    private bool keyPressed()
+    {
+        int numKeys;
+        IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
+
+        // Convert IntPtr to byte array
+        byte[] keys = new byte[numKeys];
+        Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
+        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
+        {
+
+            return true;
+        }
+        return false;
+    }
+    private void HandleJump()
+    {
+        int numKeys;
+        IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
+
+        // Convert IntPtr to byte array
+        byte[] keys = new byte[numKeys];
+        Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
+
+        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
+        {
+
+            Jump();
+        }
+
+    }
     private void Jump()
     {
         if (playerVelocity.Y == 0)
         {
             //GRAVITY = 0.25f;
-            NORMALF = 0;
+            //NORMALF = 0;
             playerVelocity.Y = JUMP_STRENGTH;
         }
     }
