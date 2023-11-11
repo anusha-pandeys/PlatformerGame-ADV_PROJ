@@ -9,7 +9,7 @@ class Game
     private TextRenderer textRenderer;
     private Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
     //private StartMenu startMenu;
-    //private Player player;
+    private Player player;
     private Map map;
     //private Blocks floor;
     //private Blocks floor2;
@@ -17,10 +17,10 @@ class Game
 
     public Game()
     {
-        //Vector2 playerPosition = new Vector2(100, 300); // Initial position
-        //Vector2 playerVelocity = new Vector2(0, 0);     // Initial velocity
+        Vector2 playerPosition = new Vector2(100, 300); // Initial position
+        Vector2 playerVelocity = new Vector2(0, 0);     // Initial velocity
         map = new Map();
-        //player = new Player(playerPosition, playerVelocity);
+        player = new Player(playerPosition, playerVelocity);
         //floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
         //floor2 = new Blocks(new Vector2(200, 250), new Vector2(50, 50), GameColor.Block1);
         //CollisionManager.addBlock(floor);
@@ -37,13 +37,16 @@ class Game
     public void Update()
     {
         map.setBackgroundColor();
+        
         foreach (var block in levelBlocks)
         {
             block.blockLoop();
+            CollisionManager.addBlock(block);
         }
+        player.playerLoop();
         //floor.blockLoop();
         //floor2.blockLoop();
-        //player.playerLoop();
+
 
         //if (true)  // Add a condition to check when the start menu should be visible
         //{

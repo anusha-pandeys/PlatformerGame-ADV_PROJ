@@ -20,6 +20,7 @@ internal class LevelLoader
                     Vector2 position = new Vector2(x * blockSize, y * blockSize);
                     blocks.Add(new Blocks(position, new Vector2(blockSize, blockSize), GameColor.Block1));
                 }
+                else continue;
             }
         }
 

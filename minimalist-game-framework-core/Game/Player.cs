@@ -28,7 +28,7 @@ internal class Player : Entity
 
     protected override Rectangle CalculateBound()
     {
-        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_WIDTH), (int)(PLAYER_HEIGHT));
+        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_HEIGHT), (int)(PLAYER_WIDTH));
     }
 
     public List<Vector2> getCoordinates()
@@ -85,22 +85,6 @@ internal class Player : Entity
         Render();
     }
 
-
-    private void HandleJump()
-    {
-        int numKeys;
-        IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
-
-        // Convert IntPtr to byte array
-        byte[] keys = new byte[numKeys];
-        Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
-
-        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
-        {
-            Jump();
-        }
-    }
-
     private void HandleInput(string collisionDetected)
     {
         int numKeys;
@@ -150,12 +134,26 @@ internal class Player : Entity
         // You can also add other key checks here, e.g., for jumping:
     }
 
+    private void HandleJump()
+    {
+        int numKeys;
+        IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
+
+        // Convert IntPtr to byte array
+        byte[] keys = new byte[numKeys];
+        Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
+
+        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
+        {
+            Jump();
+        }
+    }
     private void Jump()
     {
         if (playerVelocity.Y == 0)
         {
             //GRAVITY = 0.25f;
-            NORMALF = 0;
+            //NORMALF = 0;
             playerVelocity.Y = JUMP_STRENGTH;
         }
     }
