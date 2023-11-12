@@ -14,14 +14,19 @@ internal class StartMenu
     private IntPtr Renderer => Engine.Renderer2;
     private List<Button> buttons = new List<Button>();
     private TextRenderer textRenderer = new TextRenderer();
+    private CreditScreen creditScreen = new CreditScreen();
+    private RulesMenu rulesMenu = new RulesMenu();
+    Font yFont = Engine.LoadFont("Retro Gaming.ttf", 11);
+    private bool showRulesScreen;
+    private bool showCreditScreen;
+     private bool showStartMenu;
 
-
-
+    private Button startButton = new Button("Start Game", new Vector2(200, 200), new Vector2(50, 50));
 
     public StartMenu()
     {
         // Create buttons
-        Button startButton = new Button("Start Game", new Vector2(200, 200), new Vector2(50, 50));
+        
         Button scoreboardButton = new Button("Scoreboard", new Vector2(200, 250), new Vector2(50, 50));
         Button rulesButton = new Button("Rules", new Vector2(200, 300), new Vector2(50, 50));
         Button creditsButton = new Button("Credits", new Vector2(200, 350), new Vector2(50, 50));
@@ -33,8 +38,19 @@ internal class StartMenu
         buttons.Add(creditsButton);
     }
 
+    public bool IsStartButtonClicked()
+    {
+        // Check if the "Start Game" button is clicked
+        return startButton.IsClicked();
+    }
+
+
+
     public void Update()
     {
+        // Poll for events
+        SDL.SDL_PumpEvents();
+
         // Handle button click events
         foreach (Button button in buttons)
         {
@@ -43,7 +59,36 @@ internal class StartMenu
                 HandleButtonClick(button);
             }
         }
+
+        // Handle back button click event
+        if (showStartMenu && IsStartButtonClicked())
+        {
+            // Handle back button click logic (e.g., go back to the main menu)
+            showRulesScreen = false;
+            showCreditScreen = false;
+        }
+        else if (showRulesScreen)
+        {
+            // Check if back button is clicked in RulesMenu
+            if (rulesMenu.IsBackButtonClicked())
+            {
+                showRulesScreen = false;
+                showCreditScreen = false;
+            }
+        }
+        else if (showCreditScreen)
+        {
+            // Check if back button is clicked in CreditScreen
+            if (creditScreen.IsBackButtonClicked())
+            {
+                showRulesScreen = false;
+                showCreditScreen = false;
+            }
+        }
     }
+
+
+
 
     public void Draw(Font font)
     {
@@ -70,19 +115,29 @@ internal class StartMenu
             textRenderer.displayText(button.Text, textPosition, Color.Black, font);
         }
 
+
+        if (showRulesScreen)
+        {
+            rulesMenu.Draw(yFont);
+        }
+        else if (showCreditScreen)
+        {
+            creditScreen.Draw(yFont);
+        }
+
         // Present renderer
         SDL.SDL_RenderPresent(Renderer);
     }
 
-
     private void HandleButtonClick(Button button)
     {
-        // Implement logic for button click events here
+        Console.WriteLine($"Button Clicked: {button.Text}");
+
         if (button.Text == "Start Game")
         {
             // Start the game (placeholder logic)
-            Game game = new Game();
-            game.Update();
+            showRulesScreen = false;
+            showCreditScreen = false;
         }
         else if (button.Text == "Scoreboard")
         {
@@ -91,13 +146,15 @@ internal class StartMenu
         }
         else if (button.Text == "Rules")
         {
-            // Open rules view (placeholder logic)
-            Console.WriteLine("Opening Rules");
+            // Show rules menu
+            showRulesScreen = true;
+            showCreditScreen = false;
         }
-        else if (button.Text == "Credits")  
+        else if (button.Text == "Credits")
         {
-            // Open game credits view (placeholder logic)
-            Console.WriteLine("Opening Credits");
+            // Show credit screen
+            showCreditScreen = true;
+            showRulesScreen = false;
         }
     }
 }

@@ -1,4 +1,12 @@
 ﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using SDL2;
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Drawing;
 
 
 class Game
@@ -10,6 +18,10 @@ class Game
     private TextRenderer textRenderer;
     Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
     StartMenu startMenu;
+    private StartMenu StartMenu;
+    private RulesMenu rulesMenu;
+    private CreditScreen creditScreen;
+    private bool showStartMenu = true;
 
     Player x;
     Map map;
@@ -28,26 +40,50 @@ class Game
         entities.Add(floor);
         textRenderer = new TextRenderer();
         startMenu = new StartMenu();
+        rulesMenu = new RulesMenu();
+        creditScreen = new CreditScreen();
         //entities.Add(moving);
     }
 
     public void Update()
     {
-        if (true)  // Add a condition to check when the start menu should be visible
+        // Poll for events
+        SDL.SDL_PumpEvents();
+
+        // Update game logic based on the current state
+        if (showStartMenu)
         {
             startMenu.Update();
             startMenu.Draw(font);
+
+            // If start button is clicked, hide the start menu and start the game
+            if (startMenu.IsStartButtonClicked())
+            {
+                showStartMenu = false;
+            }
         }
         else
         {
-            // Update game logic here (e.g., player movement, collisions, etc.)
+            // Update game logic here (same as before)
             map.setBackgroundColor();
             floor.Render();
             x.playerLoop();
             DisplayPlayerCoordinates();
             moving.updateCoordinates();
+
+            // Check if back button is clicked in RulesMenu or CreditScreen
+            if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
+            {
+                showStartMenu = true;
+            }
         }
+
+        // Present renderer
+        SDL.SDL_RenderPresent(Engine.Renderer2);
     }
+
+
+
 
     public void DisplayPlayerCoordinates()
     {
