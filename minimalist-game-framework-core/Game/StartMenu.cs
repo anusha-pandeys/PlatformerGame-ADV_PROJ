@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 
 
-
 internal class StartMenu
 {
     private IntPtr Renderer => Engine.Renderer2;
@@ -108,6 +107,7 @@ internal class StartMenu
                 w = (int)button.getSize().X,
                 h = (int)button.getSize().Y
             };
+
             SDL.SDL_RenderFillRect(Renderer, ref rect);
 
             // Draw button text

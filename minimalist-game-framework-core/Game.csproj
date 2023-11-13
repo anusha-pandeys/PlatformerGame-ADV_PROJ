@@ -40,6 +40,12 @@
     <None Remove="README.md" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Game\levelPractice.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
 </Project>

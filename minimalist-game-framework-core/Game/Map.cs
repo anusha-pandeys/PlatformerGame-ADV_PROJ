@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-
 internal class Map
 {
     private IntPtr Renderer => Engine.Renderer2;  // Gets the SDL Renderer from the Engine class
@@ -22,4 +21,3 @@ internal class Map
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
 }
-
