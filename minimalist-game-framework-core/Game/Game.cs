@@ -34,7 +34,7 @@ class Game
         Vector2 playerVelocity = new Vector2(0, 0);     // Initial velocity
         map = new Map();
         textRenderer = new TextRenderer();
-        startMenu = new StartMenu();
+        StartMenu = new StartMenu();
         rulesMenu = new RulesMenu();
         creditScreen = new CreditScreen();
         //entities.Add(moving);
@@ -58,11 +58,11 @@ class Game
         // Update game logic based on the current state
         if (showStartMenu)
         {
-            startMenu.Update();
-            startMenu.Draw(font);
+            StartMenu.Update();
+            StartMenu.Draw(font);
 
             // If start button is clicked, hide the start menu and start the game
-            if (startMenu.IsStartButtonClicked())
+            if (StartMenu.IsStartButtonClicked())
             {
                 showStartMenu = false;
             }
@@ -71,10 +71,14 @@ class Game
         {
             // Update game logic here (same as before)
             map.setBackgroundColor();
-            floor.Render();
-            x.playerLoop();
+            foreach (var block in levelBlocks)
+            {
+                block.blockLoop();
+                CollisionManager.addBlock(block);
+            }
+            player.playerLoop();
             DisplayPlayerCoordinates();
-            moving.updateCoordinates();
+            //moving.updateCoordinates();
 
             // Check if back button is clicked in RulesMenu or CreditScreen
             if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
