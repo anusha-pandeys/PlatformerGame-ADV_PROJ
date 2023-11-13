@@ -10,25 +10,30 @@ class Game
     private TextRenderer textRenderer;
     Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
     StartMenu startMenu;
-
-    Player x;
-    Map map;
-    Blocks floor;
-    MovingBlock moving;
+    private Player player;
+    private Map map;
+    //private Blocks floor;
+    //private Blocks floor2;
+    private List<Blocks> levelBlocks;
+    private List<Blocks> levelBlocks2;
     public Game()
     {
-        Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
-        Vector2 playerPosition = new Vector2(100, 100); // Initial position
+        Vector2 playerPosition = new Vector2(100, 300); // Initial position
         Vector2 playerVelocity = new Vector2(0, 0);     // Initial velocity
         map = new Map();
-        x = new Player(playerPosition, playerVelocity, entities);
-        floor = new Blocks(new Vector2(300, 400), new Vector2(50, 50), GameColor.Block1);
-        moving = new MovingBlock(new Vector2(100, 100), new Vector2(50, 50), GameColor.Block1);
-        entities.Add(x);
-        entities.Add(floor);
         textRenderer = new TextRenderer();
         startMenu = new StartMenu();
         //entities.Add(moving);
+        player = new Player(playerPosition, playerVelocity, textRenderer, font);
+        //floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
+        //floor2 = new Blocks(new Vector2(200, 250), new Vector2(50, 50), GameColor.Block1);
+        //CollisionManager.addBlock(floor);
+        //CollisionManager.addBlock(floor2);
+
+        levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
+       // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
+        //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
+        //startMenu = new StartMenu();
     }
 
     public void Update()
@@ -49,9 +54,9 @@ class Game
         }
     }
 
-    public void DisplayPlayerCoordinates()
+    private void DisplayPlayerCoordinates()
     {
-        string playerCoordinates = string.Format("{0}, {1}", x.getCoordinates()[0].X, x.getCoordinates()[0].Y);
+        string playerCoordinates = string.Format("{0}, {1}", player.getCoordinates()[0].X, player.getCoordinates()[0].Y);
         textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
     }
 }
