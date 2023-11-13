@@ -3,12 +3,13 @@
 
 class Game
 {
+
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(640, 480);
-
+    private List<Entity> entities = new List<Entity>();
     private TextRenderer textRenderer;
-    private Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
-    //private StartMenu startMenu;
+    Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
+    StartMenu startMenu;
     private Player player;
     private Map map;
     //private Blocks floor;
@@ -21,6 +22,8 @@ class Game
         Vector2 playerVelocity = new Vector2(0, 0);     // Initial velocity
         map = new Map();
         textRenderer = new TextRenderer();
+        startMenu = new StartMenu();
+        //entities.Add(moving);
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
         //floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
         //floor2 = new Blocks(new Vector2(200, 250), new Vector2(50, 50), GameColor.Block1);
@@ -29,38 +32,26 @@ class Game
 
         levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
        // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
-        //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
-
-        
+        //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
         //startMenu = new StartMenu();
     }
 
     public void Update()
     {
-        map.setBackgroundColor();
-        
-        foreach (var block in levelBlocks)
+        if (true)  // Add a condition to check when the start menu should be visible
         {
-            block.blockLoop();
-            CollisionManager.addBlock(block);
+            startMenu.Update();
+            startMenu.Draw(font);
         }
-        player.playerLoop();
-        //floor.blockLoop();
-        //floor2.blockLoop();
-
-
-        //if (true)  // Add a condition to check when the start menu should be visible
-        //{
-        //startMenu.Update();
-        //startMenu.Draw(font);
-        //}
-        //else
-        //{
-        // Update game logic here (e.g., player movement, collisions, etc.)
-
-        //DisplayPlayerCoordinates();
-        //moving.updateCoordinates();
-        //}
+        else
+        {
+            // Update game logic here (e.g., player movement, collisions, etc.)
+            map.setBackgroundColor();
+            floor.Render();
+            x.playerLoop();
+            DisplayPlayerCoordinates();
+            moving.updateCoordinates();
+        }
     }
 
     private void DisplayPlayerCoordinates()
