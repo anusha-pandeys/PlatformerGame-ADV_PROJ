@@ -34,9 +34,15 @@ internal class Button
 
     public bool IsClicked()
     {
-        // Implement logic to check if the button is clicked
-        // For example, you can use mouse input or touch events here
-        return false;
+        Console.WriteLine("ish");
+        int mouseX, mouseY;
+        SDL.SDL_GetMouseState(out mouseX, out mouseY);
+
+        bool isClicked = (mouseX >= position.X && mouseX <= position.X + size.X &&
+                          mouseY >= position.Y && mouseY <= position.Y + size.Y &&
+                          SDL.SDL_GetMouseState(IntPtr.Zero, IntPtr.Zero) == SDL.SDL_BUTTON(SDL.SDL_BUTTON_LEFT));
+
+        return isClicked;
     }
 }
  
