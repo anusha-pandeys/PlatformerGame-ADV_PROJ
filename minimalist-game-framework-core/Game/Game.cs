@@ -61,7 +61,7 @@ class Game
             {
                 showStartMenu = false;
             }
-        }
+        }//
         else
         {
             // Update game logic here (same as before)
