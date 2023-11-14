@@ -16,8 +16,9 @@ internal class Player : Entity
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
     private const float JUMP_STRENGTH = -9.0f;
-    private Vector2 playerPosition;
-    private Vector2 playerVelocity;
+    public Vector2 playerPosition;
+    public Vector2 playerVelocity;
+    public Vector2 playerSize = new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT);
     private TextRenderer text;
     private Font font;
         
@@ -86,7 +87,7 @@ internal class Player : Entity
             playerVelocity.X = 0; // Stop horizontal movement
         }
 
-        Render();
+        Render(Game.localCamera);
     }
 
     private void HandleInput()
@@ -182,11 +183,12 @@ internal class Player : Entity
 
 
 
-    protected override void Render()
+    protected override void Render(Camera camera)
     {
         int numKeys;
         IntPtr keyStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
-        Draw(playerPosition, new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT));
+        Vector2 localPosition = camera.globalToLocal(playerPosition);
+        Draw(localPosition, playerSize);
     }
 
     protected override void Draw(Vector2 position, Vector2 size)
