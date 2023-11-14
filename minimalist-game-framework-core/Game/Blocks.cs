@@ -21,7 +21,7 @@ internal class Blocks : Entity
 
     public void blockLoop()
     {
-        Render();
+        Render(Game.localCamera);
     }
 
     public List<Vector2> getCoordinates()
@@ -36,9 +36,10 @@ internal class Blocks : Entity
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
     }
 
-    protected override void Render()
+    protected override void Render(Camera camera)
     {
-        Draw(position, size);
+        Vector2 localPosition = camera.globalToLocal(position);
+        Draw(localPosition, size);
     }
 
     protected override void Draw(Vector2 position, Vector2 size)

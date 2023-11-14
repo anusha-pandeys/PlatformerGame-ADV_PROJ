@@ -27,6 +27,7 @@ class Game
     //private Blocks floor2;
     private List<Blocks> levelBlocks;
     private List<Blocks> levelBlocks2;
+    public static Camera localCamera;
 
     public Game()
     {
@@ -45,9 +46,11 @@ class Game
         //CollisionManager.addBlock(floor2);
 
         levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
-       // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
-        //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
-        //startMenu = new StartMenu();
+                                                                            // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
+                                                                            //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
+                                                                            //startMenu = new StartMenu();
+
+        localCamera = new Camera();
     }
 
     public void Update()
@@ -77,6 +80,7 @@ class Game
                 CollisionManager.addBlock(block);
             }
             player.playerLoop();
+            localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             //moving.updateCoordinates();
 
