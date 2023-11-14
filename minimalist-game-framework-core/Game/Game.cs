@@ -23,6 +23,7 @@ class Game
     private bool showStartMenu = true;
     private Player player;
     private Map map;
+    private NPC npc;
     //private Blocks floor;
     //private Blocks floor2;
     private List<Blocks> levelBlocks;
@@ -43,6 +44,9 @@ class Game
         //floor2 = new Blocks(new Vector2(200, 250), new Vector2(50, 50), GameColor.Block1);
         //CollisionManager.addBlock(floor);
         //CollisionManager.addBlock(floor2);
+
+        Vector2 npcPosition = new Vector2(400, 300); // Set the NPC's initial position
+        npc = new NPC(npcPosition, new Vector2(50, 50), player);
 
         levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
        // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
@@ -78,6 +82,7 @@ class Game
             }
             player.playerLoop();
             DisplayPlayerCoordinates();
+            npc.Update();
             //moving.updateCoordinates();
 
             // Check if back button is clicked in RulesMenu or CreditScreen

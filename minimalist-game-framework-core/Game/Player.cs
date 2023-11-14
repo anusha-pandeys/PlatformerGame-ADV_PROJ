@@ -29,6 +29,10 @@ internal class Player : Entity
         this.font = font;
     }
 
+    public Vector2 Position
+    {
+        get { return playerPosition; }
+    }
 
     protected override Rectangle CalculateBound()
     {
@@ -53,6 +57,13 @@ internal class Player : Entity
         // Apply gravity
 
         HandleJump();
+
+        playerPosition += playerVelocity;
+
+        // Print player position after update
+        Console.WriteLine($"After Update - Player Position: {playerPosition}");
+
+
         if (collisionDetected.Contains("down") && !keyPressed()) 
         {
             playerVelocity.Y = 0;
