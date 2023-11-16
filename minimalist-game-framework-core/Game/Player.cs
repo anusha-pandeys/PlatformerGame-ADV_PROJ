@@ -58,6 +58,7 @@ internal class Player : Entity
         {
             playerVelocity.Y = 0;
             playerVelocity.Y -= (GRAVITY);
+            playerPosition.Y -= 1f;
             System.Console.WriteLine("down");
         } else if (collisionDetected.Contains("up"))
         {
