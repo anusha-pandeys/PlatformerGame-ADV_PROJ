@@ -28,6 +28,7 @@ class Game
     private List<Blocks> levelBlocks;
     private List<Blocks> levelBlocks2;
     public static Camera localCamera;
+    private List<Checkpoint> checkpoints;
 
     public Game()
     {
@@ -50,6 +51,9 @@ class Game
                                                                             //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
                                                                             //startMenu = new StartMenu();
 
+        //loading checkpoints
+        checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
+
         localCamera = new Camera();
     }
 
@@ -69,6 +73,7 @@ class Game
             {
                 showStartMenu = false;
             }
+           
         }//
         else
         {
@@ -84,10 +89,28 @@ class Game
             DisplayPlayerCoordinates();
             //moving.updateCoordinates();
 
+            // Render checkpoints
+            foreach (var checkpoint in checkpoints)
+            {
+                checkpoint.Update(localCamera);
+            }
+
+
             // Check if back button is clicked in RulesMenu or CreditScreen
             if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
             {
                 showStartMenu = true;
+            }
+
+            // Checkpoint collision detection
+            foreach (var checkpoint in checkpoints)
+            {
+                if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
+                {
+                    LoadNewLevel("Game\\level2.txt");
+                    player.playerPosition = new Vector2(100, 300); // Reset position
+                    break;
+                }
             }
         }
 
@@ -99,5 +122,13 @@ class Game
     {
         string playerCoordinates = string.Format("{0}, {1}", player.getCoordinates()[0].X, player.getCoordinates()[0].Y);
         textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
+    }
+
+    private void LoadNewLevel(string levelPath)
+    {
+        // Clear existing checkpoints
+        checkpoints.Clear();
+
+        levelBlocks = LevelLoader.LoadLevel(levelPath, 50);
     }
 }
