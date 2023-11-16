@@ -28,6 +28,7 @@ class Game
     private List<Blocks> levelBlocks;
     private List<Blocks> levelBlocks2;
     public static Camera localCamera;
+    private Slides slide;
 
     public Game()
     {
@@ -38,6 +39,7 @@ class Game
         StartMenu = new StartMenu();
         rulesMenu = new RulesMenu();
         creditScreen = new CreditScreen();
+        slide = new Slides(new Vector2(300,100), new Vector2(100,100));
         //entities.Add(moving);
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
         //floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
@@ -49,7 +51,8 @@ class Game
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
                                                                             //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
                                                                             //startMenu = new StartMenu();
-
+        CollisionManager.AddObj("player", player);
+        CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
     }
 
@@ -80,6 +83,7 @@ class Game
                 CollisionManager.addBlock(block);
             }
             player.playerLoop();
+            slide.slidesLoop();
             localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             //moving.updateCoordinates();

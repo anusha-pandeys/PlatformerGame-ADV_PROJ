@@ -50,7 +50,7 @@ internal class CollisionManager
         return "na";
     }
         
-    public static void checkCollisions()
+    public static bool checkCollisions(string objA, string objB) 
     {
         for (int i = 0; i < collidables.Count-1; i++) { 
             var obj1 = collidables[i];
@@ -60,12 +60,13 @@ internal class CollisionManager
                 if(obj1.Tag == obj2.Tag)
                 {
                     continue;
-                } else
+                } else if (((objA == obj1.Tag) && (objB == obj2.Tag)) || ((objA == obj2.Tag) && (objB == obj1.Tag)))
                 {
-                    isCollided(obj1, obj2);
+                    return isCollided(obj1, obj2);
                 }
             }
         }
+        return false;
     }
     public static bool isCollided(ICollidable entityA, ICollidable entityB)
     {
@@ -147,7 +148,7 @@ internal class CollisionManager
             }
             if (rightLeft && retMap.ContainsKey("right"))
             {
-                System.Console.WriteLine("left");
+                //System.Console.WriteLine("left");
                 retMap["right"] = true;
             }
             else if (!rightLeft && retMap.ContainsKey("left"))

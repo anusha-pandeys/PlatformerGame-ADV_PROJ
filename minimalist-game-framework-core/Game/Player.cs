@@ -21,13 +21,15 @@ internal class Player : Entity
     public Vector2 playerSize = new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT);
     private TextRenderer text;
     private Font font;
-        
+    private Collidable player;
+
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
         this.playerVelocity = playerVelocity;
         this.text = text;
         this.font = font;
+        this.player = new Collidable(this, "player");
     }
 
 
