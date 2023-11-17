@@ -108,7 +108,7 @@ class Game
         }
         else
         {
-            nextLevelPath = "Game\\levelPractice.txt"; // back to beginging
+            nextLevelPath = "Game\\levelPractice.txt"; // back to first level
         }
 
         // Update the current level path
