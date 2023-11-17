@@ -16,12 +16,15 @@ internal class NPC : Entity
     private float speed = 1.0f; // Set the NPC's speed
     private Player player;
     private float distance; // Declare distance as a field
+    private Color npcColor;
+    public Vector2 Position => position;
 
-    public NPC(Vector2 position, Vector2 size, Player player)
+    public NPC(Vector2 position, Vector2 size, Player player, Color npcColor)
     {
         this.position = position;
         this.size = size;
         this.player = player;
+        this.npcColor = npcColor; // Set the NPC color
     }
 
     public void Update()
@@ -33,7 +36,6 @@ internal class NPC : Entity
 
         // Implement collision detection for NPC
         string collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(speed, 0));
-
         // Update NPC's position based on collision detection
         if (collisionDetected.Contains("left"))
         {
@@ -65,7 +67,7 @@ internal class NPC : Entity
         {
             position += direction * speed;
         }
-        Console.WriteLine($"NPC Position: {position}, Player Position: {player.Position}, Distance: {distance}");
+        
     }
 
 
@@ -108,7 +110,7 @@ internal class NPC : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 255, 255); // blue
+        SDL.SDL_SetRenderDrawColor(Renderer, npcColor.R, npcColor.G, npcColor.B, npcColor.A);
 
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
@@ -120,4 +122,5 @@ internal class NPC : Entity
 
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
+
 }

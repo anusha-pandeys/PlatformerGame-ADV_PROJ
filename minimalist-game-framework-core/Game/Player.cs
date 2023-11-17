@@ -20,14 +20,21 @@ internal class Player : Entity
     private Vector2 playerVelocity;
     private TextRenderer text;
     private Font font;
-        
+    private Color originalColor = new Color(255, 0, 0, 255); // Original color (red)
+    private Color currentColor; // Current color, updated based on collision
+    private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
+    private float timeSinceCollision = 0.0f;
+
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
         this.playerVelocity = playerVelocity;
         this.text = text;
         this.font = font;
+        this.currentColor = originalColor;
+
     }
+
 
     public Vector2 Position
     {
@@ -51,38 +58,31 @@ internal class Player : Entity
     public void playerLoop()
     {
         string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
-        
+
         HandleInput();
-
-        // Apply gravity
-
         HandleJump();
 
+        // Apply gravity
         playerPosition += playerVelocity;
 
-        // Print player position after update
-        Console.WriteLine($"After Update - Player Position: {playerPosition}");
-
-
-        if (collisionDetected.Contains("down") && !keyPressed()) 
+        if (collisionDetected.Contains("down") && !keyPressed())
         {
+            HandleCollision();
             playerVelocity.Y = 0;
             playerVelocity.Y -= (GRAVITY);
             System.Console.WriteLine("down");
-        } else if (collisionDetected.Contains("up"))
+        }
+        else if (collisionDetected.Contains("up"))
         {
+            HandleCollision();
             System.Console.WriteLine("up");
             playerVelocity.Y = playerVelocity.Y * -1;
         }
-        
-        //collisionDetected = "";
+
         playerVelocity.Y += (GRAVITY);
-        
 
         // Update player position
         playerPosition += playerVelocity;
-
-        
 
         // Collision detection for the floor
         if (playerPosition.Y > 400) // Assuming 500 is ground level
@@ -97,7 +97,25 @@ internal class Player : Entity
             playerVelocity.X = 0; // Stop horizontal movement
         }
 
+        // Update the elapsed time since the last collision
+        timeSinceCollision += Engine.TimeDelta;
+
+        // Check if enough time has passed since the last collision to revert to the original color
+        if (timeSinceCollision >= collisionCooldown)
+        {
+            currentColor = originalColor;
+        }
+
+
         Render();
+    }
+
+    private void HandleCollision()
+    {
+        // Handle collision logic here
+        // For example, change the player's color to black
+        currentColor = new Color(0, 0, 0, 255);
+        timeSinceCollision = 0.0f; // Reset the timer
     }
 
     private void HandleInput()
@@ -202,7 +220,8 @@ internal class Player : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 255, 0, 0, 255); // red
+
+        SDL.SDL_SetRenderDrawColor(Renderer, currentColor.R, currentColor.G, currentColor.B, currentColor.A);
 
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {

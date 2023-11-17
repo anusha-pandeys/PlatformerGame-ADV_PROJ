@@ -23,7 +23,8 @@ class Game
     private bool showStartMenu = true;
     private Player player;
     private Map map;
-    private NPC npc;
+    private NPC redNPC;
+    private NPC greyNPC;
     //private Blocks floor;
     //private Blocks floor2;
     private List<Blocks> levelBlocks;
@@ -45,8 +46,11 @@ class Game
         //CollisionManager.addBlock(floor);
         //CollisionManager.addBlock(floor2);
 
-        Vector2 npcPosition = new Vector2(400, 300); // Set the NPC's initial position
-        npc = new NPC(npcPosition, new Vector2(50, 50), player);
+        Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
+        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red);
+
+        Vector2 greyNPCPosition = new Vector2(500, 300); // Set the grey NPC's initial position
+        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray);
 
         levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
        // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
@@ -82,7 +86,8 @@ class Game
             }
             player.playerLoop();
             DisplayPlayerCoordinates();
-            npc.Update();
+            redNPC.Update();
+            greyNPC.Update();
             //moving.updateCoordinates();
 
             // Check if back button is clicked in RulesMenu or CreditScreen
@@ -100,5 +105,11 @@ class Game
     {
         string playerCoordinates = string.Format("{0}, {1}", player.getCoordinates()[0].X, player.getCoordinates()[0].Y);
         textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
+
+        string redNPCCoordinates = string.Format("Red NPC: {0}, {1}", redNPC.Position.X, redNPC.Position.Y);
+        textRenderer.displayText(redNPCCoordinates, new Vector2(0, 20), Color.Black, font);
+
+        string greyNPCCoordinates = string.Format("Grey NPC: {0}, {1}", greyNPC.Position.X, greyNPC.Position.Y);
+        textRenderer.displayText(greyNPCCoordinates, new Vector2(0, 40), Color.Black, font);
     }
 }
