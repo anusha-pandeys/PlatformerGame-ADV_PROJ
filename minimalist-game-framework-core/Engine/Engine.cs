@@ -55,7 +55,7 @@ static partial class Engine
                 break;
             }
 
-            // Try again in the parent directory, stopping when we run out of places to look:
+            
             DirectoryInfo parent = Directory.GetParent(sourceBase);
             if (parent == null)
             {
@@ -117,9 +117,7 @@ static partial class Engine
         IntPtr renderTargetHandle = SDL.SDL_CreateTexture(Renderer, SDL.SDL_PIXELFORMAT_RGBA8888, (int)SDL.SDL_TextureAccess.SDL_TEXTUREACCESS_TARGET, (int)Game.Resolution.X, (int)Game.Resolution.Y);
         RenderTarget = new Texture(renderTargetHandle, (int)Game.Resolution.X, (int)Game.Resolution.Y);
 
-        // ======================================================================================
-        // Instantiate the game object
-        // ======================================================================================
+        // ====================
 
         Game = new Game();
     }

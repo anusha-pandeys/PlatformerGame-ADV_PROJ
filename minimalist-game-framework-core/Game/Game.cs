@@ -1,120 +1,90 @@
 ﻿using System.Collections.Generic;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using SDL2;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Drawing;
-
 
 class Game
 {
-
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(640, 480);
     private List<Entity> entities = new List<Entity>();
     private TextRenderer textRenderer;
-    Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
+    private Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
     private StartMenu StartMenu;
     private RulesMenu rulesMenu;
     private CreditScreen creditScreen;
     private bool showStartMenu = true;
     private Player player;
     private Map map;
-    //private Blocks floor;
-    //private Blocks floor2;
     private List<Blocks> levelBlocks;
-    private List<Blocks> levelBlocks2;
     public static Camera localCamera;
-    private List<Checkpoint> checkpoints;
+    private List<Checkpoint> checkpoints = new List<Checkpoint>();
+    private string currentLevelPath = "Game\\levelPractice.txt"; // Initialize first lev
 
     public Game()
     {
-        Vector2 playerPosition = new Vector2(100, 300); // Initial position
-        Vector2 playerVelocity = new Vector2(0, 0);     // Initial velocity
+        Vector2 playerPosition = new Vector2(100, 300);
+        Vector2 playerVelocity = new Vector2(0, 0);
         map = new Map();
         textRenderer = new TextRenderer();
         StartMenu = new StartMenu();
         rulesMenu = new RulesMenu();
         creditScreen = new CreditScreen();
-        //entities.Add(moving);
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
-        //floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
-        //floor2 = new Blocks(new Vector2(200, 250), new Vector2(50, 50), GameColor.Block1);
-        //CollisionManager.addBlock(floor);
-        //CollisionManager.addBlock(floor2);
 
-        levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
-                                                                            // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
-                                                                            //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
-                                                                            //startMenu = new StartMenu();
-
-        //loading checkpoints
-        checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
+        // Load initial level
+        LoadNewLevel(currentLevelPath);
 
         localCamera = new Camera();
     }
 
     public void Update()
     {
-        // Poll for events
         SDL.SDL_PumpEvents();
 
-        // Update game logic based on the current state
         if (showStartMenu)
         {
             StartMenu.Update();
             StartMenu.Draw(font);
-
-            // If start button is clicked, hide the start menu and start the game
             if (StartMenu.IsStartButtonClicked())
             {
                 showStartMenu = false;
             }
-           
-        }//
+        }
         else
         {
-            // Update game logic here (same as before)
             map.setBackgroundColor();
             foreach (var block in levelBlocks)
             {
                 block.blockLoop();
                 CollisionManager.addBlock(block);
             }
+
             player.playerLoop();
             localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
-            //moving.updateCoordinates();
 
-            // Render checkpoints
             foreach (var checkpoint in checkpoints)
             {
                 checkpoint.Update(localCamera);
             }
 
-
-            // Check if back button is clicked in RulesMenu or CreditScreen
             if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
             {
                 showStartMenu = true;
             }
 
-            // Checkpoint collision detection
             foreach (var checkpoint in checkpoints)
             {
                 if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
                 {
-                    LoadNewLevel("Game\\level2.txt");
-                    player.playerPosition = new Vector2(100, 300); // Reset position
+                    LoadNewLevel(currentLevelPath);
+                    player.playerPosition = new Vector2(100, 300);
                     break;
                 }
             }
         }
 
-        // Present renderer
         SDL.SDL_RenderPresent(Engine.Renderer2);
     }
 
@@ -124,11 +94,36 @@ class Game
         textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
     }
 
-    private void LoadNewLevel(string levelPath)
+    private void LoadNewLevel(string currentLevel)
     {
-        // Clear existing checkpoints
-        checkpoints.Clear();
+        // Determine the next level
+        string nextLevelPath;
+        if (currentLevel == "Game\\levelPractice.txt")
+        {
+            nextLevelPath = "Game\\level2.txt";
+        }
+        else if (currentLevel == "Game\\level2.txt")
+        {
+            nextLevelPath = "Game\\level3.txt";
+        }
+        else
+        {
+            nextLevelPath = "Game\\levelPractice.txt"; // back to beginging
+        }
 
-        levelBlocks = LevelLoader.LoadLevel(levelPath, 50);
+        // Update the current level path
+        currentLevelPath = nextLevelPath;
+
+        // Clear existing checkpoints and load new ones
+        if (checkpoints != null)
+        {
+            checkpoints.Clear();
+        }
+        else
+        {
+            checkpoints = new List<Checkpoint>();
+        }
+        levelBlocks = LevelLoader.LoadLevel(nextLevelPath, 50);
+        checkpoints = LevelLoader.LoadCheckpoints(nextLevelPath, 50);
     }
 }
