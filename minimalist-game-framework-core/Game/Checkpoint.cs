@@ -4,33 +4,27 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-internal class Blocks : Entity
+
+
+internal class Checkpoint : Entity
 {
     private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
     private Vector2 position;
     private Vector2 size;
-    private GameColor color;
-    private string sidesInContact;
-    public Blocks(Vector2 position, Vector2 size, GameColor color)
+    public Checkpoint(Vector2 position, Vector2 size)
     {
         this.position = position;
         this.size = size;
-        this.color = color;
-        sidesInContact = "";
     }
 
-    public void blockLoop()
+    public Rectangle Bound
     {
-        Render(Game.localCamera);
+        get
+        {
+            return CalculateBound();
+        }
     }
 
-    public List<Vector2> getCoordinates()
-    {
-        List<Vector2> result = new List<Vector2>();
-        result.Add(position);
-        result.Add(size);
-        return result;
-    }
     protected override Rectangle CalculateBound()
     {
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
@@ -44,7 +38,8 @@ internal class Blocks : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 0, 255, 0, 255); // green
+        // Set the checkpoint color to yellow
+        SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 0, 255); // yellow
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
             x = (int)position.X,
@@ -54,4 +49,12 @@ internal class Blocks : Entity
         };
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
+
+    public void Update(Camera camera)
+    {
+        Render(camera);
+    }
+
+
 }
+

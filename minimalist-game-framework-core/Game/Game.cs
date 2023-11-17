@@ -29,6 +29,8 @@ class Game
     //private Blocks floor2;
     private List<Blocks> levelBlocks;
     private List<Blocks> levelBlocks2;
+    public static Camera localCamera;
+    private List<Checkpoint> checkpoints;
 
     public Game()
     {
@@ -53,9 +55,14 @@ class Game
         greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray);
 
         levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
-       // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
-        //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
-        //startMenu = new StartMenu();
+                                                                            // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
+                                                                            //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
+                                                                            //startMenu = new StartMenu();
+
+        //loading checkpoints
+        checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
+
+        localCamera = new Camera();
     }
 
     public void Update()
@@ -74,6 +81,7 @@ class Game
             {
                 showStartMenu = false;
             }
+           
         }//
         else
         {
@@ -85,15 +93,34 @@ class Game
                 CollisionManager.addBlock(block);
             }
             player.playerLoop();
+            localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             redNPC.Update();
             greyNPC.Update();
             //moving.updateCoordinates();
 
+            // Render checkpoints
+            foreach (var checkpoint in checkpoints)
+            {
+                checkpoint.Update(localCamera);
+            }
+
+
             // Check if back button is clicked in RulesMenu or CreditScreen
             if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
             {
                 showStartMenu = true;
+            }
+
+            // Checkpoint collision detection
+            foreach (var checkpoint in checkpoints)
+            {
+                if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
+                {
+                    LoadNewLevel("Game\\level2.txt");
+                    player.playerPosition = new Vector2(100, 300); // Reset position
+                    break;
+                }
             }
         }
 
@@ -111,5 +138,13 @@ class Game
 
         string greyNPCCoordinates = string.Format("Grey NPC: {0}, {1}", greyNPC.Position.X, greyNPC.Position.Y);
         textRenderer.displayText(greyNPCCoordinates, new Vector2(0, 40), Color.Black, font);
+    }
+
+    private void LoadNewLevel(string levelPath)
+    {
+        // Clear existing checkpoints
+        checkpoints.Clear();
+
+        levelBlocks = LevelLoader.LoadLevel(levelPath, 50);
     }
 }
