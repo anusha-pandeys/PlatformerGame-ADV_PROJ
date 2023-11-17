@@ -17,7 +17,7 @@ internal class CollisionManager
         return collidable;
     }
 
-    public static void addBlock(Blocks block)
+    public static void addBlock(Blocks block)//
     {
         blocks.Add(block);
     }
