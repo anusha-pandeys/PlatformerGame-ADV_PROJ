@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -21,6 +22,27 @@ internal class CollisionManager
         blocks.Add(block);
     }
 
+    private static string unpackDictionary(Dictionary<string, bool> ret)
+    {
+        string returnStr = "";
+        if (ret.ContainsValue(true) && ret.ContainsKey("up"))
+        {
+            returnStr += "up";
+        }
+        else if (ret.ContainsValue(true) && ret.ContainsKey("down"))
+        {
+            returnStr += "down";
+        }
+        if (ret.ContainsValue(true) && ret.ContainsKey("right"))
+        {
+            returnStr += "right";
+        }
+        else if (ret.ContainsValue(true) && ret.ContainsKey("left"))
+        {
+            returnStr += "left";
+        }
+        return returnStr;
+    }
     public static string checkBlockCollision(Entity entity, Vector2 vel)
     {
         Rectangle rectangle = entity.Bound;
@@ -28,29 +50,14 @@ internal class CollisionManager
         for(int i = 0; i < blocks.Count; i++)
         {
             Dictionary<string, bool> ret = isCollided(bound, blocks[i].Bound);
-            string returnStr = "";
-            if (ret.ContainsValue(true) && ret.ContainsKey("up"))
-            {
-                returnStr += "up";
-            } else if(ret.ContainsValue(true) && ret.ContainsKey("down"))
-            {
-                returnStr += "down";
-            }
-            if(ret.ContainsValue(true) && ret.ContainsKey("right"))
-            {
-                returnStr += "right";
-            } else if (ret.ContainsValue(true) && ret.ContainsKey("left") )
-            {
-                
-                returnStr += "left";
-            }
+            string returnStr = unpackDictionary(ret);
             if (!returnStr.Equals("")) return returnStr;
             else continue;
         }
         return "na";
     }
         
-    public static bool checkCollisions(string objA, string objB) 
+    public static Dictionary<string, bool> checkCollisions(string objA, string objB) 
     {
         for (int i = 0; i < collidables.Count-1; i++) { 
             var obj1 = collidables[i];
@@ -66,9 +73,9 @@ internal class CollisionManager
                 }
             }
         }
-        return false;
+        return null;
     }
-    public static bool isCollided(ICollidable entityA, ICollidable entityB)
+    public static Dictionary<string, bool> isCollided(ICollidable entityA, ICollidable entityB)
     {
 
         Entity a = entityA.GameObject;
@@ -77,7 +84,7 @@ internal class CollisionManager
         Rectangle rectA = a.Bound;
         Rectangle rectB = b.Bound;
 
-        Vector2 boundALeft = new Vector2(rectA.X, rectA.Y);
+        /*Vector2 boundALeft = new Vector2(rectA.X, rectA.Y);
         Vector2 boundARight = new Vector2(rectA.X, rectA.Y) + new Vector2(rectA.Width, rectA.Width);
         Vector2 boundBLeft = new Vector2(rectB.X, rectB.Y);
         Vector2 boundBRight = new Vector2(rectB.X, rectB.Y) + new Vector2(rectB.Width, rectB.Width);
@@ -85,7 +92,9 @@ internal class CollisionManager
         if (boundARight.X < boundBLeft.X || boundBRight.X < boundALeft.X ||
                 boundARight.Y < boundBLeft.Y || boundBRight.Y < boundALeft.Y)
             return false;
-        else return true;
+        else return true;*/
+        Dictionary<string, bool> retMap = isCollided(rectA, rectB);
+        return retMap;
     }
 
     public static Dictionary<string, bool> isCollided(Rectangle rectA, Rectangle rectB)

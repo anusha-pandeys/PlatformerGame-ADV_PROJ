@@ -21,11 +21,11 @@ internal class Slides : Entity
     public void slidesLoop()
     {
         Render(Game.localCamera);
-        bool collided = CollisionManager.checkCollisions("player", "slide");
-        if (collided)
+        Dictionary<string, bool> collided = CollisionManager.checkCollisions("player", "slide");
+        /*if (collided.)
         {
             System.Console.WriteLine("collided with slide");
-        }
+        }*/
     }
 
     protected override Rectangle CalculateBound()
