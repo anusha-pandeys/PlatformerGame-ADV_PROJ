@@ -46,7 +46,7 @@ internal class NPC : Entity
             position.X += speed;
         }
 
-        Render();
+        Render(Game.localCamera);
     }
 
     private bool IsPlayerInRadius()
@@ -103,9 +103,10 @@ internal class NPC : Entity
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
     }
 
-    protected override void Render()
+    protected override void Render(Camera camera)
     {
-        Draw(position, size);
+        Vector2 localPosition = camera.globalToLocal(position);
+        Draw(localPosition, size);
     }
 
     protected override void Draw(Vector2 position, Vector2 size)
