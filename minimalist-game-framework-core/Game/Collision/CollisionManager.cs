@@ -51,7 +51,7 @@ internal class CollisionManager
         {
             Dictionary<string, bool> ret = isCollided(bound, blocks[i].Bound);
             string returnStr = unpackDictionary(ret);
-            if (!returnStr.Equals("")) return returnStr;
+            if (!returnStr.Equals("")) return returnStr;//
             else continue;
         }
         return "na";
