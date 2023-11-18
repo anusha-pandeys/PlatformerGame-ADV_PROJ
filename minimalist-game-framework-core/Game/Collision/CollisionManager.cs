@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -171,5 +171,20 @@ internal class CollisionManager
             }
         }
         return retMap;
+    }
+}
+
+
+
+    //handle collisions between the player and checkpoints:
+    public static bool checkCheckpointCollision(Entity entity, Rectangle checkpointBound)
+    {
+        Rectangle entityBound = entity.Bound;
+        // Check if entityBound intersects with checkpointBound
+        if (entityBound.IntersectsWith(checkpointBound))
+        {
+            return true;
+        }
+        return false;
     }
 }

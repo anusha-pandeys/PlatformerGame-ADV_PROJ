@@ -50,6 +50,7 @@ class Game
         //CollisionManager.addBlock(floor);
         //CollisionManager.addBlock(floor2);
 
+
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
         redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red);
 
@@ -82,7 +83,6 @@ class Game
             //pit.pitsLoop();
             CollisionManager.AddObj("ladder", ladder);
         }
-        
         localCamera = new Camera();
     }
 
@@ -102,11 +102,11 @@ class Game
             {
                 showStartMenu = false;
             }
-           
+
         }//
         else
         {
-            // Update game logic here (same as before)
+            
             map.setBackgroundColor();
             foreach (var block in levelBlocks)
             {
@@ -166,8 +166,9 @@ class Game
 
         }
 
-        // Present renderer
         SDL.SDL_RenderPresent(Engine.Renderer2);
+
+        RenderGrid(Engine.Renderer2);
     }
 
     private void DisplayPlayerCoordinates()
@@ -188,5 +189,28 @@ class Game
         checkpoints.Clear();
 
         levelBlocks = LevelLoader.LoadLevel(levelPath, 50);
+    }
+
+    public void RenderGrid(IntPtr renderer)
+    {
+        for (int row = 0; row < 32; row++)
+        {
+            for (int col = 0; col < 32; col++)
+            {
+                SDL.SDL_Rect tileRect = new SDL.SDL_Rect
+                {
+                    x = col * 21,
+                    y = row * 21,
+                    w = 21,
+                    h = 21,
+                };
+
+                
+                SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  
+
+                
+                SDL.SDL_RenderDrawRect(renderer, ref tileRect);
+            }
+        }
     }
 }
