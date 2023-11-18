@@ -49,22 +49,22 @@ internal class Player : Entity
 
     public void playerLoop()
     {
-        string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
         
         HandleInput();
 
         // Apply gravity
 
         HandleJump();
-        if (collisionDetected.Contains("down") && !keyPressed()) 
+        if (collisionDetected.getDown() && collisionDetected.getCollided() && !keyPressed()) 
         {
             playerVelocity.Y = 0;
             playerVelocity.Y -= (GRAVITY);
-            playerPosition.Y -= 1f;
-            System.Console.WriteLine("down");
-        } else if (collisionDetected.Contains("up"))
+            //playerPosition.Y -= 1f;
+           // System.Console.WriteLine("down");
+        } else if (collisionDetected.getUp() && collisionDetected.getCollided())
         {
-            System.Console.WriteLine("up");
+           // System.Console.WriteLine("up");
             playerVelocity.Y = playerVelocity.Y * -1;
         }
         
@@ -111,8 +111,8 @@ internal class Player : Entity
         {
             text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
-            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
-            if (collisionDetected.Contains("left")) 
+            CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
+            if (collisionDetected.getLeft() && collisionDetected.getCollided()) 
             {
                 //System.Console.WriteLine("left");
                 playerVelocity.X = 0;
@@ -128,8 +128,8 @@ internal class Player : Entity
         {
             text.displayText("right", new Vector2(10, 30), Color.Black, font);
             Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
-            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
-            if (collisionDetected.Contains("right"))
+            CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
+            if (collisionDetected.getRight() && collisionDetected.getCollided())
             {
                 System.Console.WriteLine("right");
                 playerVelocity.X = 0;

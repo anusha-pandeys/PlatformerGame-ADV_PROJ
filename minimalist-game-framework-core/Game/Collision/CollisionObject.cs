@@ -10,6 +10,7 @@ internal class CollisionObject
     private bool right;
     private bool up;
     private bool down;
+    private bool collided;
 
     public CollisionObject()
     {
@@ -17,8 +18,13 @@ internal class CollisionObject
         right = false;
         up = false;
         down = false;
+        collided = false;
     }
 
+    public bool getCollided()
+    {
+        return collided;
+    }
     public bool getLeft()
     {
         return left;
@@ -50,7 +56,10 @@ internal class CollisionObject
     {
         this.up = up;
     }
-
+    public void setCollided(bool collided)
+    {
+        this.collided = collided;
+    }
     public void setDown(bool down)
     {
         this.down = down;

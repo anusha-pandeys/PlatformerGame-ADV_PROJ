@@ -21,7 +21,7 @@ internal class Slides : Entity
     public void slidesLoop()
     {
         Render(Game.localCamera);
-        Dictionary<string, bool> collided = CollisionManager.checkCollisions("player", "slide");
+        //Dictionary<string, bool> collided = CollisionManager.checkCollisions("player", "slide");
         /*if (collided.)
         {
             System.Console.WriteLine("collided with slide");
