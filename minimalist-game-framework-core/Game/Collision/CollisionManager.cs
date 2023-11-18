@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -52,7 +52,7 @@ internal class CollisionManager
         return "na";
     }
 
-    public static void checkCollisions()
+    public static bool checkCollisions(string objA, string objB)
     {
         for (int i = 0; i < collidables.Count - 1; i++)
         {
@@ -64,12 +64,13 @@ internal class CollisionManager
                 {
                     continue;
                 }
-                else
+                else if (((objA == obj1.Tag) && (objB == obj2.Tag)) || ((objA == obj2.Tag) && (objB == obj1.Tag)))
                 {
-                    isCollided(obj1, obj2);
+                    return isCollided(obj1, obj2);
                 }
             }
         }
+        return false;
     }
     public static bool isCollided(ICollidable entityA, ICollidable entityB)
     {
@@ -100,23 +101,29 @@ internal class CollisionManager
         Vector2 boundARight = new Vector2(rectA.X, rectA.Y) + new Vector2(rectA.Width, rectA.Width);
         Vector2 boundBLeft = new Vector2(rectB.X, rectB.Y);
         Vector2 boundBRight = new Vector2(rectB.X, rectB.Y) + new Vector2(rectB.Width, rectB.Width);
+        Rectangle rectATransformed = rectA;
+        Rectangle rectBTransformed = rectB;
+        rectATransformed.X = rectATransformed.X + (rectATransformed.Width / 2);
+        rectATransformed.Y = rectATransformed.Y + (rectATransformed.Height / 2);
+        rectBTransformed.X = rectBTransformed.X + (rectBTransformed.Width / 2);
+        rectBTransformed.Y = rectBTransformed.Y + (rectBTransformed.Height / 2);
 
-        if (rectA.Y < rectB.Y)
+        if (rectATransformed.Y < rectBTransformed.Y)
         {
             retMap["down"] = true;
             upOrDown = true;
         }
-        if (rectA.Y > rectB.Y)
+        if (rectATransformed.Y > rectBTransformed.Y)
         {
             retMap["up"] = true;
             upOrDown = false;
         }
-        if (rectA.X < rectB.X)
+        if (rectATransformed.X < rectBTransformed.X)
         {
             retMap["right"] = true;
             rightLeft = true;
         }
-        if (rectA.X > rectB.X)
+        if (rectATransformed.X > rectBTransformed.X)
         {
             retMap["left"] = true;
             rightLeft = false;
@@ -154,7 +161,7 @@ internal class CollisionManager
             }
             if (rightLeft && retMap.ContainsKey("right"))
             {
-                System.Console.WriteLine("left");
+                //System.Console.WriteLine("left");
                 retMap["right"] = true;
             }
             else if (!rightLeft && retMap.ContainsKey("left"))
@@ -165,6 +172,8 @@ internal class CollisionManager
         }
         return retMap;
     }
+}
+
 
 
     //handle collisions between the player and checkpoints:
@@ -178,5 +187,4 @@ internal class CollisionManager
         }
         return false;
     }
-
 }

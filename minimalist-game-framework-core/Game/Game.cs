@@ -23,13 +23,17 @@ class Game
     private bool showStartMenu = true;
     private Player player;
     private Map map;
+    private NPC redNPC;
+    private NPC greyNPC;
     //private Blocks floor;
     //private Blocks floor2;
     private List<Blocks> levelBlocks;
     private List<Blocks> levelBlocks2;
     public static Camera localCamera;
     private List<Checkpoint> checkpoints;
-
+    private List<Pits> pits;
+    private List<Ladder> ladders;
+    //private Ladder ladder;
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 300); // Initial position
@@ -46,12 +50,39 @@ class Game
         //CollisionManager.addBlock(floor);
         //CollisionManager.addBlock(floor2);
 
-        levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50);
 
+        Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
+        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red);
 
+        Vector2 greyNPCPosition = new Vector2(500, 300); // Set the grey NPC's initial position
+        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray);
+
+        levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
+                                                                            // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
+                                                                            //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
+                                                                            //startMenu = new StartMenu();
+        pits = LevelLoader.loadPits("Game\\levelPractice.txt", 50);
+        ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
         //loading checkpoints
-        checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); 
-
+        checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
+        //ladder = new Ladder(new Vector2(100, 200), new Vector2(50, 100));
+        //CollisionManager.AddObj("pit", pit);
+        CollisionManager.AddObj("player", player);
+        foreach (var block in levelBlocks)
+        {
+            //block.blockLoop();
+            CollisionManager.addBlock(block);
+        }
+        foreach (var pit in pits)
+        {
+            //pit.pitsLoop();
+            CollisionManager.AddObj("pit", pit);
+        }
+        foreach (var ladder in ladders)
+        {
+            //pit.pitsLoop();
+            CollisionManager.AddObj("ladder", ladder);
+        }
         localCamera = new Camera();
     }
 
@@ -80,11 +111,33 @@ class Game
             foreach (var block in levelBlocks)
             {
                 block.blockLoop();
-                CollisionManager.addBlock(block);
+                //CollisionManager.addBlock(block);
+            }
+            foreach (var pit in pits)
+            {
+                pit.pitsLoop();
+                if (pit.getPlayerDeath())
+                {
+                    //implement death/game over
+                    System.Console.WriteLine("dead");
+                }
+                //CollisionManager.addBlock(block);
+            }
+            foreach (var ladder in ladders)
+            {
+                ladder.ladderLoop();
+                if (ladder.getTranslate())
+                {
+                    player.translateUpLadder();
+                }
+                //CollisionManager.addBlock(block);
             }
             player.playerLoop();
             localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
+            redNPC.Update();
+            greyNPC.Update();
+            
             //moving.updateCoordinates();
 
             // Render checkpoints
@@ -101,7 +154,7 @@ class Game
             }
 
             // Checkpoint collision detection
-            foreach (var checkpoint in checkpoints)
+            /*foreach (var checkpoint in checkpoints)
             {
                 if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
                 {
@@ -109,7 +162,8 @@ class Game
                     player.playerPosition = new Vector2(100, 300); // Reset position
                     break;
                 }
-            }
+            }*/
+
         }
 
         SDL.SDL_RenderPresent(Engine.Renderer2);
@@ -121,6 +175,12 @@ class Game
     {
         string playerCoordinates = string.Format("{0}, {1}", player.getCoordinates()[0].X, player.getCoordinates()[0].Y);
         textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
+
+        string redNPCCoordinates = string.Format("Red NPC: {0}, {1}", redNPC.Position.X, redNPC.Position.Y);
+        textRenderer.displayText(redNPCCoordinates, new Vector2(0, 20), Color.Black, font);
+
+        string greyNPCCoordinates = string.Format("Grey NPC: {0}, {1}", greyNPC.Position.X, greyNPC.Position.Y);
+        textRenderer.displayText(greyNPCCoordinates, new Vector2(0, 40), Color.Black, font);
     }
 
     private void LoadNewLevel(string levelPath)

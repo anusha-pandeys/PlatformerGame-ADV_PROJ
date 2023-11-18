@@ -15,21 +15,32 @@ internal class Player : Entity
     private const int BLOCK_SIZE = 50;
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
-    private const float JUMP_STRENGTH = -9.0f;
+    private const float JUMP_STRENGTH = -3f;
     public Vector2 playerPosition;
     public Vector2 playerVelocity;
     public Vector2 playerSize = new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT);
     private TextRenderer text;
     private Font font;
-        
+    private Color originalColor = new Color(255, 0, 0, 255); // Original color (red)
+    private Color currentColor; // Current color, updated based on collision
+    private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
+    private float timeSinceCollision = 0.0f;
+    private Collidable player;
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
         this.playerVelocity = playerVelocity;
         this.text = text;
         this.font = font;
+        this.currentColor = originalColor;
+        this.player = new Collidable(this, "player");
     }
 
+
+    public Vector2 Position
+    {
+        get { return playerPosition; }
+    }
 
     protected override Rectangle CalculateBound()
     {
@@ -45,35 +56,46 @@ internal class Player : Entity
         return result;
     }
 
+    public void translateUpLadder()
+    {
+        while(CollisionManager.checkCollisions("player", "ladder"))
+        {
+            playerVelocity.X = 0;
+            playerVelocity.Y = 0.1f;
+            playerPosition.Y -= playerVelocity.Y;
+           // Render(Game.localCamera);
+        }
+    }
+
     public void playerLoop()
     {
         string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
-        
+
         HandleInput();
+        HandleJump();
 
         // Apply gravity
+        playerPosition += playerVelocity;
 
-        HandleJump();
-        if (collisionDetected.Contains("down") && !keyPressed()) 
+        if (collisionDetected.Contains("down") && !keyPressed())
         {
+            HandleCollision();
             playerVelocity.Y = 0;
             playerVelocity.Y -= (GRAVITY);
             playerPosition.Y -= 1f;
             System.Console.WriteLine("down");
-        } else if (collisionDetected.Contains("up"))
+        }
+        else if (collisionDetected.Contains("up"))
         {
+            HandleCollision();
             System.Console.WriteLine("up");
             playerVelocity.Y = playerVelocity.Y * -1;
         }
-        
-        //collisionDetected = "";
+
         playerVelocity.Y += (GRAVITY);
-        
 
         // Update player position
         playerPosition += playerVelocity;
-
-        
 
         // Collision detection for the floor
         if (playerPosition.Y > 400) // Assuming 500 is ground level
@@ -88,7 +110,24 @@ internal class Player : Entity
             playerVelocity.X = 0; // Stop horizontal movement
         }
 
+        // Update the elapsed time since the last collision
+        timeSinceCollision += Engine.TimeDelta;
+
+        // Check if enough time has passed since the last collision to revert to the original color
+        if (timeSinceCollision >= collisionCooldown)
+        {
+            currentColor = originalColor;
+        }
+        
         Render(Game.localCamera);
+    }
+
+    private void HandleCollision()
+    {
+        // Handle collision logic here
+        // For example, change the player's color to black
+        currentColor = new Color(0, 0, 0, 255);
+        timeSinceCollision = 0.0f; // Reset the timer
     }
 
     private void HandleInput()
@@ -194,7 +233,8 @@ internal class Player : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 255, 0, 0, 255); // red
+
+        SDL.SDL_SetRenderDrawColor(Renderer, currentColor.R, currentColor.G, currentColor.B, currentColor.A);
 
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
