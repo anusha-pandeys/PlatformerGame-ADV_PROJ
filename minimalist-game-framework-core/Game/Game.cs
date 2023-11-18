@@ -33,6 +33,7 @@ class Game
     private List<Checkpoint> checkpoints;
     private List<Pits> pits;
     private List<Ladder> ladders;
+    private static int currLevel;
     //private Ladder ladder;
     public Game()
     {
