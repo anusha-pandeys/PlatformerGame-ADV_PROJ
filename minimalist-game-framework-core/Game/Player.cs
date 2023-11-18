@@ -11,7 +11,7 @@ internal class Player : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;  // Gets the SDL Renderer from the Engine class
     private const float PLAYER_WIDTH = 50f;
-    private const float PLAYER_HEIGHT = 70f;
+    private const float PLAYER_HEIGHT = 50f;
     private const int BLOCK_SIZE = 50;
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;

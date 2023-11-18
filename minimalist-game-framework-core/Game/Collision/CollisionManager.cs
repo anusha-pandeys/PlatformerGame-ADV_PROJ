@@ -6,7 +6,7 @@ using System.Text;
 
 internal class CollisionManager
 {
-    private static List<ICollidable> collidables = new List<ICollidable>();
+    public static List<ICollidable> collidables { get; set; } = new List<ICollidable>();
     public static List<Blocks> blocks { get; set; } = new List<Blocks>();
 
     public static ICollidable AddObj(string tag, Entity entity)
