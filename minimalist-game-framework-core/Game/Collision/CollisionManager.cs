@@ -172,9 +172,6 @@ internal class CollisionManager
         }
         return retMap;
     }
-}
-
-
 
     //handle collisions between the player and checkpoints:
     public static bool checkCheckpointCollision(Entity entity, Rectangle checkpointBound)

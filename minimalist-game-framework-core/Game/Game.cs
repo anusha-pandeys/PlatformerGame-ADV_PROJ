@@ -154,7 +154,7 @@ class Game
             }
 
             // Checkpoint collision detection
-            /*foreach (var checkpoint in checkpoints)
+            foreach (var checkpoint in checkpoints)
             {
                 if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
                 {
@@ -162,7 +162,7 @@ class Game
                     player.playerPosition = new Vector2(100, 300); // Reset position
                     break;
                 }
-            }*/
+            }
 
         }
 
@@ -189,6 +189,9 @@ class Game
         checkpoints.Clear();
 
         levelBlocks = LevelLoader.LoadLevel(levelPath, 50);
+        pits = LevelLoader.loadPits(levelPath, 50);
+        ladders = LevelLoader.loadLadder(levelPath, 50);
+        checkpoints = LevelLoader.LoadCheckpoints(levelPath, 50);
     }
 
     public void RenderGrid(IntPtr renderer)
