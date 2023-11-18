@@ -43,6 +43,8 @@ internal class NPC : Entity
         }
     }
 
+    //
+
     public void Update()
     {
         if (IsPlayerInRadius())
@@ -77,8 +79,6 @@ internal class NPC : Entity
 
         Render();
     }
-
-    //
 
 
 
