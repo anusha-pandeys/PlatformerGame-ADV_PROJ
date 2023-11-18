@@ -29,7 +29,12 @@ class Game
     //private Blocks floor2;
     private List<Blocks> levelBlocks;
     private List<Blocks> levelBlocks2;
-
+    public static Camera localCamera;
+    private List<Checkpoint> checkpoints;
+    private List<Pits> pits;
+    private List<Ladder> ladders;
+    private static int currLevel = 1;
+    //private Ladder ladder;
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 300); // Initial position
@@ -46,6 +51,7 @@ class Game
         //CollisionManager.addBlock(floor);
         //CollisionManager.addBlock(floor2);
 
+
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
         redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 1.5f);
 
@@ -53,9 +59,19 @@ class Game
         greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 300f, 1.0f);
 
         levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
-       // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
-        //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
-        //startMenu = new StartMenu();
+                                                                            // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
+                                                                            //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
+                                                                            //startMenu = new StartMenu();
+        pits = LevelLoader.loadPits("Game\\levelPractice.txt", 50);
+        ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
+        //loading checkpoints
+        checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
+        //ladder = new Ladder(new Vector2(100, 200), new Vector2(50, 100));
+        //CollisionManager.AddObj("pit", pit);
+        loadEntities();
+        CollisionManager.AddObj("player", player);
+        
+        localCamera = new Camera();
     }
     //
 
@@ -75,31 +91,78 @@ class Game
             {
                 showStartMenu = false;
             }
+
         }//
         else
         {
-            // Update game logic here (same as before)
+            
             map.setBackgroundColor();
             foreach (var block in levelBlocks)
             {
                 block.blockLoop();
-                CollisionManager.addBlock(block);
+                //CollisionManager.addBlock(block);
+            }
+            foreach (var pit in pits)
+            {
+                pit.pitsLoop();
+                if (pit.getPlayerDeath())
+                {
+                    //implement death/game over
+                    System.Console.WriteLine("dead");
+                }
+                //CollisionManager.addBlock(block);
+            }
+            foreach (var ladder in ladders)
+            {
+                ladder.ladderLoop();
+                if (ladder.getTranslate())
+                {
+                    player.translateUpLadder();
+                }
+                //CollisionManager.addBlock(block);
             }
             player.playerLoop();
+            localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             redNPC.Update();
             greyNPC.Update();
+            
             //moving.updateCoordinates();
+
+            // Render checkpoints
+            foreach (var checkpoint in checkpoints)
+            {
+                checkpoint.Update(localCamera);
+            }
+
 
             // Check if back button is clicked in RulesMenu or CreditScreen
             if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
             {
                 showStartMenu = true;
             }
+
+            // Checkpoint collision detection
+            foreach (var checkpoint in checkpoints)
+            {
+                if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
+                {
+                    currLevel++;
+                    checkpoints.Clear();
+                    CollisionManager.blocks.Clear();
+                    CollisionManager.collidables.Clear();
+                    string path = "Game\\level" + currLevel.ToString() + ".txt";
+                    LoadNewLevel(path);
+                    player.playerPosition = new Vector2(100, 300); // Reset position
+                    break;
+                }
+            }
+
         }
 
-        // Present renderer
         SDL.SDL_RenderPresent(Engine.Renderer2);
+
+        RenderGrid(Engine.Renderer2);
     }
 
     private void DisplayPlayerCoordinates()
@@ -112,5 +175,56 @@ class Game
 
         string greyNPCCoordinates = string.Format("Grey NPC: {0}, {1}", greyNPC.Position.X, greyNPC.Position.Y);
         textRenderer.displayText(greyNPCCoordinates, new Vector2(0, 40), Color.Black, font);
+    }
+
+    private void LoadNewLevel(string levelPath)
+    {
+        // Clear existing checkpoints
+        levelBlocks = LevelLoader.LoadLevel(levelPath, 50);
+        pits = LevelLoader.loadPits(levelPath, 50);
+        ladders = LevelLoader.loadLadder(levelPath, 50);
+        checkpoints = LevelLoader.LoadCheckpoints(levelPath, 50);
+        loadEntities();
+    }
+
+    public void loadEntities()
+    {
+        foreach (var block in levelBlocks)
+        {
+            //block.blockLoop();
+            CollisionManager.addBlock(block);
+        }
+        foreach (var pit in pits)
+        {
+            //pit.pitsLoop();
+            CollisionManager.AddObj("pit", pit);
+        }
+        foreach (var ladder in ladders)
+        {
+            //pit.pitsLoop();
+            CollisionManager.AddObj("ladder", ladder);
+        }
+    }
+    public void RenderGrid(IntPtr renderer)
+    {
+        for (int row = 0; row < 32; row++)
+        {
+            for (int col = 0; col < 32; col++)
+            {
+                SDL.SDL_Rect tileRect = new SDL.SDL_Rect
+                {
+                    x = col * 21,
+                    y = row * 21,
+                    w = 21,
+                    h = 21,
+                };
+
+                
+                SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  
+
+                
+                SDL.SDL_RenderDrawRect(renderer, ref tileRect);
+            }
+        }
     }
 }

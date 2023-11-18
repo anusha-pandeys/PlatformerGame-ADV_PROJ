@@ -11,20 +11,21 @@ internal class Player : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;  // Gets the SDL Renderer from the Engine class
     private const float PLAYER_WIDTH = 50f;
-    private const float PLAYER_HEIGHT = 70f;
+    private const float PLAYER_HEIGHT = 50f;
     private const int BLOCK_SIZE = 50;
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
-    private const float JUMP_STRENGTH = -9.0f;
-    private Vector2 playerPosition;
-    private Vector2 playerVelocity;
+    private const float JUMP_STRENGTH = -3f;
+    public Vector2 playerPosition;
+    public Vector2 playerVelocity;
+    public Vector2 playerSize = new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT);
     private TextRenderer text;
     private Font font;
     private Color originalColor = new Color(255, 0, 0, 255); // Original color (red)
     private Color playerColor;
     private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
     private float timeSinceCollision = 0.0f;
-
+    private Collidable player;
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
@@ -32,7 +33,7 @@ internal class Player : Entity
         this.text = text;
         this.font = font;
         this.playerColor = originalColor;
-
+        this.player = new Collidable(this, "player");
     }
 
 
@@ -66,6 +67,17 @@ internal class Player : Entity
         return result;
     }
 
+    public void translateUpLadder()
+    {
+        while(CollisionManager.checkCollisions("player", "ladder"))
+        {
+            playerVelocity.X = 0;
+            playerVelocity.Y = 0.1f;
+            playerPosition.Y -= playerVelocity.Y;
+           // Render(Game.localCamera);
+        }
+    }
+
     public void playerLoop()
     {
         string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
@@ -81,6 +93,8 @@ internal class Player : Entity
             HandleCollision();
             playerVelocity.Y = 0;
             playerVelocity.Y -= (GRAVITY);
+            playerPosition.Y -= 1f;
+            System.Console.WriteLine("down");
         }
         else if (collisionDetected.Contains("up"))
         {
@@ -115,9 +129,8 @@ internal class Player : Entity
         {
             playerColor = originalColor;
         }
-
-
-        Render();
+        
+        Render(Game.localCamera);
     }
 
     private void HandleCollision()
@@ -221,11 +234,12 @@ internal class Player : Entity
 
 
 
-    protected override void Render()
+    protected override void Render(Camera camera)
     {
         int numKeys;
         IntPtr keyStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
-        Draw(playerPosition, new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT));
+        Vector2 localPosition = camera.globalToLocal(playerPosition);
+        Draw(localPosition, playerSize);
     }
 
     protected override void Draw(Vector2 position, Vector2 size)

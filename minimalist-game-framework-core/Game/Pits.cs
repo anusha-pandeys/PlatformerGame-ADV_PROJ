@@ -4,33 +4,43 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-internal class Blocks : Entity
+internal class Pits : Entity
 {
-    private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
+    private IntPtr Renderer => Engine.Renderer2;
     private Vector2 position;
     private Vector2 size;
-    private GameColor color;
-    private string sidesInContact;
-    public Blocks(Vector2 position, Vector2 size, GameColor color)
+    private Collidable pits;
+    public bool playerDeath = false;
+    //private bool first;
+    public Pits(Vector2 position, Vector2 size)
     {
         this.position = position;
         this.size = size;
-        this.color = color;
-        sidesInContact = "";
+        this.pits = new Collidable(this, "pit");
+        //first = false;
+    }
+    public bool getPlayerDeath()
+    {
+        return playerDeath; 
+    }
+    public void pitsLoop()
+    {
+        Render(new Camera());
+        if (checkCollision())
+        {
+            playerDeath = true;
+        }
+    }
+    public bool checkCollision()
+    {
+        //Dictionary<string, bool> ret = CollisionManager.checkCollisions("pit", "player");
+        if(CollisionManager.checkCollisions("player", "pit"))
+        {
+            return true;
+        }
+        return false;
     }
 
-    public void blockLoop()
-    {
-        Render(Game.localCamera);
-    }
-
-    public List<Vector2> getCoordinates()
-    {
-        List<Vector2> result = new List<Vector2>();
-        result.Add(position);
-        result.Add(size);
-        return result;
-    }
     protected override Rectangle CalculateBound()
     {
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
@@ -38,8 +48,7 @@ internal class Blocks : Entity
 
     protected override void Render(Camera camera)
     {
-        Vector2 localPosition = camera.globalToLocal(position);
-        Draw(localPosition, size);
+        Draw(position, size);
     }
 
     protected override void Draw(Vector2 position, Vector2 size)
