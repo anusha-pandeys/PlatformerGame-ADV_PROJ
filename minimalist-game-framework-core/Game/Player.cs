@@ -25,7 +25,7 @@ internal class Player : Entity
     private Color currentColor; // Current color, updated based on collision
     private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
     private float timeSinceCollision = 0.0f;
-
+    private Collidable player;
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
@@ -33,7 +33,7 @@ internal class Player : Entity
         this.text = text;
         this.font = font;
         this.currentColor = originalColor;
-
+        this.player = new Collidable(this, "player");
     }
 
 

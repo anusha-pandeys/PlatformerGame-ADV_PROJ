@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -13,61 +14,70 @@ internal class CollisionManager
     {
         ICollidable collidable = new Collidable(entity, tag);
         collidables.Add(collidable);
-        return collidable;
+        return collidable;//
     }
 
-    public static void addBlock(Blocks block)
+    public static void addBlock(Blocks block)//
     {
         blocks.Add(block);
     }
 
+    private static string unpackDictionary(Dictionary<string, bool> ret)
+    {
+        string returnStr = "";
+        if (ret.ContainsValue(true) && ret.ContainsKey("up"))
+        {
+            returnStr += "up";
+        }
+        else if (ret.ContainsValue(true) && ret.ContainsKey("down"))
+        {
+            returnStr += "down";
+        }
+        if (ret.ContainsValue(true) && ret.ContainsKey("right"))
+        {
+            returnStr += "right";
+        }
+        else if (ret.ContainsValue(true) && ret.ContainsKey("left"))
+        {
+            returnStr += "left";
+        }
+        return returnStr;
+    }
     public static string checkBlockCollision(Entity entity, Vector2 vel)
     {
         Rectangle rectangle = entity.Bound;
         Rectangle bound = new Rectangle((int)(rectangle.X + vel.X), (int)(rectangle.Y + vel.Y), rectangle.Width, rectangle.Height);
-        for(int i = 0; i < blocks.Count; i++)
+        for (int i = 0; i < blocks.Count; i++)
         {
             Dictionary<string, bool> ret = isCollided(bound, blocks[i].Bound);
-            string returnStr = "";
-            if (ret.ContainsValue(true) && ret.ContainsKey("up"))
-            {
-                returnStr += "up";
-            } else if(ret.ContainsValue(true) && ret.ContainsKey("down"))
-            {
-                returnStr += "down";
-            }
-            if(ret.ContainsValue(true) && ret.ContainsKey("right"))
-            {
-                returnStr += "right";
-            } else if (ret.ContainsValue(true) && ret.ContainsKey("left") )
-            {
-                
-                returnStr += "left";
-            }
+            string returnStr = unpackDictionary(ret);
             if (!returnStr.Equals("")) return returnStr;
             else continue;
         }
         return "na";
     }
-        
-    public static void checkCollisions()
+
+    public static Dictionary<string, bool> checkCollisions(string objA, string objB)
     {
-        for (int i = 0; i < collidables.Count-1; i++) { 
+        for (int i = 0; i < collidables.Count - 1; i++)
+        {
             var obj1 = collidables[i];
-            for(int j = i+1; j < collidables.Count; j++)
+            for (int j = i + 1; j < collidables.Count; j++)
             {
                 var obj2 = collidables[j];
-                if(obj1.Tag == obj2.Tag)
+                if (obj1.Tag == obj2.Tag)
                 {
                     continue;
-                } else
+                }
+                else if (((objA == obj1.Tag) && (objB == obj2.Tag)) || ((objA == obj2.Tag) && (objB == obj1.Tag)))
                 {
-                    isCollided(obj1, obj2);
+                    return isCollided(obj1, obj2);
                 }
             }
         }
+        return null;
     }
-    public static bool isCollided(ICollidable entityA, ICollidable entityB)
+    public static Dictionary<string, bool> isCollided(ICollidable entityA, ICollidable entityB)
     {
 
         Entity a = entityA.GameObject;
@@ -76,7 +86,7 @@ internal class CollisionManager
         Rectangle rectA = a.Bound;
         Rectangle rectB = b.Bound;
 
-        Vector2 boundALeft = new Vector2(rectA.X, rectA.Y);
+        /*Vector2 boundALeft = new Vector2(rectA.X, rectA.Y);
         Vector2 boundARight = new Vector2(rectA.X, rectA.Y) + new Vector2(rectA.Width, rectA.Width);
         Vector2 boundBLeft = new Vector2(rectB.X, rectB.Y);
         Vector2 boundBRight = new Vector2(rectB.X, rectB.Y) + new Vector2(rectB.Width, rectB.Width);
@@ -84,7 +94,9 @@ internal class CollisionManager
         if (boundARight.X < boundBLeft.X || boundBRight.X < boundALeft.X ||
                 boundARight.Y < boundBLeft.Y || boundBRight.Y < boundALeft.Y)
             return false;
-        else return true;
+        else return true;*/
+        Dictionary<string, bool> retMap = isCollided(rectA, rectB);
+        return retMap;
     }
 
     public static Dictionary<string, bool> isCollided(Rectangle rectA, Rectangle rectB)
@@ -101,17 +113,17 @@ internal class CollisionManager
         {
             retMap["down"] = true;
             upOrDown = true;
-        } 
+        }
         if (rectA.Y > rectB.Y)
         {
             retMap["up"] = true;
             upOrDown = false;
         }
-        if(rectA.X < rectB.X)
+        if (rectA.X < rectB.X)
         {
             retMap["right"] = true;
             rightLeft = true;
-        } 
+        }
         if (rectA.X > rectB.X)
         {
             retMap["left"] = true;
@@ -121,16 +133,19 @@ internal class CollisionManager
         if (boundARight.X < boundBLeft.X || boundBRight.X < boundALeft.X ||
                 boundARight.Y < boundBLeft.Y || boundBRight.Y < boundALeft.Y)//
         {
-            if(upOrDown && retMap.ContainsKey("down"))
+            if (upOrDown && retMap.ContainsKey("down"))
             {
                 retMap["down"] = false;
-            } else if (!upOrDown && retMap.ContainsKey("up"))
+            }
+            else if (!upOrDown && retMap.ContainsKey("up"))
             {
                 retMap["up"] = false;
             }
-            if(rightLeft && retMap.ContainsKey("right")) {
+            if (rightLeft && retMap.ContainsKey("right"))
+            {
                 retMap["right"] = false;
-            } else if (!rightLeft && retMap.ContainsKey("left"))
+            }
+            else if (!rightLeft && retMap.ContainsKey("left"))
             {
                 retMap["left"] = false;
             }
@@ -147,29 +162,15 @@ internal class CollisionManager
             }
             if (rightLeft && retMap.ContainsKey("right"))
             {
-                System.Console.WriteLine("left");
+                //System.Console.WriteLine("left");
                 retMap["right"] = true;
             }
             else if (!rightLeft && retMap.ContainsKey("left"))
             {
-                
+
                 retMap["left"] = true;
             }
         }
         return retMap;
     }
-
-
-    //handle collisions between the player and checkpoints:
-    public static bool checkCheckpointCollision(Entity entity, Rectangle checkpointBound)
-    {
-        Rectangle entityBound = entity.Bound;
-        // Check if entityBound intersects with checkpointBound
-        if (entityBound.IntersectsWith(checkpointBound))
-        {
-            return true;
-        }
-        return false;
-    }
-
 }
