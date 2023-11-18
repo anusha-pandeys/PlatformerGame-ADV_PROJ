@@ -112,8 +112,9 @@ class Game
             }
         }
 
-        // Present renderer
         SDL.SDL_RenderPresent(Engine.Renderer2);
+
+        RenderGrid(Engine.Renderer2);
     }
 
     private void DisplayPlayerCoordinates()
@@ -128,5 +129,28 @@ class Game
         checkpoints.Clear();
 
         levelBlocks = LevelLoader.LoadLevel(levelPath, 50);
+    }
+
+    public void RenderGrid(IntPtr renderer)
+    {
+        for (int row = 0; row < 32; row++)
+        {
+            for (int col = 0; col < 32; col++)
+            {
+                SDL.SDL_Rect tileRect = new SDL.SDL_Rect
+                {
+                    x = col * 21,
+                    y = row * 21,
+                    w = 21,
+                    h = 21,
+                };
+
+                
+                SDL.SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  
+
+                
+                SDL.SDL_RenderDrawRect(renderer, ref tileRect);
+            }
+        }
     }
 }
