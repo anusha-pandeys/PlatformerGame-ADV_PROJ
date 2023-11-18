@@ -6,26 +6,44 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
-
 internal class NPC : Entity
 {
-    private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
+    private IntPtr Renderer => Engine.Renderer2;
     private Vector2 position;
     private Vector2 size;
-    private float followRadius = 300.0f; // Set the follow radius
-    private float speed = 1.0f; // Set the NPC's speed
+    private float followRadius;
+    private float speed;
     private Player player;
-    private float distance; // Declare distance as a field
+    private float distance;
+    private Color originalColor;
     private Color npcColor;
-    public Vector2 Position => position;
+    private float collisionCooldown = 0.1f;
+    private float timeSinceCollision = 0.0f;
 
-    public NPC(Vector2 position, Vector2 size, Player player, Color npcColor)
+    public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed)
     {
         this.position = position;
         this.size = size;
         this.player = player;
-        this.npcColor = npcColor; // Set the NPC color
+        this.originalColor = npcColor; // Set the original color
+        this.npcColor = originalColor;
+        this.followRadius = followRadius;
+        this.speed = speed;
     }
+
+    private void UpdateCollisionCooldown()
+    {
+        // Update the elapsed time since the last collision
+        timeSinceCollision += Engine.TimeDelta;
+
+        // Check if enough time has passed since the last collision to revert to the original color
+        if (timeSinceCollision >= collisionCooldown)
+        {
+            npcColor = originalColor;
+        }
+    }
+
+    //
 
     public void Update()
     {
@@ -34,20 +52,36 @@ internal class NPC : Entity
             FollowPlayer();
         }
 
-        // Implement collision detection for NPC
-        string collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(speed, 0));
+        // Check for collisions with the player
+        string collisionDetected = CollisionManager.checkBlockCollision(player, new Vector2(speed, 0));
+
         // Update NPC's position based on collision detection
         if (collisionDetected.Contains("left"))
         {
+            Console.WriteLine("Collision Left");
             position.X -= speed;
         }
         else if (collisionDetected.Contains("right"))
         {
+            Console.WriteLine("Collision Right");
             position.X += speed;
         }
 
+        // Handle collision and update color
+        HandleCollision();
+        UpdateCollisionCooldown();  // Update collision cooldown
+
+        // Reset the NPC color if enough time has passed since the last collision
+        if (timeSinceCollision >= collisionCooldown)
+        {
+            npcColor = originalColor;
+        }
+
+
         Render(Game.localCamera);
     }
+
+
 
     private bool IsPlayerInRadius()
     {
@@ -67,10 +101,27 @@ internal class NPC : Entity
         {
             position += direction * speed;
         }
-        
+    }
+
+    private bool playerCollided()
+    {
+        Rectangle npcBounds = CalculateBound();
+        Rectangle playerBounds = player.GetPlayerBounds();
+        return npcBounds.IntersectsWith(playerBounds);
     }
 
 
+    private void HandleCollision()
+    {
+        // Check if the collision is with the player
+        if (playerCollided())
+        {
+            // Handle collision logic here for NPC colliding with the player
+            // For example, change the NPC's color to black
+            npcColor = new Color(0, 0, 0, 255);
+            timeSinceCollision = 0.0f; // Reset the timer
+        }
+    }
 
 
     private float CalculateDistance(Vector2 point1, Vector2 point2)

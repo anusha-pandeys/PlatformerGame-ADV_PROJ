@@ -22,7 +22,7 @@ internal class Player : Entity
     private TextRenderer text;
     private Font font;
     private Color originalColor = new Color(255, 0, 0, 255); // Original color (red)
-    private Color currentColor; // Current color, updated based on collision
+    private Color playerColor;
     private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
     private float timeSinceCollision = 0.0f;
     private Collidable player;
@@ -32,9 +32,23 @@ internal class Player : Entity
         this.playerVelocity = playerVelocity;
         this.text = text;
         this.font = font;
-        this.currentColor = originalColor;
+        this.playerColor = originalColor;
         this.player = new Collidable(this, "player");
     }
+
+
+    internal Rectangle GetPlayerBounds()
+    {
+        return CalculateBound();
+    }
+
+
+    protected override Rectangle CalculateBound()
+    {
+        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_HEIGHT), (int)(PLAYER_WIDTH));
+    }
+
+
 
 
     public Vector2 Position
@@ -42,10 +56,7 @@ internal class Player : Entity
         get { return playerPosition; }
     }
 
-    protected override Rectangle CalculateBound()
-    {
-        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_HEIGHT), (int)(PLAYER_WIDTH));
-    }
+    
 
     public List<Vector2> getCoordinates()
     {
@@ -116,7 +127,7 @@ internal class Player : Entity
         // Check if enough time has passed since the last collision to revert to the original color
         if (timeSinceCollision >= collisionCooldown)
         {
-            currentColor = originalColor;
+            playerColor = originalColor;
         }
         
         Render(Game.localCamera);
@@ -126,7 +137,7 @@ internal class Player : Entity
     {
         // Handle collision logic here
         // For example, change the player's color to black
-        currentColor = new Color(0, 0, 0, 255);
+        playerColor = new Color(0, 0, 0, 255);
         timeSinceCollision = 0.0f; // Reset the timer
     }
 
@@ -234,7 +245,7 @@ internal class Player : Entity
     protected override void Draw(Vector2 position, Vector2 size)
     {
 
-        SDL.SDL_SetRenderDrawColor(Renderer, currentColor.R, currentColor.G, currentColor.B, currentColor.A);
+        SDL.SDL_SetRenderDrawColor(Renderer, playerColor.R, playerColor.G, playerColor.B, playerColor.A);
 
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
