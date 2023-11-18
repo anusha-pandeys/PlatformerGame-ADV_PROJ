@@ -31,7 +31,7 @@ class Game
     private List<Blocks> levelBlocks2;
     public static Camera localCamera;
     private List<Checkpoint> checkpoints;
-
+    private Pits pit;
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 300); // Initial position
@@ -58,9 +58,11 @@ class Game
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
                                                                             //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
                                                                             //startMenu = new StartMenu();
-
+        pit = new Pits(new Vector2(300, 200), new Vector2(50, 20));
         //loading checkpoints
         checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
+        CollisionManager.AddObj("pit", pit);
+        CollisionManager.AddObj("player", player);
 
         localCamera = new Camera();
     }
@@ -97,6 +99,12 @@ class Game
             DisplayPlayerCoordinates();
             redNPC.Update();
             greyNPC.Update();
+            pit.pitsLoop();
+            if(pit.getPlayerDeath())
+            {
+                //implement death/game over
+                System.Console.WriteLine("dead");
+            }
             //moving.updateCoordinates();
 
             // Render checkpoints
@@ -113,7 +121,7 @@ class Game
             }
 
             // Checkpoint collision detection
-            foreach (var checkpoint in checkpoints)
+            /*foreach (var checkpoint in checkpoints)
             {
                 if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
                 {
@@ -121,7 +129,8 @@ class Game
                     player.playerPosition = new Vector2(100, 300); // Reset position
                     break;
                 }
-            }
+            }*/
+
         }
 
         // Present renderer
