@@ -25,23 +25,25 @@ internal class CollisionManager
     {
         Rectangle rectangle = entity.Bound;
         Rectangle bound = new Rectangle((int)(rectangle.X + vel.X), (int)(rectangle.Y + vel.Y), rectangle.Width, rectangle.Height);
-        for(int i = 0; i < blocks.Count; i++)
+        for (int i = 0; i < blocks.Count; i++)
         {
             Dictionary<string, bool> ret = isCollided(bound, blocks[i].Bound);
             string returnStr = "";
             if (ret.ContainsValue(true) && ret.ContainsKey("up"))
             {
                 returnStr += "up";
-            } else if(ret.ContainsValue(true) && ret.ContainsKey("down"))
+            }
+            else if (ret.ContainsValue(true) && ret.ContainsKey("down"))
             {
                 returnStr += "down";
             }
-            if(ret.ContainsValue(true) && ret.ContainsKey("right"))
+            if (ret.ContainsValue(true) && ret.ContainsKey("right"))
             {
                 returnStr += "right";
-            } else if (ret.ContainsValue(true) && ret.ContainsKey("left") )
+            }
+            else if (ret.ContainsValue(true) && ret.ContainsKey("left"))
             {
-                
+
                 returnStr += "left";
             }
             if (!returnStr.Equals("")) return returnStr;
@@ -49,18 +51,20 @@ internal class CollisionManager
         }
         return "na";
     }
-        
+
     public static void checkCollisions()
     {
-        for (int i = 0; i < collidables.Count-1; i++) { 
+        for (int i = 0; i < collidables.Count - 1; i++)
+        {
             var obj1 = collidables[i];
-            for(int j = i+1; j < collidables.Count; j++)
+            for (int j = i + 1; j < collidables.Count; j++)
             {
                 var obj2 = collidables[j];
-                if(obj1.Tag == obj2.Tag)
+                if (obj1.Tag == obj2.Tag)
                 {
                     continue;
-                } else
+                }
+                else
                 {
                     isCollided(obj1, obj2);
                 }
@@ -101,17 +105,17 @@ internal class CollisionManager
         {
             retMap["down"] = true;
             upOrDown = true;
-        } 
+        }
         if (rectA.Y > rectB.Y)
         {
             retMap["up"] = true;
             upOrDown = false;
         }
-        if(rectA.X < rectB.X)
+        if (rectA.X < rectB.X)
         {
             retMap["right"] = true;
             rightLeft = true;
-        } 
+        }
         if (rectA.X > rectB.X)
         {
             retMap["left"] = true;
@@ -121,16 +125,19 @@ internal class CollisionManager
         if (boundARight.X < boundBLeft.X || boundBRight.X < boundALeft.X ||
                 boundARight.Y < boundBLeft.Y || boundBRight.Y < boundALeft.Y)//
         {
-            if(upOrDown && retMap.ContainsKey("down"))
+            if (upOrDown && retMap.ContainsKey("down"))
             {
                 retMap["down"] = false;
-            } else if (!upOrDown && retMap.ContainsKey("up"))
+            }
+            else if (!upOrDown && retMap.ContainsKey("up"))
             {
                 retMap["up"] = false;
             }
-            if(rightLeft && retMap.ContainsKey("right")) {
+            if (rightLeft && retMap.ContainsKey("right"))
+            {
                 retMap["right"] = false;
-            } else if (!rightLeft && retMap.ContainsKey("left"))
+            }
+            else if (!rightLeft && retMap.ContainsKey("left"))
             {
                 retMap["left"] = false;
             }
@@ -152,7 +159,7 @@ internal class CollisionManager
             }
             else if (!rightLeft && retMap.ContainsKey("left"))
             {
-                
+
                 retMap["left"] = true;
             }
         }
