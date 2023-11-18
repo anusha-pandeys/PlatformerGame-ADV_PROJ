@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.Diagnostics;
 
 
 class Game
@@ -19,6 +20,8 @@ class Game
     Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
     private StartMenu StartMenu;
     private RulesMenu rulesMenu;
+    private WinScreen winScreen = new WinScreen();
+    private LoseScreen loseScreen = new LoseScreen();
     private CreditScreen creditScreen;
     private bool showStartMenu = true;
     private Player player;
@@ -109,6 +112,7 @@ class Game
                 {
                     //implement death/game over
                     System.Console.WriteLine("dead");
+                    loseScreen.show();
                 }
                 //CollisionManager.addBlock(block);
             }
@@ -151,9 +155,11 @@ class Game
                     checkpoints.Clear();
                     CollisionManager.blocks.Clear();
                     CollisionManager.collidables.Clear();
+                    winScreen.show(); 
                     string path = "Game\\level" + currLevel.ToString() + ".txt";
                     LoadNewLevel(path);
                     player.playerPosition = new Vector2(100, 300); // Reset position
+                    
                     break;
                 }
             }
