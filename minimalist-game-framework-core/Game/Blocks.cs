@@ -17,11 +17,12 @@ internal class Blocks : Entity
         this.size = size;
         this.color = color;
         sidesInContact = "";
+        Game.entities.Add(this);
     }
 
     public void blockLoop()
     {
-        Render(Game.localCamera);
+        //Render(Game.localCamera);
     }
 
     public List<Vector2> getCoordinates()
@@ -36,7 +37,7 @@ internal class Blocks : Entity
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
     }
 
-    protected override void Render(Camera camera)
+    public override void Render(Camera camera)
     {
         Vector2 localPosition = camera.globalToLocal(position);
         Draw(localPosition, size);

@@ -18,6 +18,7 @@ internal class Pits : Entity
         this.size = size;
         this.pits = new Collidable(this, "pit");
         //first = false;
+        Game.entities.Add(this);
     }
     public bool getPlayerDeath()
     {
@@ -25,7 +26,7 @@ internal class Pits : Entity
     }
     public void pitsLoop()
     {
-        Render(new Camera());
+        //Render(new Camera());
         if (checkCollision())
         {
             playerDeath = true;
@@ -46,7 +47,7 @@ internal class Pits : Entity
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
     }
 
-    protected override void Render(Camera camera)
+    public override void Render(Camera camera)
     {
         Draw(position, size);
     }

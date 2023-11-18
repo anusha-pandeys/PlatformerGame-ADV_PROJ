@@ -18,6 +18,7 @@ internal class Player : Entity
     private const float JUMP_STRENGTH = -3f;
     public Vector2 playerPosition;
     public Vector2 playerVelocity;
+    public Vector2 globalPos;
     public Vector2 playerSize = new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT);
     private TextRenderer text;
     private Font font;
@@ -26,6 +27,7 @@ internal class Player : Entity
     private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
     private float timeSinceCollision = 0.0f;
     private Collidable player;
+    
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
@@ -34,6 +36,7 @@ internal class Player : Entity
         this.font = font;
         this.currentColor = originalColor;
         this.player = new Collidable(this, "player");
+        Game.entities.Add(this);
     }
 
 
@@ -119,7 +122,7 @@ internal class Player : Entity
             currentColor = originalColor;
         }
         
-        Render(Game.localCamera);
+        //Render(Game.localCamera);
     }
 
     private void HandleCollision()
@@ -223,12 +226,13 @@ internal class Player : Entity
 
 
 
-    protected override void Render(Camera camera)
+    public override void Render(Camera camera)
     {
         int numKeys;
         IntPtr keyStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
-        Vector2 localPosition = camera.globalToLocal(playerPosition);
-        Draw(localPosition, playerSize);
+        //Vector2 localPosition = camera.globalToLocal(playerPosition);
+        //Draw(localPosition, playerSize);
+        Draw(playerPosition, playerSize);
     }
 
     protected override void Draw(Vector2 position, Vector2 size)

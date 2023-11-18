@@ -25,6 +25,7 @@ internal class NPC : Entity
         this.size = size;
         this.player = player;
         this.npcColor = npcColor; // Set the NPC color
+        Game.entities.Add(this);
     }
 
     public void Update()
@@ -46,7 +47,7 @@ internal class NPC : Entity
             position.X += speed;
         }
 
-        Render(Game.localCamera);
+        //Render(Game.localCamera);
     }
 
     private bool IsPlayerInRadius()
@@ -103,7 +104,7 @@ internal class NPC : Entity
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
     }
 
-    protected override void Render(Camera camera)
+    public override void Render(Camera camera)
     {
         Vector2 localPosition = camera.globalToLocal(position);
         Draw(localPosition, size);

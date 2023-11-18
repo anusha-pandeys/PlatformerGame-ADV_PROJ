@@ -172,7 +172,7 @@ internal class CollisionManager
         }
         return retMap;
     }
-}
+
 
 
 
@@ -187,4 +187,5 @@ internal class CollisionManager
         }
         return false;
     }
+    
 }
