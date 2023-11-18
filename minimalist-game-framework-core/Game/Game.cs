@@ -31,7 +31,9 @@ class Game
     private List<Blocks> levelBlocks2;
     public static Camera localCamera;
     private List<Checkpoint> checkpoints;
-    private Pits pit;
+    private List<Pits> pits;
+    private List<Ladder> ladders;
+    //private Ladder ladder;
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 300); // Initial position
@@ -58,12 +60,29 @@ class Game
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
                                                                             //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
                                                                             //startMenu = new StartMenu();
-        pit = new Pits(new Vector2(300, 200), new Vector2(50, 20));
+        pits = LevelLoader.loadPits("Game\\levelPractice.txt", 50);
+        ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
         //loading checkpoints
         checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
-        CollisionManager.AddObj("pit", pit);
+        //ladder = new Ladder(new Vector2(100, 200), new Vector2(50, 100));
+        //CollisionManager.AddObj("pit", pit);
         CollisionManager.AddObj("player", player);
-
+        foreach (var block in levelBlocks)
+        {
+            //block.blockLoop();
+            CollisionManager.addBlock(block);
+        }
+        foreach (var pit in pits)
+        {
+            //pit.pitsLoop();
+            CollisionManager.AddObj("pit", pit);
+        }
+        foreach (var ladder in ladders)
+        {
+            //pit.pitsLoop();
+            CollisionManager.AddObj("ladder", ladder);
+        }
+        
         localCamera = new Camera();
     }
 
@@ -92,19 +111,33 @@ class Game
             foreach (var block in levelBlocks)
             {
                 block.blockLoop();
-                CollisionManager.addBlock(block);
+                //CollisionManager.addBlock(block);
+            }
+            foreach (var pit in pits)
+            {
+                pit.pitsLoop();
+                if (pit.getPlayerDeath())
+                {
+                    //implement death/game over
+                    System.Console.WriteLine("dead");
+                }
+                //CollisionManager.addBlock(block);
+            }
+            foreach (var ladder in ladders)
+            {
+                ladder.ladderLoop();
+                if (ladder.getTranslate())
+                {
+                    player.translateUpLadder();
+                }
+                //CollisionManager.addBlock(block);
             }
             player.playerLoop();
             localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             redNPC.Update();
             greyNPC.Update();
-            pit.pitsLoop();
-            if(pit.getPlayerDeath())
-            {
-                //implement death/game over
-                System.Console.WriteLine("dead");
-            }
+            
             //moving.updateCoordinates();
 
             // Render checkpoints

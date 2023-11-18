@@ -19,7 +19,11 @@ internal class LevelLoader
                 {
                     Vector2 position = new Vector2(x * blockSize, y * blockSize);
                     blocks.Add(new Blocks(position, new Vector2(blockSize, blockSize), GameColor.Block1));
-                }           
+                }        
+                else if (lines[y][x] == 'p')
+                {
+                    Vector2 position = new Vector2(x * blockSize, y * blockSize);
+                }
                 else continue;
             }
         }
@@ -47,5 +51,44 @@ internal class LevelLoader
         return checkpoints;
     }
 
+    public static List<Pits> loadPits(string filePath, int pitsSize)
+    {
+        List<Pits> pits = new List<Pits>();
+        string[] lines = File.ReadAllLines(filePath);
+
+        for (int y = 0; y < lines.Length; y++)
+        {
+            for (int x = 0; x < lines[y].Length; x++)
+            {
+                if (lines[y][x] == 'p')
+                {
+                    Vector2 position = new Vector2(x * pitsSize, y * pitsSize);
+                    pits.Add(new Pits(position, new Vector2(pitsSize, pitsSize)));
+                }
+            }
+        }
+
+        return pits;
+    }
+
+    public static List<Ladder> loadLadder(string filePath, int ladderSize)
+    {
+        List<Ladder> ladders = new List<Ladder>();
+        string[] lines = File.ReadAllLines(filePath);
+
+        for (int y = 0; y < lines.Length; y++)
+        {
+            for (int x = 0; x < lines[y].Length; x++)
+            {
+                if (lines[y][x] == 'l')
+                {
+                    Vector2 position = new Vector2(x * ladderSize, y * ladderSize);
+                    ladders.Add(new Ladder(position, new Vector2(ladderSize, ladderSize)));
+                }
+            }
+        }
+
+        return ladders;
+    }
 }
 

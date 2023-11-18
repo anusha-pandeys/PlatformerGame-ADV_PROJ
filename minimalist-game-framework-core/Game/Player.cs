@@ -15,7 +15,7 @@ internal class Player : Entity
     private const int BLOCK_SIZE = 50;
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
-    private const float JUMP_STRENGTH = -9.0f;
+    private const float JUMP_STRENGTH = -3f;
     public Vector2 playerPosition;
     public Vector2 playerVelocity;
     public Vector2 playerSize = new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT);
@@ -54,6 +54,17 @@ internal class Player : Entity
         result.Add(playerPosition);
         result.Add(new Vector2(50, 70));
         return result;
+    }
+
+    public void translateUpLadder()
+    {
+        while(CollisionManager.checkCollisions("player", "ladder"))
+        {
+            playerVelocity.X = 0;
+            playerVelocity.Y = 0.1f;
+            playerPosition.Y -= playerVelocity.Y;
+           // Render(Game.localCamera);
+        }
     }
 
     public void playerLoop()
