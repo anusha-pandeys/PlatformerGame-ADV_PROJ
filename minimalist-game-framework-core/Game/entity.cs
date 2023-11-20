@@ -12,7 +12,7 @@ internal abstract class Entity : IDisposable
     public Vector2 Position { get { return position; } set { position = value; } }
 
     protected abstract Rectangle CalculateBound();
-    protected abstract void Render(Camera camera);
+    public abstract void Render(Camera camera);
     protected abstract void Draw(Vector2 position, Vector2 size);
 
     protected Rectangle GetBounds()

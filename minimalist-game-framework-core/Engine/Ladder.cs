@@ -61,9 +61,11 @@ internal class Ladder : Entity
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
 
-    protected override void Render(Camera camera)
+    public override void Render(Camera camera)
     {
-        Draw(position, size);
+        //Draw(position, size);
+        Vector2 localPosition = camera.globalToLocal(position);
+        Draw(localPosition, size);
     }
 }
 

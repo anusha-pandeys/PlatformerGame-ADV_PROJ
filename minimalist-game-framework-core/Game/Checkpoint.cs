@@ -15,6 +15,7 @@ internal class Checkpoint : Entity
     {
         this.position = position;
         this.size = size;
+        Game.entities.Add(this);
     }
 
     public Rectangle Bound
@@ -30,7 +31,7 @@ internal class Checkpoint : Entity
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
     }
 
-    protected override void Render(Camera camera)
+    public override void Render(Camera camera)
     {
         Vector2 localPosition = camera.globalToLocal(position);
         Draw(localPosition, size);

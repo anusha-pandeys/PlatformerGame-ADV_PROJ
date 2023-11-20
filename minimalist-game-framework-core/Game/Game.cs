@@ -15,7 +15,7 @@ class Game
 
     public static readonly string Title = "Minimalist Game Framework";
     public static readonly Vector2 Resolution = new Vector2(640, 480);
-    private List<Entity> entities = new List<Entity>();
+    public static List<Entity> entities = new List<Entity>();
     private TextRenderer textRenderer;
     Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
     private StartMenu StartMenu;
@@ -24,7 +24,7 @@ class Game
     private LoseScreen loseScreen = new LoseScreen();
     private CreditScreen creditScreen;
     private bool showStartMenu = true;
-    private Player player;
+    public static Player player;
     private Map map;
     private NPC redNPC;
     private NPC greyNPC;
@@ -100,6 +100,8 @@ class Game
         {
             
             map.setBackgroundColor();
+            
+            
             foreach (var block in levelBlocks)
             {
                 block.blockLoop();
@@ -125,6 +127,8 @@ class Game
                 }
                 //CollisionManager.addBlock(block);
             }
+            
+            
             player.playerLoop();
             localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
@@ -137,6 +141,12 @@ class Game
             foreach (var checkpoint in checkpoints)
             {
                 checkpoint.Update(localCamera);
+            }
+            
+            foreach (Entity i in entities)
+            {
+                i.Render(localCamera);
+                
             }
 
 

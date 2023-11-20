@@ -15,10 +15,16 @@ internal class Camera
 
     public Vector2 globalToLocal(Vector2 globalPlayer)
     {
-        return new Vector2(globalPlayer.X, height - Math.Abs(globalPlayer.Y - globalCy));
+        //return globalPlayer;
+        float yPos = globalPlayer.Y;
+        yPos -= Game.player.playerVelocity.Y;
+        return new Vector2(globalPlayer.X, yPos);
+        //return new Vector2(globalPlayer.X, height - Math.Abs(globalPlayer.Y - globalCy));
+
     }
     public void UpdateGlobalCy(Vector2 globalPlayer, Vector2 playerSize, Vector2 playerVelocity)
     {
+        /*
         float localPlayerY = height - Math.Abs(globalPlayer.Y - globalCy);
         if (localPlayerY < playerSize.Y/2 && playerVelocity.Y == 0)
         {
@@ -27,6 +33,9 @@ internal class Camera
         {
             globalCy += height / 2;
         }
+        */
+
+
 
         /*
         int newCy = (int) playerPosition.Y - height / 2;

@@ -29,6 +29,7 @@ internal class NPC : Entity
         this.npcColor = originalColor;
         this.followRadius = followRadius;
         this.speed = speed;
+        Game.entities.Add(this);
     }
 
     private void UpdateCollisionCooldown()
@@ -67,6 +68,7 @@ internal class NPC : Entity
             position.X += speed;
         }
 
+
         // Handle collision and update color
         HandleCollision();
         UpdateCollisionCooldown();  // Update collision cooldown
@@ -78,7 +80,7 @@ internal class NPC : Entity
         }
 
 
-        Render(Game.localCamera);
+        //Render(Game.localCamera);
     }
 
 
@@ -154,7 +156,7 @@ internal class NPC : Entity
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
     }
 
-    protected override void Render(Camera camera)
+    public override void Render(Camera camera)
     {
         Vector2 localPosition = camera.globalToLocal(position);
         Draw(localPosition, size);
