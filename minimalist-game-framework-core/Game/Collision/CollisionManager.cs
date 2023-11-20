@@ -8,8 +8,6 @@ internal class CollisionManager
 {
     private static List<ICollidable> collidables = new List<ICollidable>();
     public static List<Blocks> blocks { get; set; } = new List<Blocks>();
-    private static TextRenderer textRenderer;
-    private static Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
     public static double angle;
     public static ICollidable AddObj(string tag, Entity entity)
     {
@@ -32,10 +30,8 @@ internal class CollisionManager
         {
             CollisionObject ret = prospectiveSlideCollision(entity.Bound, blocks[i].Bound);
             CollisionObject collisions = isCollided(bound, blocks[i].Bound , ret);
-            System.Console.WriteLine(ret.getDistance() + " " + collisions.getDistance());
-            if ((collisions.getCollidedHorizontal() || collisions.getCollidedVertical()) && collisions.getDistance() < 2)
+            if ((collisions.getCollidedHorizontal()))
             {
-                System.Console.WriteLine(collisions.getDistance());
                 return collisions;
             }
             //else continue;
@@ -69,8 +65,8 @@ internal class CollisionManager
 
         Rectangle rectA = a.Bound;
         Rectangle rectB = b.Bound;
-        //CollisionObject collisionStatus = isCollided(rectA, rectB);
-        return new CollisionObject();
+        return isCollided(rectA, rectB, new CollisionObject());
+        //return new CollisionObject();
     }
 
     public static CollisionObject prospectiveSlideCollision(Rectangle rectPreCollision, Rectangle colliding)
@@ -128,17 +124,13 @@ internal class CollisionManager
         Vector2 boundBLeftDown = new Vector2(rectB.X, rectB.Y) + new Vector2(0, rectB.Height);
         Vector2 boundBRightDown = new Vector2(rectB.X, rectB.Y) + new Vector2(rectB.Width, rectB.Height);
 
-        if ((boundARightUp.X > boundBLeftUp.X || boundALeftUp.X < boundBRightUp.X) )
+        if ((boundARightUp.X > boundBLeftUp.X || boundALeftUp.X < boundBRightUp.X) && (boundARightDown.Y > boundBRightUp.Y || boundARightUp.Y < boundBRightDown.Y))
         {
             //System.Console.WriteLine("collided hor");
             collisions.setCollidedHorizontal(true);
         }
 
-        if ((boundARightDown.Y > boundBRightUp.Y || boundARightUp.Y < boundBRightDown.Y))
-        {
-           // System.Console.WriteLine("collided vert");
-            collisions.setCollidedVertical(true);
-        }
+
 
         return collisions;
     }
