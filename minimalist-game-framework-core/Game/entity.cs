@@ -15,6 +15,13 @@ internal abstract class Entity : IDisposable
     public abstract void Render(Camera camera);
     protected abstract void Draw(Vector2 position, Vector2 size);
 
+    protected Rectangle GetBounds()
+    {
+        return CalculateBound();
+    }
+
+
+
     public void Dispose()
     {
         throw new NotImplementedException();

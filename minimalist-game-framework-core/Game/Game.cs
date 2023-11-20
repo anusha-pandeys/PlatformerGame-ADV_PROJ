@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.Diagnostics;
 
 
 class Game
@@ -19,6 +20,8 @@ class Game
     Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
     private StartMenu StartMenu;
     private RulesMenu rulesMenu;
+    private WinScreen winScreen = new WinScreen();
+    private LoseScreen loseScreen = new LoseScreen();
     private CreditScreen creditScreen;
     private bool showStartMenu = true;
     public static Player player;
@@ -33,6 +36,7 @@ class Game
     private List<Checkpoint> checkpoints;
     private List<Pits> pits;
     private List<Ladder> ladders;
+    private static int currLevel = 1;
     //private Ladder ladder;
     public Game()
     {
@@ -52,10 +56,10 @@ class Game
 
 
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
-        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red);
+        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 1.5f);
 
         Vector2 greyNPCPosition = new Vector2(500, 300); // Set the grey NPC's initial position
-        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray);
+        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 300f, 1.0f);
 
         levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
@@ -67,24 +71,12 @@ class Game
         checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
         //ladder = new Ladder(new Vector2(100, 200), new Vector2(50, 100));
         //CollisionManager.AddObj("pit", pit);
+        loadEntities();
         CollisionManager.AddObj("player", player);
-        foreach (var block in levelBlocks)
-        {
-            //block.blockLoop();
-            CollisionManager.addBlock(block);
-        }
-        foreach (var pit in pits)
-        {
-            //pit.pitsLoop();
-            CollisionManager.AddObj("pit", pit);
-        }
-        foreach (var ladder in ladders)
-        {
-            //pit.pitsLoop();
-            CollisionManager.AddObj("ladder", ladder);
-        }
+        
         localCamera = new Camera();
     }
+    //
 
     public void Update()
     {
@@ -122,6 +114,7 @@ class Game
                 {
                     //implement death/game over
                     System.Console.WriteLine("dead");
+                    loseScreen.show();
                 }
                 //CollisionManager.addBlock(block);
             }
@@ -164,15 +157,22 @@ class Game
             }
 
             // Checkpoint collision detection
-            /*foreach (var checkpoint in checkpoints)
+            foreach (var checkpoint in checkpoints)
             {
                 if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
                 {
-                    LoadNewLevel("Game\\level2.txt");
+                    currLevel++;
+                    checkpoints.Clear();
+                    CollisionManager.blocks.Clear();
+                    CollisionManager.collidables.Clear();
+                    winScreen.show(); 
+                    string path = "Game\\level" + currLevel.ToString() + ".txt";
+                    LoadNewLevel(path);
                     player.playerPosition = new Vector2(100, 300); // Reset position
+                    
                     break;
                 }
-            }*/
+            }
 
         }
 
@@ -196,11 +196,31 @@ class Game
     private void LoadNewLevel(string levelPath)
     {
         // Clear existing checkpoints
-        checkpoints.Clear();
-
         levelBlocks = LevelLoader.LoadLevel(levelPath, 50);
+        pits = LevelLoader.loadPits(levelPath, 50);
+        ladders = LevelLoader.loadLadder(levelPath, 50);
+        checkpoints = LevelLoader.LoadCheckpoints(levelPath, 50);
+        loadEntities();
     }
 
+    public void loadEntities()
+    {
+        foreach (var block in levelBlocks)
+        {
+            //block.blockLoop();
+            CollisionManager.addBlock(block);
+        }
+        foreach (var pit in pits)
+        {
+            //pit.pitsLoop();
+            CollisionManager.AddObj("pit", pit);
+        }
+        foreach (var ladder in ladders)
+        {
+            //pit.pitsLoop();
+            CollisionManager.AddObj("ladder", ladder);
+        }
+    }
     public void RenderGrid(IntPtr renderer)
     {
         for (int row = 0; row < 32; row++)
