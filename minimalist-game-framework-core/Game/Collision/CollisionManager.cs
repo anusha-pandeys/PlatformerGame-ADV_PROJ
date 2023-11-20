@@ -25,19 +25,20 @@ internal class CollisionManager
 
 
     public static CollisionObject checkBlockCollision(Entity entity, Vector2 vel)
-    {
+    { 
         Rectangle rectangle = entity.Bound;
         Rectangle bound = new Rectangle((int)(rectangle.X + vel.X), (int)(rectangle.Y + vel.Y), rectangle.Width, rectangle.Height);
         for (int i = 0; i < blocks.Count; i++)
         {
             CollisionObject ret = prospectiveSlideCollision(entity.Bound, blocks[i].Bound);
-            CollisionObject collisions = isCollided(blocks[i].Bound, bound, ret);
+            CollisionObject collisions = isCollided(bound, blocks[i].Bound , ret);
+            System.Console.WriteLine(ret.getDistance() + " " + collisions.getDistance());
             if ((collisions.getCollidedHorizontal() || collisions.getCollidedVertical()) && collisions.getDistance() < 2)
             {
                 System.Console.WriteLine(collisions.getDistance());
                 return collisions;
             }
-            else continue;
+            //else continue;
         }
         return new CollisionObject();
     }
@@ -129,13 +130,13 @@ internal class CollisionManager
 
         if ((boundARightUp.X > boundBLeftUp.X || boundALeftUp.X < boundBRightUp.X) )
         {
-            System.Console.WriteLine("collided hor");
+            //System.Console.WriteLine("collided hor");
             collisions.setCollidedHorizontal(true);
         }
 
         if ((boundARightDown.Y > boundBRightUp.Y || boundARightUp.Y < boundBRightDown.Y))
         {
-            System.Console.WriteLine("collided vert");
+           // System.Console.WriteLine("collided vert");
             collisions.setCollidedVertical(true);
         }
 
