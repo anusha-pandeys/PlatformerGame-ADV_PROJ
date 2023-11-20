@@ -94,7 +94,7 @@ class Game
                 showStartMenu = true;
             }
         }
-
+        displayAngle();
         // Present renderer
         SDL.SDL_RenderPresent(Engine.Renderer2);
     }
@@ -103,5 +103,10 @@ class Game
     {
         string playerCoordinates = string.Format("{0}, {1}", player.getCoordinates()[0].X, player.getCoordinates()[0].Y);
         textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
+    }
+    private void displayAngle()
+    {
+        //System.Console.WriteLine(CollisionManager.angle);
+        textRenderer.displayText(CollisionManager.angle.ToString(), new Vector2(100, 100), Color.Black, font);
     }
 }
