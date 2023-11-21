@@ -21,7 +21,7 @@ class Game
     private RulesMenu rulesMenu;
     private CreditScreen creditScreen;
     private bool showStartMenu = true;
-    private Player player;
+    public  static Player player;
     private Map map;
     //private Blocks floor;
     //private Blocks floor2;
@@ -108,5 +108,10 @@ class Game
     {
         //System.Console.WriteLine(CollisionManager.angle);
         textRenderer.displayText(CollisionManager.angle.ToString(), new Vector2(100, 100), Color.Black, font);
+    }
+
+    public Player getPlayer()
+    {
+        return player;
     }
 }

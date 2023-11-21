@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 
@@ -113,29 +114,11 @@ internal class CollisionManager
     }*/
     public static CollisionObject isCollided(Rectangle rectA, Rectangle rectB, CollisionObject sideCollided)
     {
-        Vector2 shortestDistancePoint = new Vector2();
         CollisionObject collisions = sideCollided;
-        float dx = Math.Max(rectA.Left, rectB.Left) - Math.Min(rectA.Right, rectB.Right);
-        float dy = Math.Max(rectA.Top, rectB.Top) - Math.Min(rectA.Bottom, rectB.Bottom);
 
-        if (dx >= 0 && dy >= 0)
+        if (rectA.IntersectsWith(rectB))
         {
-            // Rectangles overlap, calculate the shortest distance
-            if (dx < dy)
-            {
-                // Collision on the X-axis
-                shortestDistancePoint.X = (rectA.Left < rectB.Left) ? rectA.Right : rectA.Left;
-                shortestDistancePoint.Y = rectA.Top + rectA.Height / 2; // Use the vertical center of rectA
-            }
-            else
-            {
-                // Collision on the Y-axis
-                shortestDistancePoint.X = rectA.Left + rectA.Width / 2; // Use the horizontal center of rectA
-                shortestDistancePoint.Y = (rectA.Top < rectB.Top) ? rectA.Bottom : rectA.Top;
-            }
-
             collisions.setCollided(true);
-            collisions.setDistance(shortestDistancePoint);
         }
 
         return collisions;

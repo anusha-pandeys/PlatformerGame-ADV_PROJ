@@ -51,29 +51,41 @@ internal class Player : Entity
     public void playerLoop()
     {
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
-        
+
         HandleInput();
-        
+
         // Apply gravity
 
         HandleJump();
-        if (collisionDetected.getCollided()) 
+        if (collisionDetected.getCollided())
         {
-            playerPosition = collisionDetected.getDistance();
+            //playerPosition = collisionDetected.getDistance();
             //playerVelocity.Y = 0;
             //playerVelocity.Y -= (GRAVITY);
-            
-        } 
-        
-        //collisionDetected = "";
-        playerVelocity.Y += (GRAVITY);
-        
+            int i = 1;
+            while (collisionDetected.getCollided())
+            {
+                playerPosition.Y -= 2f/i;
+                i++;
+                collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
+            } 
+            if (!collisionDetected.getCollided())
+            {
+                playerVelocity.Y = 0;
+            }
+            //Render(Game.localCamera);
+        }
+        else
+        {
+            //collisionDetected = "";
+            playerVelocity.Y += (GRAVITY);
 
-        // Update player position
-        playerPosition += playerVelocity;
 
-        
+            // Update player position
+            playerPosition += playerVelocity;
 
+
+        }
         // Collision detection for the floor
         if (playerPosition.Y > 400) // Assuming 500 is ground level
         {
@@ -128,7 +140,7 @@ internal class Player : Entity
             CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
             if (collisionDetected.getCollided())
             {
-                System.Console.WriteLine("right");
+             //   System.Console.WriteLine("right");
                 playerVelocity.X = 0;
             }
             else
@@ -181,8 +193,10 @@ internal class Player : Entity
         }
     }
 
-
-
+    public void renderOutside(Camera camera)
+    {
+        Render(camera);
+    }
     protected override void Render(Camera camera)
     {
         int numKeys;
