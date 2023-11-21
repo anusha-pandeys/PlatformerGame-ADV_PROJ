@@ -57,17 +57,13 @@ internal class Player : Entity
         // Apply gravity
 
         HandleJump();
-        if (collisionDetected.getCollidedHorizontal()) 
+        if (collisionDetected.getCollided()) 
         {
-            playerVelocity.Y = 0;
-            playerVelocity.Y -= (GRAVITY);
-            //playerPosition.Y -= 1f;
-           // System.Console.WriteLine("down");
-        } else if (collisionDetected.getCollidedHorizontal())
-        {
-           // System.Console.WriteLine("up");
-            playerVelocity.Y = playerVelocity.Y * -1;
-        }
+            playerPosition = collisionDetected.getDistance();
+            //playerVelocity.Y = 0;
+            //playerVelocity.Y -= (GRAVITY);
+            
+        } 
         
         //collisionDetected = "";
         playerVelocity.Y += (GRAVITY);
@@ -113,7 +109,7 @@ internal class Player : Entity
             text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
             CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
-            if (collisionDetected.getCollidedHorizontal()) 
+            if (collisionDetected.getCollided()) 
             {
                 //System.Console.WriteLine("left");
                 playerVelocity.X = 0;
@@ -130,7 +126,7 @@ internal class Player : Entity
             text.displayText("right", new Vector2(10, 30), Color.Black, font);
             Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
             CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
-            if (collisionDetected.getCollidedHorizontal())
+            if (collisionDetected.getCollided())
             {
                 System.Console.WriteLine("right");
                 playerVelocity.X = 0;

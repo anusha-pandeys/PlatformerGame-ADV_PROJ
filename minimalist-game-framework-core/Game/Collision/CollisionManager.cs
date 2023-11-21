@@ -28,9 +28,9 @@ internal class CollisionManager
         Rectangle bound = new Rectangle((int)(rectangle.X + vel.X), (int)(rectangle.Y + vel.Y), rectangle.Width, rectangle.Height);
         for (int i = 0; i < blocks.Count; i++)
         {
-            CollisionObject ret = prospectiveSlideCollision(entity.Bound, blocks[i].Bound);
-            CollisionObject collisions = isCollided(bound, blocks[i].Bound , ret);
-            if ((collisions.getCollidedHorizontal()))
+            //CollisionObject ret = prospectiveSlideCollision(entity.Bound, blocks[i].Bound);
+            CollisionObject collisions = isCollided(bound, blocks[i].Bound , new CollisionObject());
+            if ((collisions.getCollided()))
             {
                 return collisions;
             }
@@ -69,7 +69,7 @@ internal class CollisionManager
         //return new CollisionObject();
     }
 
-    public static CollisionObject prospectiveSlideCollision(Rectangle rectPreCollision, Rectangle colliding)
+   /* public static CollisionObject prospectiveSlideCollision(Rectangle rectPreCollision, Rectangle colliding)
     {
         Vector2 centerPre = new Vector2(rectPreCollision.X + (rectPreCollision.Width / 2), rectPreCollision.Y + (rectPreCollision.Height / 2));
         Vector2 collidingRect = new Vector2(colliding.X + (colliding.Width / 2), colliding.Y + (colliding.Height / 2));
@@ -110,27 +110,33 @@ internal class CollisionManager
         }
 
         return ret;
-    }
+    }*/
     public static CollisionObject isCollided(Rectangle rectA, Rectangle rectB, CollisionObject sideCollided)
     {
+        Vector2 shortestDistancePoint = new Vector2();
         CollisionObject collisions = sideCollided;
-        Vector2 boundALeftUp = new Vector2(rectA.X, rectA.Y);
-        Vector2 boundARightUp = new Vector2(rectA.X, rectA.Y) + new Vector2(rectA.Width, 0);
-        Vector2 boundALeftDown = new Vector2(rectA.X, rectA.Y) + new Vector2(0, rectA.Height);
-        Vector2 boundARightDown = new Vector2(rectA.X, rectA.Y) + new Vector2(rectA.Width, rectA.Height);
+        float dx = Math.Max(rectA.Left, rectB.Left) - Math.Min(rectA.Right, rectB.Right);
+        float dy = Math.Max(rectA.Top, rectB.Top) - Math.Min(rectA.Bottom, rectB.Bottom);
 
-        Vector2 boundBLeftUp = new Vector2(rectB.X, rectB.Y);
-        Vector2 boundBRightUp = new Vector2(rectB.X, rectB.Y) + new Vector2(rectB.Width, 0);
-        Vector2 boundBLeftDown = new Vector2(rectB.X, rectB.Y) + new Vector2(0, rectB.Height);
-        Vector2 boundBRightDown = new Vector2(rectB.X, rectB.Y) + new Vector2(rectB.Width, rectB.Height);
-
-        if ((boundARightUp.X > boundBLeftUp.X || boundALeftUp.X < boundBRightUp.X) && (boundARightDown.Y > boundBRightUp.Y || boundARightUp.Y < boundBRightDown.Y))
+        if (dx >= 0 && dy >= 0)
         {
-            //System.Console.WriteLine("collided hor");
-            collisions.setCollidedHorizontal(true);
+            // Rectangles overlap, calculate the shortest distance
+            if (dx < dy)
+            {
+                // Collision on the X-axis
+                shortestDistancePoint.X = (rectA.Left < rectB.Left) ? rectA.Right : rectA.Left;
+                shortestDistancePoint.Y = rectA.Top + rectA.Height / 2; // Use the vertical center of rectA
+            }
+            else
+            {
+                // Collision on the Y-axis
+                shortestDistancePoint.X = rectA.Left + rectA.Width / 2; // Use the horizontal center of rectA
+                shortestDistancePoint.Y = (rectA.Top < rectB.Top) ? rectA.Bottom : rectA.Top;
+            }
+
+            collisions.setCollided(true);
+            collisions.setDistance(shortestDistancePoint);
         }
-
-
 
         return collisions;
     }

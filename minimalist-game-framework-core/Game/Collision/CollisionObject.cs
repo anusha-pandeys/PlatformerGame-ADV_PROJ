@@ -10,31 +10,25 @@ internal class CollisionObject
     private bool right;
     private bool up;
     private bool down;
-    private bool collidedVertical;
-    private bool collidedHorizontal;
-    private double distance;
+    private bool collided;
+    private Vector2 distance;
     public CollisionObject()
     {
-        distance = 0;
+        distance = new Vector2();
         left = false;
         right = false;
         up = false;
         down = false;
-        collidedVertical = false;
-        collidedHorizontal = false;
+        collided = false;
     }
 
-    public double getDistance()
+    public Vector2 getDistance()
     {
         return distance; 
     }
-    public bool getCollidedVertical()
+    public bool getCollided()
     {
-        return collidedVertical;
-    }
-    public bool getCollidedHorizontal()
-    {
-        return collidedHorizontal;
+        return collided;
     }
     public bool getLeft()
     {
@@ -67,19 +61,15 @@ internal class CollisionObject
     {
         this.up = up;
     }
-    public void setCollidedVertical(bool collided)
+    public void setCollided(bool collided)
     {
-        this.collidedVertical = collided;
-    }
-    public void setCollidedHorizontal(bool collided)
-    {
-        this.collidedHorizontal = collided;
+        this.collided = collided;
     }
     public void setDown(bool down)
     {
         this.down = down;
     }
-    public void setDistance(double distance)
+    public void setDistance(Vector2 distance)
     {
         this.distance = distance;
     }
