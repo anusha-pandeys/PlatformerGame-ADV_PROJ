@@ -11,8 +11,8 @@ using System.Security.Cryptography;
 internal class Player : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;  // Gets the SDL Renderer from the Engine class
-    private const float PLAYER_WIDTH = 50f;
-    private const float PLAYER_HEIGHT = 70f;
+    public const float PLAYER_WIDTH = 50f;
+    public const float PLAYER_HEIGHT = 70f;
     private const int BLOCK_SIZE = 50;
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
@@ -23,6 +23,7 @@ internal class Player : Entity
     private TextRenderer text;
     private Font font;
     private Collidable player;
+    private bool blockBelow;
 
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
@@ -31,6 +32,7 @@ internal class Player : Entity
         this.text = text;
         this.font = font;
         this.player = new Collidable(this, "player");
+        blockBelow = false;
     }
 
 
@@ -50,32 +52,20 @@ internal class Player : Entity
 
     public void playerLoop()
     {
-        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
-
         HandleInput();
-
-        // Apply gravity
-
         HandleJump();
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
         if (collisionDetected.getCollided())
         {
-            //playerPosition = collisionDetected.getDistance();
-            //playerVelocity.Y = 0;
-            //playerVelocity.Y -= (GRAVITY);
-            int i = 1;
-            while (collisionDetected.getCollided())
+            if (collisionDetected.getDistanceY() > 0)
             {
-                playerPosition.Y -= 2f/i;
-                i++;
-                collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
-            } 
-            if (!collisionDetected.getCollided())
-            {
-                playerVelocity.Y = 0;
+                playerPosition.Y -= collisionDetected.getDistanceY();
+                //collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
             }
-            //Render(Game.localCamera);
-        }
-        else
+            playerVelocity.Y = 0;
+            blockBelow = CollisionManager.getClosestBlock(this);
+        } 
+        else if (!blockBelow)
         {
             //collisionDetected = "";
             playerVelocity.Y += (GRAVITY);
@@ -94,7 +84,7 @@ internal class Player : Entity
         }
 
         // Collision detection for the walls (placeholder logic)
-        if (playerPosition.X < 0 || playerPosition.X + PLAYER_WIDTH > 800) // Assuming screen width is 800
+        if (playerPosition.X < 0 || playerPosition.X + PLAYER_WIDTH > 640) // Assuming screen width is 800
         {
             playerVelocity.X = 0; // Stop horizontal movement
         }

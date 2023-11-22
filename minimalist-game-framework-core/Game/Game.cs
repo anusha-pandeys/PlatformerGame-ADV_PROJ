@@ -107,7 +107,7 @@ class Game
     private void displayAngle()
     {
         //System.Console.WriteLine(CollisionManager.angle);
-        textRenderer.displayText(CollisionManager.angle.ToString(), new Vector2(100, 100), Color.Black, font);
+       // textRenderer.displayText(CollisionManager.angle.ToString(), new Vector2(100, 100), Color.Black, font);
     }
 
     public Player getPlayer()

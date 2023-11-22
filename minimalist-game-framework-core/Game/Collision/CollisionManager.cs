@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Numerics;
 using System.Text;
 
 internal class CollisionManager
 {
     private static List<ICollidable> collidables = new List<ICollidable>();
     public static List<Blocks> blocks { get; set; } = new List<Blocks>();
-    public static double angle;
+    public static CollisionObject collision = new CollisionObject();
     public static ICollidable AddObj(string tag, Entity entity)
     {
         ICollidable collidable = new Collidable(entity, tag);
@@ -30,16 +31,40 @@ internal class CollisionManager
         for (int i = 0; i < blocks.Count; i++)
         {
             //CollisionObject ret = prospectiveSlideCollision(entity.Bound, blocks[i].Bound);
-            CollisionObject collisions = isCollided(bound, blocks[i].Bound , new CollisionObject());
-            if ((collisions.getCollided()))
+            collision = isCollided(bound, blocks[i].Bound , new CollisionObject());
+            if(collision.getCollided()) 
             {
-                return collisions;
+                return collision;
             }
-            //else continue;
         }
         return new CollisionObject();
     }
-        
+
+    public static bool getClosestBlock(Player player)
+    {
+        float playerCenterX = player.Position.X + player.playerSize.X / 2;
+        float playerCenterY = player.Position.Y + player.playerSize.Y / 2;
+        int max = 0;
+        double closestDist = double.MaxValue;
+        for(int i = 0; i < blocks.Count; i++)
+        {
+            Rectangle curr = blocks[i].Bound;
+            float currCenterX = curr.X + curr.Width / 2;
+            float currCenterY = curr.Y + curr.Height / 2;
+            double dist = Math.Sqrt(Math.Pow(playerCenterX - currCenterX, 2) + Math.Pow(playerCenterY - currCenterY, 2));
+            if(dist < closestDist)
+            {
+                closestDist = dist;
+                max = i;
+            }
+        }
+        Rectangle closest = blocks[max].Bound;
+        if(Math.Abs((closest.Y - playerCenterY) - ((player.playerSize.Y/2) + (closest.Width/2))) < 10)
+        {
+            return true;
+        }
+        return false;
+    }
     public static CollisionObject checkCollisions(string objA, string objB) 
     {
         for (int i = 0; i < collidables.Count-1; i++) { 
@@ -115,12 +140,29 @@ internal class CollisionManager
     public static CollisionObject isCollided(Rectangle rectA, Rectangle rectB, CollisionObject sideCollided)
     {
         CollisionObject collisions = sideCollided;
-
+        Vector2 maxChange = new Vector2();
+        float dyA = (rectA.Y + rectA.Height) - (rectB.Y);
+        float dyB = (rectB.Y + rectB.Height) - (rectA.Y);
+        if (dyA < dyB)
+        {
+            collisions.setDistanceY(Math.Abs(dyA));
+        } else
+        {
+            collisions.setDistanceY(Math.Abs(dyB));
+        }
+        float dxA = (rectA.X + rectA.Width) - (rectB.X);
+        float dxB = (rectB.X + rectB.Width) - (rectA.X);
+        if (dxA < dxB)
+        {
+            collisions.setDistanceX(Math.Abs(dxA));
+        } else
+        {
+            collisions.setDistanceX(Math.Abs(dxB));
+        }
         if (rectA.IntersectsWith(rectB))
         {
             collisions.setCollided(true);
-        }
-
+        } 
         return collisions;
     }
 }
