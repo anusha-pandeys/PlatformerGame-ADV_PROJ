@@ -1,14 +1,16 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Numerics;
 using System.Text;
-
 
 internal class CollisionManager
 {
     public static List<ICollidable> collidables { get; set; } = new List<ICollidable>();
     public static List<Blocks> blocks { get; set; } = new List<Blocks>();
-
+    public static CollisionObject collision = new CollisionObject();
     public static ICollidable AddObj(string tag, Entity entity)
     {
         ICollidable collidable = new Collidable(entity, tag);
@@ -21,38 +23,52 @@ internal class CollisionManager
         blocks.Add(block);
     }
 
-    public static string checkBlockCollision(Entity entity, Vector2 vel)
-    {
+
+    public static CollisionObject checkBlockCollision(Entity entity, Vector2 vel)
+    { 
         Rectangle rectangle = entity.Bound;
         Rectangle bound = new Rectangle((int)(rectangle.X + vel.X), (int)(rectangle.Y + vel.Y), rectangle.Width, rectangle.Height);
         for (int i = 0; i < blocks.Count; i++)
         {
-            Dictionary<string, bool> ret = isCollided(bound, blocks[i].Bound);
-            string returnStr = "";
-            if (ret.ContainsValue(true) && ret.ContainsKey("up"))
+            //CollisionObject ret = prospectiveSlideCollision(entity.Bound, blocks[i].Bound);
+            collision = isCollided(bound, blocks[i].Bound , new CollisionObject());
+            if(collision.getCollided()) 
             {
-                returnStr += "up";
+                return collision;
             }
-            else if (ret.ContainsValue(true) && ret.ContainsKey("down"))
-            {
-                returnStr += "down";
-            }
-            if (ret.ContainsValue(true) && ret.ContainsKey("right"))
-            {
-                returnStr += "right";
-            }
-            else if (ret.ContainsValue(true) && ret.ContainsKey("left"))
-            {
 
-                returnStr += "left";
-            }
-            if (!returnStr.Equals("")) return returnStr;
-            else continue;
+
         }
-        return "na";
+        return new CollisionObject();
     }
 
-    public static bool checkCollisions(string objA, string objB)
+    public static bool getClosestBlock(Player player)
+    {
+        float playerCenterX = player.Position.X + player.playerSize.X / 2;
+        float playerCenterY = player.Position.Y + player.playerSize.Y / 2;
+        int max = 0;
+        double closestDist = double.MaxValue;
+        for(int i = 0; i < blocks.Count; i++)
+        {
+            Rectangle curr = blocks[i].Bound;
+            float currCenterX = curr.X + curr.Width / 2;
+            float currCenterY = curr.Y + curr.Height / 2;
+            double dist = Math.Sqrt(Math.Pow(playerCenterX - currCenterX, 2) + Math.Pow(playerCenterY - currCenterY, 2));
+            if(dist < closestDist)
+            {
+                closestDist = dist;
+                max = i;
+            }
+        }
+        Rectangle closest = blocks[max].Bound;
+        if(Math.Abs((closest.Y - playerCenterY) - ((player.playerSize.Y/2) + (closest.Width/2))) < 10)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static CollisionObject checkCollisions(string objA, string objB) 
     {
         for (int i = 0; i < collidables.Count - 1; i++)
         {
@@ -63,16 +79,15 @@ internal class CollisionManager
                 if (obj1.Tag == obj2.Tag)
                 {
                     continue;
-                }
-                else if (((objA == obj1.Tag) && (objB == obj2.Tag)) || ((objA == obj2.Tag) && (objB == obj1.Tag)))
+                } else if (((objA == obj1.Tag) && (objB == obj2.Tag)) || ((objA == obj2.Tag) && (objB == obj1.Tag)))
                 {
                     return isCollided(obj1, obj2);
                 }
             }
-        }
-        return false;
+
+        return null;
     }
-    public static bool isCollided(ICollidable entityA, ICollidable entityB)
+    public static CollisionObject isCollided(ICollidable entityA, ICollidable entityB)
     {
 
         Entity a = entityA.GameObject;
@@ -80,97 +95,37 @@ internal class CollisionManager
 
         Rectangle rectA = a.Bound;
         Rectangle rectB = b.Bound;
-
-        Vector2 boundALeft = new Vector2(rectA.X, rectA.Y);
-        Vector2 boundARight = new Vector2(rectA.X, rectA.Y) + new Vector2(rectA.Width, rectA.Width);
-        Vector2 boundBLeft = new Vector2(rectB.X, rectB.Y);
-        Vector2 boundBRight = new Vector2(rectB.X, rectB.Y) + new Vector2(rectB.Width, rectB.Width);
-
-        if (boundARight.X < boundBLeft.X || boundBRight.X < boundALeft.X ||
-                boundARight.Y < boundBLeft.Y || boundBRight.Y < boundALeft.Y)
-            return false;
-        else return true;
+        return isCollided(rectA, rectB, new CollisionObject());
+        //return new CollisionObject();
     }
-
-    public static Dictionary<string, bool> isCollided(Rectangle rectA, Rectangle rectB)
+      
+    public static CollisionObject isCollided(Rectangle rectA, Rectangle rectB, CollisionObject sideCollided)
     {
-        Dictionary<string, bool> retMap = new Dictionary<string, bool>();
-        bool upOrDown = false;
-        bool rightLeft = false;
-        Vector2 boundALeft = new Vector2(rectA.X, rectA.Y);
-        Vector2 boundARight = new Vector2(rectA.X, rectA.Y) + new Vector2(rectA.Width, rectA.Width);
-        Vector2 boundBLeft = new Vector2(rectB.X, rectB.Y);
-        Vector2 boundBRight = new Vector2(rectB.X, rectB.Y) + new Vector2(rectB.Width, rectB.Width);
-        Rectangle rectATransformed = rectA;
-        Rectangle rectBTransformed = rectB;
-        rectATransformed.X = rectATransformed.X + (rectATransformed.Width / 2);
-        rectATransformed.Y = rectATransformed.Y + (rectATransformed.Height / 2);
-        rectBTransformed.X = rectBTransformed.X + (rectBTransformed.Width / 2);
-        rectBTransformed.Y = rectBTransformed.Y + (rectBTransformed.Height / 2);
-
-        if (rectATransformed.Y < rectBTransformed.Y)
+        CollisionObject collisions = sideCollided;
+        Vector2 maxChange = new Vector2();
+        float dyA = (rectA.Y + rectA.Height) - (rectB.Y);
+        float dyB = (rectB.Y + rectB.Height) - (rectA.Y);
+        if (dyA < dyB)
         {
-            retMap["down"] = true;
-            upOrDown = true;
-        }
-        if (rectATransformed.Y > rectBTransformed.Y)
+            collisions.setDistanceY(Math.Abs(dyA));
+        } else
         {
-            retMap["up"] = true;
-            upOrDown = false;
+            collisions.setDistanceY(Math.Abs(dyB));
         }
-        if (rectATransformed.X < rectBTransformed.X)
+        float dxA = (rectA.X + rectA.Width) - (rectB.X);
+        float dxB = (rectB.X + rectB.Width) - (rectA.X);
+        if (dxA < dxB)
         {
-            retMap["right"] = true;
-            rightLeft = true;
-        }
-        if (rectATransformed.X > rectBTransformed.X)
+            collisions.setDistanceX(Math.Abs(dxA));
+        } else
         {
-            retMap["left"] = true;
-            rightLeft = false;
+            collisions.setDistanceX(Math.Abs(dxB));
         }
-
-        if (boundARight.X < boundBLeft.X || boundBRight.X < boundALeft.X ||
-                boundARight.Y < boundBLeft.Y || boundBRight.Y < boundALeft.Y)//
+        if (rectA.IntersectsWith(rectB))
         {
-            if (upOrDown && retMap.ContainsKey("down"))
-            {
-                retMap["down"] = false;
-            }
-            else if (!upOrDown && retMap.ContainsKey("up"))
-            {
-                retMap["up"] = false;
-            }
-            if (rightLeft && retMap.ContainsKey("right"))
-            {
-                retMap["right"] = false;
-            }
-            else if (!rightLeft && retMap.ContainsKey("left"))
-            {
-                retMap["left"] = false;
-            }
-        }
-        else
-        {
-            if (upOrDown && retMap.ContainsKey("down"))
-            {
-                retMap["down"] = true;
-            }
-            else if (!upOrDown && retMap.ContainsKey("up"))
-            {
-                retMap["up"] = true;
-            }
-            if (rightLeft && retMap.ContainsKey("right"))
-            {
-                //System.Console.WriteLine("left");
-                retMap["right"] = true;
-            }
-            else if (!rightLeft && retMap.ContainsKey("left"))
-            {
-
-                retMap["left"] = true;
-            }
-        }
-        return retMap;
+            collisions.setCollided(true);
+        } 
+        return collisions;
     }
 
     //handle collisions between the player and checkpoints:

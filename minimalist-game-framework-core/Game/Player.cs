@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.Security.Cryptography;
 
 internal class Player : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;  // Gets the SDL Renderer from the Engine class
-    private const float PLAYER_WIDTH = 50f;
-    private const float PLAYER_HEIGHT = 50f;
+    public const float PLAYER_WIDTH = 50f;
+    public const float PLAYER_HEIGHT = 70f;
     private const int BLOCK_SIZE = 50;
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
@@ -26,8 +27,8 @@ internal class Player : Entity
     private Color playerColor;
     private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
     private float timeSinceCollision = 0.0f;
-    private Collidable player;
-    
+    private bool blockBelow;
+
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
@@ -37,6 +38,7 @@ internal class Player : Entity
         this.playerColor = originalColor;
         this.player = new Collidable(this, "player");
         Game.entities.Add(this);
+        blockBelow = false;
     }
 
 
@@ -83,34 +85,30 @@ internal class Player : Entity
 
     public void playerLoop()
     {
-        string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
-
         HandleInput();
         HandleJump();
-
-        // Apply gravity
-        playerPosition += playerVelocity;
-
-        if (collisionDetected.Contains("down") && !keyPressed())
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
+        if (collisionDetected.getCollided())
         {
-            HandleCollision();
+            if (collisionDetected.getDistanceY() > 0)
+            {
+                playerPosition.Y -= collisionDetected.getDistanceY();
+                //collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
+            }
             playerVelocity.Y = 0;
-            playerVelocity.Y -= (GRAVITY);
-            playerPosition.Y -= 1f;
-            System.Console.WriteLine("down");
-        }
-        else if (collisionDetected.Contains("up"))
+            blockBelow = CollisionManager.getClosestBlock(this);
+        } 
+        else if (!blockBelow)
         {
-            HandleCollision();
-            System.Console.WriteLine("up");
-            playerVelocity.Y = playerVelocity.Y * -1;
+            //collisionDetected = "";
+            playerVelocity.Y += (GRAVITY);
+
+
+            // Update player position
+            playerPosition += playerVelocity;
+
+
         }
-
-        playerVelocity.Y += (GRAVITY);
-
-        // Update player position
-        playerPosition += playerVelocity;
-
         // Collision detection for the floor
         if (playerPosition.Y > 400) // Assuming 500 is ground level
         {
@@ -119,21 +117,12 @@ internal class Player : Entity
         }
 
         // Collision detection for the walls (placeholder logic)
-        if (playerPosition.X < 0 || playerPosition.X + PLAYER_WIDTH > 800) // Assuming screen width is 800
+        if (playerPosition.X < 0 || playerPosition.X + PLAYER_WIDTH > 640) // Assuming screen width is 800
         {
             playerVelocity.X = 0; // Stop horizontal movement
         }
 
-        // Update the elapsed time since the last collision
-        timeSinceCollision += Engine.TimeDelta;
-
-        // Check if enough time has passed since the last collision to revert to the original color
-        if (timeSinceCollision >= collisionCooldown)
-        {
-            playerColor = originalColor;
-        }
-        
-        //Render(Game.localCamera);
+        Render(Game.localCamera);
     }
 
     private void HandleCollision()
@@ -162,8 +151,8 @@ internal class Player : Entity
         {
             text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
-            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
-            if (collisionDetected.Contains("left")) 
+            CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
+            if (collisionDetected.getCollided()) 
             {
                 //System.Console.WriteLine("left");
                 playerVelocity.X = 0;
@@ -179,10 +168,10 @@ internal class Player : Entity
         {
             text.displayText("right", new Vector2(10, 30), Color.Black, font);
             Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
-            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
-            if (collisionDetected.Contains("right"))
+            CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
+            if (collisionDetected.getCollided())
             {
-                System.Console.WriteLine("right");
+             //   System.Console.WriteLine("right");
                 playerVelocity.X = 0;
             }
             else
@@ -236,8 +225,11 @@ internal class Player : Entity
     }
 
 
-
-    public override void Render(Camera camera)
+    public void renderOutside(Camera camera)
+    {
+        Render(camera);
+    }
+    protected override void Render(Camera camera)
     {
         int numKeys;
         IntPtr keyStatePtr = SDL.SDL_GetKeyboardState(out numKeys);

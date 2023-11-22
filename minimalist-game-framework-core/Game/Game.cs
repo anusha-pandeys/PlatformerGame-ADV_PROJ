@@ -24,7 +24,7 @@ class Game
     private LoseScreen loseScreen = new LoseScreen();
     private CreditScreen creditScreen;
     private bool showStartMenu = true;
-    public static Player player;
+    public  static Player player;
     private Map map;
     private NPC redNPC;
     private NPC greyNPC;
@@ -38,6 +38,7 @@ class Game
     private List<Ladder> ladders;
     private static int currLevel = 1;
     //private Ladder ladder;
+
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 300); // Initial position
@@ -47,6 +48,7 @@ class Game
         StartMenu = new StartMenu();
         rulesMenu = new RulesMenu();
         creditScreen = new CreditScreen();
+        slide = new Slides(new Vector2(300,100), new Vector2(100,100));
         //entities.Add(moving);
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
         //floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
@@ -65,6 +67,7 @@ class Game
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
                                                                             //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
                                                                             //startMenu = new StartMenu();
+
         pits = LevelLoader.loadPits("Game\\levelPractice.txt", 50);
         ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
         //loading checkpoints
@@ -74,6 +77,9 @@ class Game
         loadEntities();
         CollisionManager.AddObj("player", player);
         
+
+        CollisionManager.AddObj("player", player);
+        CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
     }
     //
@@ -130,6 +136,7 @@ class Game
             
             
             player.playerLoop();
+            slide.slidesLoop();
             localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             redNPC.Update();
@@ -242,5 +249,13 @@ class Game
                 SDL.SDL_RenderDrawRect(renderer, ref tileRect);
             }
         }
+    }
+
+}
+
+
+    public Player getPlayer()
+    {
+        return player;
     }
 }

@@ -34,6 +34,7 @@ internal class Button
 
     public bool IsClicked()
     {
+
         int mouseX, mouseY;
         SDL.SDL_GetMouseState(out mouseX, out mouseY);
 
