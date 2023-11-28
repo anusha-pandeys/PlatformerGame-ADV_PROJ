@@ -102,33 +102,41 @@ internal class CollisionManager
         CollisionObject collisions = sideCollided;
         float dyA = (rectA.Y + rectA.Height) - (rectB.Y);
         float dyB = (rectB.Y + rectB.Height) - (rectA.Y);
+        float distanceY;
         if (dyA < dyB)
         {
-            collisions.setDistanceY((dyA));
+            distanceY = dyA;
+            //collisions.setDistanceY((dyA));
         } else
         {
-            collisions.setDistanceY((dyB));
+            distanceY= dyB;
+            //collisions.setDistanceY((dyB));
         }
         float dxA = (rectA.X + rectA.Width) - (rectB.X);
         float dxB = (rectB.X + rectB.Width) - (rectA.X);
+        float distanceX;
         if (dxA < dxB)
         {
-            collisions.setDistanceX(Math.Abs(dxA));
+            distanceX = dxA;
+            //collisions.setDistanceX(Math.Abs(dxA));
         } else
         {
-            collisions.setDistanceX(Math.Abs(dxB));
+            distanceX= dxB;
+            //collisions.setDistanceX(Math.Abs(dxB));
+        }
+        if(distanceY < distanceX)
+        {
+            collisions.setDistanceY(distanceY);
+            collisions.setDistanceX(0f);
+        } else
+        {
+            collisions.setDistanceY(0f);
+            collisions.setDistanceX(distanceX);
         }
         if (rectA.IntersectsWith(rectB))
         {
-            if(rectA.Right > rectB.Left)
-            {
-                collisions.setRight(true);
-            } else if (rectA.Left < rectB.Right)
-            {
-                collisions.setLeft(true);  
-            }
             collisions.setCollided(true);
-        } 
+        }
         return collisions;
     }
 

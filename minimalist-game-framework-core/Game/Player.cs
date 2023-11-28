@@ -107,13 +107,14 @@ internal class Player : Entity
         {
             playerVelocity.Y += (GRAVITY);
         }
-        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, playerVelocity.Y), secondsElapsed);
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, playerVelocity.Y+1f), secondsElapsed);
         if (collisionDetected.getCollided())
         {
             playerVelocity.Y = 0;
             if (collisionDetected.getDistanceY() > 0 && collisionDetected.getDistanceX() < CollisionManager.blocks[0].size.X/2)
             {
-                playerPosition.Y -= collisionDetected.getDistanceY();
+                playerPosition -= new Vector2(collisionDetected.getDistanceX(), collisionDetected.getDistanceY());
+                //playerPosition.Y -= collisionDetected.getDistanceY();
             }
             
         }
@@ -122,10 +123,18 @@ internal class Player : Entity
     {
         float horizontalMovement = playerVelocity.X;
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(playerVelocity.X, 0), secondsElapsed);
-        if (collisionDetected.getCollided() && (collisionDetected.getLeft() || collisionDetected.getRight()))
+        if (collisionDetected.getCollided())
         {
             // Handle collision when moving in the original direction
-            playerVelocity.X = 0;
+            //playerVelocity.X = 0;
+            playerPosition -= new Vector2(collisionDetected.getDistanceX(), collisionDetected.getDistanceY());
+        } else
+        {
+            collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(playerVelocity.X, 0), secondsElapsed);
+            if (collisionDetected.getCollided())
+            {
+                playerPosition += new Vector2(collisionDetected.getDistanceX(), collisionDetected.getDistanceY());
+            }
         }
     }
 
