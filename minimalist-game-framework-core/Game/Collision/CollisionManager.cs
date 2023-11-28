@@ -24,20 +24,18 @@ internal class CollisionManager
     }
 
 
-    public static CollisionObject checkBlockCollision(Entity entity, Vector2 vel)
+    public static CollisionObject checkBlockCollision(Entity entity, Vector2 vel, double time)
     { 
         Rectangle rectangle = entity.Bound;
-        Rectangle bound = new Rectangle((int)(rectangle.X + vel.X), (int)(rectangle.Y + vel.Y), rectangle.Width, rectangle.Height);
+        Rectangle bound = new Rectangle((int)(rectangle.X + (vel.X*time)), (int)(rectangle.Y + (vel.Y*time)), rectangle.Width, rectangle.Height);
         for (int i = 0; i < blocks.Count; i++)
         {
-            //CollisionObject ret = prospectiveSlideCollision(entity.Bound, blocks[i].Bound);
             collision = isCollided(bound, blocks[i].Bound , new CollisionObject());
             if(collision.getCollided()) 
             {
+                collision.setBlock(blocks[i]);
                 return collision;
             }
-
-
         }
         return new CollisionObject();
     }
@@ -79,12 +77,13 @@ internal class CollisionManager
                 if (obj1.Tag == obj2.Tag)
                 {
                     continue;
-                } else if (((objA == obj1.Tag) && (objB == obj2.Tag)) || ((objA == obj2.Tag) && (objB == obj1.Tag)))
+                }
+                else if (((objA == obj1.Tag) && (objB == obj2.Tag)) || ((objA == obj2.Tag) && (objB == obj1.Tag)))
                 {
                     return isCollided(obj1, obj2);
                 }
             }
-
+        }
         return null;
     }
     public static CollisionObject isCollided(ICollidable entityA, ICollidable entityB)
@@ -96,21 +95,19 @@ internal class CollisionManager
         Rectangle rectA = a.Bound;
         Rectangle rectB = b.Bound;
         return isCollided(rectA, rectB, new CollisionObject());
-        //return new CollisionObject();
     }
       
     public static CollisionObject isCollided(Rectangle rectA, Rectangle rectB, CollisionObject sideCollided)
     {
         CollisionObject collisions = sideCollided;
-        Vector2 maxChange = new Vector2();
         float dyA = (rectA.Y + rectA.Height) - (rectB.Y);
         float dyB = (rectB.Y + rectB.Height) - (rectA.Y);
         if (dyA < dyB)
         {
-            collisions.setDistanceY(Math.Abs(dyA));
+            collisions.setDistanceY((dyA));
         } else
         {
-            collisions.setDistanceY(Math.Abs(dyB));
+            collisions.setDistanceY((dyB));
         }
         float dxA = (rectA.X + rectA.Width) - (rectB.X);
         float dxB = (rectB.X + rectB.Width) - (rectA.X);
@@ -123,6 +120,13 @@ internal class CollisionManager
         }
         if (rectA.IntersectsWith(rectB))
         {
+            if(rectA.Right > rectB.Left)
+            {
+                collisions.setRight(true);
+            } else if (rectA.Left < rectB.Right)
+            {
+                collisions.setLeft(true);  
+            }
             collisions.setCollided(true);
         } 
         return collisions;
@@ -139,5 +143,4 @@ internal class CollisionManager
         }
         return false;
     }
-    
 }

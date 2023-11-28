@@ -35,10 +35,10 @@ internal class Pits : Entity
     public bool checkCollision()
     {
         //Dictionary<string, bool> ret = CollisionManager.checkCollisions("pit", "player");
-        if(CollisionManager.checkCollisions("player", "pit"))
-        {
-            return true;
-        }
+        //if(CollisionManager.checkCollisions("player", "pit"))
+        //{
+        //    return true;
+      //  }
         return false;
     }
 

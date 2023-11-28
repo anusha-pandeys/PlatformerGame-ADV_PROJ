@@ -48,7 +48,7 @@ class Game
         StartMenu = new StartMenu();
         rulesMenu = new RulesMenu();
         creditScreen = new CreditScreen();
-        slide = new Slides(new Vector2(300,100), new Vector2(100,100));
+        //slide = new Slides(new Vector2(300,100), new Vector2(100,100));
         //entities.Add(moving);
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
         //floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
@@ -69,17 +69,17 @@ class Game
                                                                             //startMenu = new StartMenu();
 
         pits = LevelLoader.loadPits("Game\\levelPractice.txt", 50);
-        ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
+        //ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
         //loading checkpoints
-        checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
+        //checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
         //ladder = new Ladder(new Vector2(100, 200), new Vector2(50, 100));
         //CollisionManager.AddObj("pit", pit);
         loadEntities();
         CollisionManager.AddObj("player", player);
         
 
-        CollisionManager.AddObj("player", player);
-        CollisionManager.AddObj("slide", slide);
+        //CollisionManager.AddObj("player", player);
+        //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
     }
     //
@@ -124,19 +124,19 @@ class Game
                 }
                 //CollisionManager.addBlock(block);
             }
-            foreach (var ladder in ladders)
-            {
-                ladder.ladderLoop();
+            //foreach (var ladder in ladders)
+            //{
+                /*ladder.ladderLoop();
                 if (ladder.getTranslate())
                 {
                     player.translateUpLadder();
-                }
+                }*/
                 //CollisionManager.addBlock(block);
-            }
+           // }
             
             
             player.playerLoop();
-            slide.slidesLoop();
+            //slide.slidesLoop();
             localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             redNPC.Update();
@@ -145,10 +145,10 @@ class Game
             //moving.updateCoordinates();
 
             // Render checkpoints
-            foreach (var checkpoint in checkpoints)
+        /*    foreach (var checkpoint in checkpoints)
             {
                 checkpoint.Update(localCamera);
-            }
+            }*/
             
             foreach (Entity i in entities)
             {
@@ -164,7 +164,7 @@ class Game
             }
 
             // Checkpoint collision detection
-            foreach (var checkpoint in checkpoints)
+            /*foreach (var checkpoint in checkpoints)
             {
                 if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
                 {
@@ -179,7 +179,7 @@ class Game
                     
                     break;
                 }
-            }
+            }*/
 
         }
 
@@ -222,11 +222,11 @@ class Game
             //pit.pitsLoop();
             CollisionManager.AddObj("pit", pit);
         }
-        foreach (var ladder in ladders)
-        {
+        //foreach (var ladder in ladders)
+        //{
             //pit.pitsLoop();
-            CollisionManager.AddObj("ladder", ladder);
-        }
+        //    CollisionManager.AddObj("ladder", ladder);
+       // }
     }
     public void RenderGrid(IntPtr renderer)
     {
@@ -251,11 +251,9 @@ class Game
         }
     }
 
-}
-
-
     public Player getPlayer()
     {
         return player;
     }
 }
+

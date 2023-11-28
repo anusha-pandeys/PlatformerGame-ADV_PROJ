@@ -64,7 +64,7 @@ internal class Slides : Entity
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
 
-    protected override void Render(Camera camera)
+    public override void Render(Camera camera)
     {
         Draw(this.position, this.size);
     }
