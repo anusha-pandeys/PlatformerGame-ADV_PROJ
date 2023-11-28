@@ -27,7 +27,7 @@ internal class Player : Entity
     private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
     private float timeSinceCollision = 0.0f;
     private Collidable player;
-    
+    public HealthBar healthBar;
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
@@ -36,10 +36,14 @@ internal class Player : Entity
         this.font = font;
         this.playerColor = originalColor;
         this.player = new Collidable(this, "player");
+        healthBar = new HealthBar("playerHealthBar", new Vector2(220,50), 100);
         Game.entities.Add(this);
     }
 
-
+    public void setHealth(int health)
+    {
+        healthBar.setHealth(health);
+    }
     internal Rectangle GetPlayerBounds()
     {
         return CalculateBound();
@@ -83,6 +87,7 @@ internal class Player : Entity
 
     public void playerLoop()
     {
+        healthBar.Render();
         string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
 
         HandleInput();

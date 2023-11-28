@@ -9,17 +9,16 @@ internal class HealthBar : UIElements
     private Vector2 position;
     private int health;
     private IntPtr Renderer => Engine.Renderer2;
-    public HealthBar(string name, Vector2 position)
+    public HealthBar(string name, Vector2 position, int health)
     {
         setName(name);
         setPosition(position);
-        health = 100;
+        this.health = health;
     }
 
     public void setHealth(int health)
     {
         this.health = health;
-        Draw();
     }
 
     public int getHealth()
@@ -43,7 +42,7 @@ internal class HealthBar : UIElements
         this.position = position;
     }
 
-    public override void Render(Camera camera)
+    public override void Render()
     {
         Draw(position, new Vector2(200, 50));
     }
@@ -51,7 +50,7 @@ internal class HealthBar : UIElements
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 205, 133, 63, 100);
+        SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 51, 100);
 
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
@@ -63,16 +62,18 @@ internal class HealthBar : UIElements
 
         SDL.SDL_RenderFillRect(Renderer, ref rect);
 
-        SDL.SDL_SetRenderDrawColor(Renderer, 220, 20, 60, 100);
-
+        SDL.SDL_SetRenderDrawColor(Renderer, 255, 51, 51, 100);
+        int offset = 30;
+        double sizeX =  ((double)size.X * (health / 100.0))-20;
         SDL.SDL_Rect rect2 = new SDL.SDL_Rect()
         {
-            x = (int)position.X+10,
-            y = (int)position.Y+10,
-            w = (int)(size.X*(health/100))-10,
-            h = (int)size.Y-10
+            
+            x = (int)(position.X+ 10),
+            y = (int)(position.Y+ 10),
+            w = (int)sizeX,
+            h = (int)(size.Y-20)
         };
 
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        SDL.SDL_RenderFillRect(Renderer, ref rect2);
     }
 }

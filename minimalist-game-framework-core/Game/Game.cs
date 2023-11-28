@@ -118,6 +118,7 @@ class Game
                 }
                 //CollisionManager.addBlock(block);
             }
+            player.playerLoop();
             foreach (var ladder in ladders)
             {
                 ladder.ladderLoop();
@@ -129,7 +130,7 @@ class Game
             }
             
             
-            player.playerLoop();
+            
             localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             redNPC.Update();
@@ -175,7 +176,6 @@ class Game
             }
 
         }
-
         SDL.SDL_RenderPresent(Engine.Renderer2);
 
         RenderGrid(Engine.Renderer2);
