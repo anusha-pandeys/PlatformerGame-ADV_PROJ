@@ -30,7 +30,7 @@ internal class Pits : Entity
         if (checkCollision())
         {
             //playerDeath = true;
-            Game.player.setHealth(10);
+            Game.player.setHealth(50);
         }
     }
     public bool checkCollision()

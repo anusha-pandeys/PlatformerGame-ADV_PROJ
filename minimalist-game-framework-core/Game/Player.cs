@@ -36,7 +36,7 @@ internal class Player : Entity
         this.font = font;
         this.playerColor = originalColor;
         this.player = new Collidable(this, "player");
-        healthBar = new HealthBar("playerHealthBar", new Vector2(220,50), 100);
+        healthBar = new HealthBar("playerHealthBar", new Vector2(220,50), 100, new Vector2(100, 50));
         Game.entities.Add(this);
     }
 

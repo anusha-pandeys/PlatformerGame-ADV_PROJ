@@ -7,13 +7,15 @@ internal class HealthBar : UIElements
 {
     private string name;
     private Vector2 position;
+    private Vector2 size;
     private int health;
     private IntPtr Renderer => Engine.Renderer2;
-    public HealthBar(string name, Vector2 position, int health)
+    public HealthBar(string name, Vector2 position, int health, Vector2 size)
     {
         setName(name);
         setPosition(position);
         this.health = health;
+        this.size = size;
     }
 
     public void setHealth(int health)
@@ -44,9 +46,17 @@ internal class HealthBar : UIElements
 
     public override void Render()
     {
-        Draw(position, new Vector2(200, 50));
+        Draw(position, getSize());
+    }
+    public override void setSize(Vector2 size)
+    {
+        this.size = size;
     }
 
+    public override Vector2 getSize()
+    {
+        return size;
+    }
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
@@ -61,19 +71,21 @@ internal class HealthBar : UIElements
         };
 
         SDL.SDL_RenderFillRect(Renderer, ref rect);
-
+        Vector2 healthSize = getSize() - new Vector2(20, 20);
         SDL.SDL_SetRenderDrawColor(Renderer, 255, 51, 51, 100);
         int offset = 30;
-        double sizeX =  ((double)size.X * (health / 100.0))-20;
+        double sizeX =  ((double)healthSize.X * (health / 100.0));
         SDL.SDL_Rect rect2 = new SDL.SDL_Rect()
         {
             
             x = (int)(position.X+ 10),
             y = (int)(position.Y+ 10),
             w = (int)sizeX,
-            h = (int)(size.Y-20)
+            h = (int)(healthSize.Y)
         };
 
         SDL.SDL_RenderFillRect(Renderer, ref rect2);
     }
+
+ 
 }
