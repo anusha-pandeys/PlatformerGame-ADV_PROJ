@@ -88,8 +88,8 @@ internal class Player : Entity
         HandleInput();
         HandleJump();
         double secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
-        HandleCollisionX(secondsElapsed);
         HandleCollisionY(secondsElapsed);
+        HandleCollisionX(secondsElapsed);
         playerPosition += playerVelocity;
         // Collision detection for the floor
         if (playerPosition.Y > 400) // Assuming 500 is ground level
@@ -103,37 +103,30 @@ internal class Player : Entity
 
     private void HandleCollisionY(double secondsElapsed)
     {
-        if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), 1).getCollided())
-        {
-            playerVelocity.Y += (GRAVITY);
-        }
-        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, playerVelocity.Y+1f), secondsElapsed);
+        
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, playerVelocity.Y+2f), secondsElapsed);
         if (collisionDetected.getCollided())
         {
+            playerPosition.Y += collisionDetected.getDistanceY();
             playerVelocity.Y = 0;
-            if (collisionDetected.getDistanceY() > 0 && collisionDetected.getDistanceX() < CollisionManager.blocks[0].size.X/2)
-            {
-                playerPosition -= new Vector2(collisionDetected.getDistanceX(), collisionDetected.getDistanceY());
-                //playerPosition.Y -= collisionDetected.getDistanceY();
-            }
-            
+        } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
+        {
+            playerVelocity.Y += (GRAVITY);
         }
     }
     private void HandleCollisionX(double secondsElapsed)
     {
         float horizontalMovement = playerVelocity.X;
-        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(playerVelocity.X, 0), secondsElapsed);
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(2f, 0), secondsElapsed);
         if (collisionDetected.getCollided())
         {
-            // Handle collision when moving in the original direction
-            //playerVelocity.X = 0;
-            playerPosition -= new Vector2(collisionDetected.getDistanceX(), collisionDetected.getDistanceY());
+            playerPosition.X += collisionDetected.getDistanceX();
         } else
         {
-            collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(playerVelocity.X, 0), secondsElapsed);
+            collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(-2f, 0), secondsElapsed);
             if (collisionDetected.getCollided())
             {
-                playerPosition += new Vector2(collisionDetected.getDistanceX(), collisionDetected.getDistanceY());
+                playerPosition.X += collisionDetected.getDistanceX();
             }
         }
     }

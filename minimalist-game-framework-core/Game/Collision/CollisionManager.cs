@@ -100,41 +100,29 @@ internal class CollisionManager
     public static CollisionObject isCollided(Rectangle rectA, Rectangle rectB, CollisionObject sideCollided)
     {
         CollisionObject collisions = sideCollided;
-        float dyA = (rectA.Y + rectA.Height) - (rectB.Y);
-        float dyB = (rectB.Y + rectB.Height) - (rectA.Y);
-        float distanceY;
-        if (dyA < dyB)
-        {
-            distanceY = dyA;
-            //collisions.setDistanceY((dyA));
-        } else
-        {
-            distanceY= dyB;
-            //collisions.setDistanceY((dyB));
-        }
-        float dxA = (rectA.X + rectA.Width) - (rectB.X);
-        float dxB = (rectB.X + rectB.Width) - (rectA.X);
-        float distanceX;
-        if (dxA < dxB)
-        {
-            distanceX = dxA;
-            //collisions.setDistanceX(Math.Abs(dxA));
-        } else
-        {
-            distanceX= dxB;
-            //collisions.setDistanceX(Math.Abs(dxB));
-        }
-        if(distanceY < distanceX)
-        {
-            collisions.setDistanceY(distanceY);
-            collisions.setDistanceX(0f);
-        } else
-        {
-            collisions.setDistanceY(0f);
-            collisions.setDistanceX(distanceX);
-        }
+        
         if (rectA.IntersectsWith(rectB))
         {
+                        float overlapX = Math.Min(rectA.X + rectA.Width, rectB.X + rectB.Width) - Math.Max(rectA.X, rectB.X);
+            float overlapY = Math.Min(rectA.Y + rectA.Height, rectB.Y + rectB.Height) - Math.Max(rectA.Y, rectB.Y);
+
+            // Determine the axis of least penetration
+            if (overlapX < overlapY)
+            {
+                // Resolve along the X axis
+                if (rectA.X < rectB.X)
+                    collisions.setDistanceX(-1 * overlapX);
+                else
+                    collisions.setDistanceX(overlapX);
+            }
+            else
+            {
+                // Resolve along the Y axis
+                if (rectA.Y < rectB.Y)
+                    collisions.setDistanceY(-1 * overlapY);
+                else
+                    collisions.setDistanceY(overlapY);
+            }
             collisions.setCollided(true);
         }
         return collisions;

@@ -137,7 +137,7 @@ class Game
             
             player.playerLoop();
             //slide.slidesLoop();
-            localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
+            //localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             redNPC.Update();
             greyNPC.Update();
