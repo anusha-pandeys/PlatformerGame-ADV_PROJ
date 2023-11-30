@@ -4,44 +4,32 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-internal class Blocks : Entity
+internal class Bullet : Entity
 {
-    private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
+    private IntPtr Renderer => Engine.Renderer2;
     private Vector2 position;
     private Vector2 size;
     private GameColor color;
-    private string sidesInContact;
-    private Vector2 velocity; // New property to store the velocity
+    private Vector2 velocity;
+    public Enemy Source { get; set; }
 
-    public void SetVelocity(Vector2 velocity)
-    {
-        this.velocity = velocity;
-    }
-
-    public void blockLoop()
-    {
-        // Update the block's position based on the velocity
-        position += velocity * Engine.TimeDelta;
-
-        // Render(Game.localCamera);
-    }
-
-    public Blocks(Vector2 position, Vector2 size, GameColor color)
+    public Bullet(Vector2 position, Vector2 velocity, Vector2 size, GameColor color)
     {
         this.position = position;
+        this.velocity = velocity;
         this.size = size;
         this.color = color;
-        sidesInContact = "";
         Game.entities.Add(this);
     }
 
-    public List<Vector2> getCoordinates()
+    public void BulletLoop()
     {
-        List<Vector2> result = new List<Vector2>();
-        result.Add(position);
-        result.Add(size);
-        return result;
+        // Update the bullet's position based on the velocity
+        position += velocity * Engine.TimeDelta;
+
+        Render(Game.localCamera);
     }
+
     protected override Rectangle CalculateBound()
     {
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
@@ -55,7 +43,7 @@ internal class Blocks : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 0, 255, 0, 255); // green
+        SDL.SDL_SetRenderDrawColor(Renderer, 255, 0, 0, 255); // red
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
             x = (int)position.X,
@@ -65,4 +53,5 @@ internal class Blocks : Entity
         };
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
+
 }

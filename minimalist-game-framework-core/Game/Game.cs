@@ -82,6 +82,8 @@ class Game
     {
         // Poll for events
         SDL.SDL_PumpEvents();
+        // Measure the time elapsed between one frame and the next:
+
 
         // Update game logic based on the current state
         if (showStartMenu)
@@ -100,8 +102,8 @@ class Game
         {
             
             map.setBackgroundColor();
-            
-            
+
+
             foreach (var block in levelBlocks)
             {
                 block.blockLoop();
@@ -127,14 +129,18 @@ class Game
                 }
                 //CollisionManager.addBlock(block);
             }
-            
-            
+
+            Vector2 enemySpawnPosition = new Vector2(400, 100); // Set the desired spawn position
+            Enemy enemy = new Enemy(enemySpawnPosition, new Vector2(50, 50)); // Adjust size as needed
+            enemy.EnemyLoop();
             player.playerLoop();
             localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             redNPC.Update();
             greyNPC.Update();
-            
+
+
+
             //moving.updateCoordinates();
 
             // Render checkpoints
