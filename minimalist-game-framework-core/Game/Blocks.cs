@@ -10,6 +10,7 @@ internal class Blocks : Entity
     private Vector2 position;
     public Vector2 size;
     private GameColor color;
+    private Collidable blocks;
     private string sidesInContact;
     public Blocks(Vector2 position, Vector2 size, GameColor color)
     {
@@ -17,6 +18,7 @@ internal class Blocks : Entity
         this.size = size;
         this.color = color;
         sidesInContact = "";
+        //blocks.Tag = "block";
         Game.entities.Add(this);
     }
 

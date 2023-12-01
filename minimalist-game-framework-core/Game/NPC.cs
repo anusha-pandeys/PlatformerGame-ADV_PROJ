@@ -19,6 +19,7 @@ internal class NPC : Entity
     private Color npcColor;
     private float collisionCooldown = 0.1f;
     private float timeSinceCollision = 0.0f;
+    private Collidable npc;
 
     public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed)
     {
@@ -30,6 +31,7 @@ internal class NPC : Entity
         this.followRadius = followRadius;
         this.speed = speed;
         Game.entities.Add(this);
+        this.npc = new Collidable(this, "npc");
     }
 
     private void UpdateCollisionCooldown()
@@ -39,7 +41,7 @@ internal class NPC : Entity
 
         // Check if enough time has passed since the last collision to revert to the original color
         if (timeSinceCollision >= collisionCooldown)
-        {//
+        {
             npcColor = originalColor;
         }
     }
@@ -48,21 +50,21 @@ internal class NPC : Entity
 
     public void Update()
     {
-       /* if (IsPlayerInRadius())
+        if (IsPlayerInRadius())
         {
             FollowPlayer();
         }
 
         // Check for collisions with the player
-        string collisionDetected = CollisionManager.checkBlockCollision(player, new Vector2(speed, 0));
+        //string collisionDetected = CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1);
 
         // Update NPC's position based on collision detection
-        if (collisionDetected.Contains("left"))
+        if (CollisionManager.checkBlockCollision(player, new Vector2(-1*speed, 0), 1).getCollided())
         {
             Console.WriteLine("Collision Left");
             position.X -= speed;
         }
-        else if (collisionDetected.Contains("right"))
+        else if (CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1).getCollided())
         {
             Console.WriteLine("Collision Right");
             position.X += speed;
@@ -80,7 +82,7 @@ internal class NPC : Entity
         }
 
 
-        //Render(Game.localCamera);*/
+        //Render(Game.localCamera);
     }
 
 
@@ -98,11 +100,11 @@ internal class NPC : Entity
         Vector2 direction = CalculateDirection(player.Position - position);
 
         // Update NPC's position only if it doesn't collide with any blocks
-        /*string collisionDetected = CollisionManager.checkBlockCollision(this, direction * speed);
-        if (collisionDetected == "na")
+        //string collisionDetected = CollisionManager.checkBlockCollision(this, direction * speed);
+        if (!CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1).getCollided())
         {
             position += direction * speed;
-        }*/
+        }
     }
 
     private bool playerCollided()

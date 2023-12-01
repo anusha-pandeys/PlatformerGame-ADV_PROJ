@@ -131,7 +131,7 @@ internal class StartMenu
 
     private void HandleButtonClick(Button button)
     {
-        Console.WriteLine($"Button Clicked: {button.Text}");
+        //Console.WriteLine($"Button Clicked: {button.Text}");
 
         if (button.Text == "Start Game")
         {

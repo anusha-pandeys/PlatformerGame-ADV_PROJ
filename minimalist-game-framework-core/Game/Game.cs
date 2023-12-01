@@ -72,8 +72,9 @@ class Game
         //CollisionManager.AddObj("pit", pit);
         loadEntities();
         CollisionManager.AddObj("player", player);
-        
-
+        CollisionManager.AddObj("npc", redNPC);
+        CollisionManager.AddObj("npc", greyNPC);
+        CollisionManager.AddObj("spear", spear);
         //CollisionManager.AddObj("player", player);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
