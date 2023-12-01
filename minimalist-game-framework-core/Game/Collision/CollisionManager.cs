@@ -103,7 +103,7 @@ internal class CollisionManager
         
         if (rectA.IntersectsWith(rectB))
         {
-                        float overlapX = Math.Min(rectA.X + rectA.Width, rectB.X + rectB.Width) - Math.Max(rectA.X, rectB.X);
+            float overlapX = Math.Min(rectA.X + rectA.Width, rectB.X + rectB.Width) - Math.Max(rectA.X, rectB.X);
             float overlapY = Math.Min(rectA.Y + rectA.Height, rectB.Y + rectB.Height) - Math.Max(rectA.Y, rectB.Y);
 
             // Determine the axis of least penetration
