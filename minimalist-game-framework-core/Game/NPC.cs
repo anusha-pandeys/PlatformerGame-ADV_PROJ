@@ -39,7 +39,7 @@ internal class NPC : Entity
 
         // Check if enough time has passed since the last collision to revert to the original color
         if (timeSinceCollision >= collisionCooldown)
-        {
+        {//
             npcColor = originalColor;
         }
     }
