@@ -40,32 +40,6 @@ internal class CollisionManager
         return new CollisionObject();
     }
 
-    public static bool getClosestBlock(Player player)
-    {
-        float playerCenterX = player.Position.X + player.playerSize.X / 2;
-        float playerCenterY = player.Position.Y + player.playerSize.Y / 2;
-        int max = 0;
-        double closestDist = double.MaxValue;
-        for(int i = 0; i < blocks.Count; i++)
-        {
-            Rectangle curr = blocks[i].Bound;
-            float currCenterX = curr.X + curr.Width / 2;
-            float currCenterY = curr.Y + curr.Height / 2;
-            double dist = Math.Sqrt(Math.Pow(playerCenterX - currCenterX, 2) + Math.Pow(playerCenterY - currCenterY, 2));
-            if(dist < closestDist)
-            {
-                closestDist = dist;
-                max = i;
-            }
-        }
-        Rectangle closest = blocks[max].Bound;
-        if(Math.Abs((closest.Y - playerCenterY) - ((player.playerSize.Y/2) + (closest.Width/2))) < 10)
-        {
-            return true;
-        }
-        return false;
-    }
-
     public static CollisionObject checkCollisions(string objA, string objB) 
     {
         for (int i = 0; i < collidables.Count - 1; i++)

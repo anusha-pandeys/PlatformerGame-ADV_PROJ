@@ -37,6 +37,7 @@ class Game
     private List<Pits> pits;
     private List<Ladder> ladders;
     private static int currLevel = 1;
+    private Spear spear;
     //private Ladder ladder;
 
     public Game()
@@ -51,12 +52,7 @@ class Game
         //slide = new Slides(new Vector2(300,100), new Vector2(100,100));
         //entities.Add(moving);
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
-        //floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
-        //floor2 = new Blocks(new Vector2(200, 250), new Vector2(50, 50), GameColor.Block1);
-        //CollisionManager.addBlock(floor);
-        //CollisionManager.addBlock(floor2);
-
-
+        spear = new Spear();
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
         redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 1.5f);
 
@@ -88,7 +84,7 @@ class Game
     {
         // Poll for events
         SDL.SDL_PumpEvents();
-
+        spear.spearLoop();
         // Update game logic based on the current state
         if (showStartMenu)
         {
