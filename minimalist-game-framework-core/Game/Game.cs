@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -120,6 +120,7 @@ class Game
                 }
                 //CollisionManager.addBlock(block);
             }
+
             //foreach (var ladder in ladders)
             //{
                 /*ladder.ladderLoop();
@@ -130,10 +131,9 @@ class Game
                 //CollisionManager.addBlock(block);
            // }
             
-            
+
+            localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             player.playerLoop();
-            //slide.slidesLoop();
-            //localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             DisplayPlayerCoordinates();
             redNPC.Update();
             greyNPC.Update();
@@ -178,7 +178,6 @@ class Game
             }*/
 
         }
-
         SDL.SDL_RenderPresent(Engine.Renderer2);
 
         RenderGrid(Engine.Renderer2);

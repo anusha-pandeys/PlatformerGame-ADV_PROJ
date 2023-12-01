@@ -29,7 +29,8 @@ internal class Pits : Entity
         //Render(new Camera());
         if (checkCollision())
         {
-            playerDeath = true;
+            //playerDeath = true;
+            Game.player.setHealth(50);
         }
     }
     public bool checkCollision()
@@ -54,7 +55,7 @@ internal class Pits : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 0, 255, 0, 255); // green
+        SDL.SDL_SetRenderDrawColor(Renderer, 102, 51, 0, 255); // green
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
             x = (int)position.X,
