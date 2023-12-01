@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,7 +24,7 @@ class Game
     private LoseScreen loseScreen = new LoseScreen();
     private CreditScreen creditScreen;
     private bool showStartMenu = true;
-    public static Player player;
+    public  static Player player;
     private Map map;
     private NPC redNPC;
     private NPC greyNPC;
@@ -37,7 +37,9 @@ class Game
     private List<Pits> pits;
     private List<Ladder> ladders;
     private static int currLevel = 1;
+    private Spear spear;
     //private Ladder ladder;
+
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 300); // Initial position
@@ -47,14 +49,10 @@ class Game
         StartMenu = new StartMenu();
         rulesMenu = new RulesMenu();
         creditScreen = new CreditScreen();
+        //slide = new Slides(new Vector2(300,100), new Vector2(100,100));
         //entities.Add(moving);
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
-        //floor = new Blocks(new Vector2(100, 250), new Vector2(50, 50), GameColor.Block1);
-        //floor2 = new Blocks(new Vector2(200, 250), new Vector2(50, 50), GameColor.Block1);
-        //CollisionManager.addBlock(floor);
-        //CollisionManager.addBlock(floor2);
-
-
+        spear = new Spear();
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
         redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 1.5f);
 
@@ -65,15 +63,19 @@ class Game
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
                                                                             //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
                                                                             //startMenu = new StartMenu();
+
         pits = LevelLoader.loadPits("Game\\levelPractice.txt", 50);
-        ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
+        //ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
         //loading checkpoints
-        checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
+        //checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
         //ladder = new Ladder(new Vector2(100, 200), new Vector2(50, 100));
         //CollisionManager.AddObj("pit", pit);
         loadEntities();
         CollisionManager.AddObj("player", player);
         
+
+        //CollisionManager.AddObj("player", player);
+        //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
     }
     //
@@ -82,7 +84,7 @@ class Game
     {
         // Poll for events
         SDL.SDL_PumpEvents();
-
+        spear.spearLoop();
         // Update game logic based on the current state
         if (showStartMenu)
         {
@@ -118,19 +120,20 @@ class Game
                 }
                 //CollisionManager.addBlock(block);
             }
-            foreach (var ladder in ladders)
-            {
-                ladder.ladderLoop();
+
+            //foreach (var ladder in ladders)
+            //{
+                /*ladder.ladderLoop();
                 if (ladder.getTranslate())
                 {
                     player.translateUpLadder();
-                }
+                }*/
                 //CollisionManager.addBlock(block);
-            }
+           // }
             
-            
-            player.playerLoop();
+
             localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
+            player.playerLoop();
             DisplayPlayerCoordinates();
             redNPC.Update();
             greyNPC.Update();
@@ -138,10 +141,10 @@ class Game
             //moving.updateCoordinates();
 
             // Render checkpoints
-            foreach (var checkpoint in checkpoints)
+        /*    foreach (var checkpoint in checkpoints)
             {
                 checkpoint.Update(localCamera);
-            }
+            }*/
             
             foreach (Entity i in entities)
             {
@@ -157,7 +160,7 @@ class Game
             }
 
             // Checkpoint collision detection
-            foreach (var checkpoint in checkpoints)
+            /*foreach (var checkpoint in checkpoints)
             {
                 if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
                 {
@@ -172,10 +175,9 @@ class Game
                     
                     break;
                 }
-            }
+            }*/
 
         }
-
         SDL.SDL_RenderPresent(Engine.Renderer2);
 
         RenderGrid(Engine.Renderer2);
@@ -215,11 +217,11 @@ class Game
             //pit.pitsLoop();
             CollisionManager.AddObj("pit", pit);
         }
-        foreach (var ladder in ladders)
-        {
+        //foreach (var ladder in ladders)
+        //{
             //pit.pitsLoop();
-            CollisionManager.AddObj("ladder", ladder);
-        }
+        //    CollisionManager.AddObj("ladder", ladder);
+       // }
     }
     public void RenderGrid(IntPtr renderer)
     {
@@ -243,4 +245,10 @@ class Game
             }
         }
     }
+
+    public Player getPlayer()
+    {
+        return player;
+    }
 }
+

@@ -39,7 +39,7 @@ internal class NPC : Entity
 
         // Check if enough time has passed since the last collision to revert to the original color
         if (timeSinceCollision >= collisionCooldown)
-        {
+        {//
             npcColor = originalColor;
         }
     }
@@ -48,7 +48,7 @@ internal class NPC : Entity
 
     public void Update()
     {
-        if (IsPlayerInRadius())
+       /* if (IsPlayerInRadius())
         {
             FollowPlayer();
         }
@@ -80,7 +80,7 @@ internal class NPC : Entity
         }
 
 
-        //Render(Game.localCamera);
+        //Render(Game.localCamera);*/
     }
 
 
@@ -98,11 +98,11 @@ internal class NPC : Entity
         Vector2 direction = CalculateDirection(player.Position - position);
 
         // Update NPC's position only if it doesn't collide with any blocks
-        string collisionDetected = CollisionManager.checkBlockCollision(this, direction * speed);
+        /*string collisionDetected = CollisionManager.checkBlockCollision(this, direction * speed);
         if (collisionDetected == "na")
         {
             position += direction * speed;
-        }
+        }*/
     }
 
     private bool playerCollided()
