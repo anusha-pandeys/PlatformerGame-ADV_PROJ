@@ -7,7 +7,7 @@ using System.Text;
 internal class Blocks : Entity
 {
     private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
-    private Vector2 position;
+    public Vector2 position;
     public Vector2 size;
     private GameColor color;
     private string sidesInContact;
@@ -41,6 +41,9 @@ internal class Blocks : Entity
     {
         Vector2 localPosition = camera.globalToLocal(position);
         Draw(localPosition, size);
+       
+        
+
     }
 
     protected override void Draw(Vector2 position, Vector2 size)

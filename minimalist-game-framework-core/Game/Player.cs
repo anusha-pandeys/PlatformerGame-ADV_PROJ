@@ -15,10 +15,9 @@ internal class Player : Entity
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
     private const float JUMP_STRENGTH = -3f;
-    public Vector2 playerPosition;
+    public Vector2 position;
     public Vector2 playerVelocity;
-    public Vector2 globalPos;
-    public Vector2 playerSize;
+    public Vector2 size;
     private TextRenderer text;
     private Font font;
     private Color originalColor = new Color(255, 0, 0, 255); // Original color (red)
@@ -27,10 +26,10 @@ internal class Player : Entity
     private float timeSinceCollision = 0.0f;
     private bool blockBelow;
     private Collidable player;
-    public HealthBar healthBar;
-    public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
+    
+    public Player(Vector2 position, Vector2 playerVelocity, TextRenderer text, Font font)
     {
-        this.playerPosition = playerPosition;
+        this.position = position;
         this.playerVelocity = playerVelocity;
         this.text = text;
         this.font = font;
@@ -54,7 +53,7 @@ internal class Player : Entity
 
     protected override Rectangle CalculateBound()
     {
-        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(playerSize.X), (int)(playerSize.Y));
+        return new Rectangle((int)position.X, (int)position.Y, (int)(size.X), (int)(size.Y));
     }
 
 
@@ -62,7 +61,7 @@ internal class Player : Entity
 
     public Vector2 Position
     {
-        get { return playerPosition; }
+        get { return position; }
     }
 
     
@@ -71,7 +70,7 @@ internal class Player : Entity
     {
 
         List<Vector2> result = new List<Vector2>();
-        result.Add(playerPosition);
+        result.Add(position);
         result.Add(new Vector2(50, 70));
         return result;
     }
@@ -82,8 +81,9 @@ internal class Player : Entity
         {
             playerVelocity.X = 0;
             playerVelocity.Y = 0.1f;
-            playerPosition.Y -= playerVelocity.Y;
-           // Render(Game.localCamera);
+            position.Y -= playerVelocity.Y;
+           
+            Render(Game.localCamera);
         }
     }*/
 
@@ -96,15 +96,15 @@ internal class Player : Entity
         double secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
         HandleCollisionY(secondsElapsed);
         HandleCollisionX(secondsElapsed);
-        playerPosition += playerVelocity;
+        position += playerVelocity;
         // Collision detection for the floor
-        if (playerPosition.Y > 400) // Assuming 500 is ground level
+        if (position.Y > 400) // Assuming 500 is ground level
         {
-            playerPosition.Y = 400;
+            position.Y = 400;
             playerVelocity.Y = 0; // Stop downward movement
         }
 
-        Render(Game.localCamera);
+        //Render(Game.localCamera);
     }
 
     private void HandleCollisionY(double secondsElapsed)
@@ -191,9 +191,11 @@ internal class Player : Entity
     }
     public override void Render(Camera camera)
     {
-        //Vector2 localPosition = camera.globalToLocal(playerPosition);
-        //Draw(localPosition, playerSize);
-        Draw(playerPosition, playerSize);
+        //Vector2 localPosition = camera.globalToLocal(position);
+        //Draw(localPosition, size);
+        Game.localCamera.UpdateGlobalCy(position,size,playerVelocity);
+        Draw(position, size);
+
     }
 
     protected override void Draw(Vector2 position, Vector2 size)
