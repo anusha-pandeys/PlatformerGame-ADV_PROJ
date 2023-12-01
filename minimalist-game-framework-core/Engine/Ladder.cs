@@ -37,10 +37,10 @@ internal class Ladder : Entity
     public bool checkCollision()
     {
         //Dictionary<string, bool> ret = CollisionManager.checkCollisions("pit", "player");
-        if (CollisionManager.checkCollisions("player", "ladder"))
-        {
-            return true;
-        }
+       // if (CollisionManager.checkCollisions("player", "ladder"))
+        //{
+         //   return true;
+      //  }
         return false;
     }
     protected override Rectangle CalculateBound()

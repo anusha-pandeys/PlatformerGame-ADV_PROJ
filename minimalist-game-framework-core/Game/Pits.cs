@@ -1,4 +1,4 @@
-﻿using SDL2;
+using SDL2;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -36,10 +36,10 @@ internal class Pits : Entity
     public bool checkCollision()
     {
         //Dictionary<string, bool> ret = CollisionManager.checkCollisions("pit", "player");
-        if(CollisionManager.checkCollisions("player", "pit"))
-        {
-            return true;
-        }
+        //if(CollisionManager.checkCollisions("player", "pit"))
+        //{
+        //    return true;
+      //  }
         return false;
     }
 
