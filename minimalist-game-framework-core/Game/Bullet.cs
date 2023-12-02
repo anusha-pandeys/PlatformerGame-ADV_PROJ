@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-
 internal class Bullet : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;
@@ -22,12 +21,21 @@ internal class Bullet : Entity
         Game.entities.Add(this);
     }
 
-    public void BulletLoop()
+    public void BulletLoop(Camera camera)
     {
-        // Update the bullet's position based on the velocity
-        position += velocity * Engine.TimeDelta;
+        float fixedTimeStep = 0.016f; // Adjust this value as needed
+        float accumulatedTime = 0.0f;
 
-        Render(Game.localCamera);
+        // Update the bullet's position based on the velocity
+        accumulatedTime += Engine.TimeDelta;
+
+        while (accumulatedTime >= fixedTimeStep)
+        {
+            position += velocity * fixedTimeStep;
+            accumulatedTime -= fixedTimeStep;
+        }
+
+        Render(camera);
     }
 
     protected override Rectangle CalculateBound()
@@ -53,5 +61,4 @@ internal class Bullet : Entity
         };
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
-
 }

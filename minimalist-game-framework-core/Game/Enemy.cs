@@ -13,9 +13,9 @@ internal class Enemy : Entity
     private Vector2 position;
     private Vector2 size;
     private Color enemyColor;
-    private float shootCooldown = 0.1f;
+    private float shootCooldown = 0.5f;
     private float timeSinceLastShot = 0.0f;
-    private float bulletSpeed = 10.0f;
+    private float bulletSpeed = 50.0f;
 
 
     public Enemy(Vector2 spawnPosition, Vector2 size)
@@ -36,10 +36,12 @@ internal class Enemy : Entity
         {
             if (entity is Bullet bullet && bullet.Source == this)
             {
-                bullet.BulletLoop();
+                bullet.BulletLoop(Game.localCamera); // Pass the camera here
             }
         }
     }
+
+
 
     private void UpdateShooting()
     {
