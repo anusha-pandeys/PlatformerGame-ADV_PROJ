@@ -12,39 +12,47 @@ internal class Spear : Entity
     private Vector2 size;
     private Collidable spear;
     private int[,] stateTransitions = { { 1, 1, 0 }, { 0, 1, 1 }, { 1, 0, 1 } };
-    private int currentState; // 0 = notDrawn; 1 = drawing; 2 = pullign back
-    private float dx;
+    private int currentState = 0; // 0 = notDrawn; 1 = drawing; 2 = pullign back
+    private float dx = 0;
     public Spear()
     {
         this.position = Game.player.Position + new Vector2(0, Game.player.playerSize.Y/2);
         this.size = new Vector2(50, 5);
         this.spear = new Collidable(this, "spear");
-        currentState = 0; //not drawn
-        dx = 0;
         Game.entities.Add(this);
     }
 
     public void spearLoop()
     {
-        if(IsClicked())
+        if (IsClicked())
         {
             if (checkCollision("npc"))
             {
                 //dx = 2f;
             }
-            if(currentState == 0 && canTransition(1))
+            if (currentState == 0 && canTransition(1))
             {
-                dx = 2f;
+                dx = 10f;
             }
-        } else if (this.position.X > Game.player.Position.X+Game.player.playerSize.X
+            if (stateTransitions[2, 0] == 1)
+            {
+                System.Console.WriteLine("hi");
+            }
+        } 
+        else if (this.position.X >= (Game.player.playerPosition.X + Game.player.playerSize.X)
             && currentState == 1 && canTransition(2))
         {
-            dx = -2f;
-        } else if (currentState == 2 && canTransition(0) && this.position.X <= Game.player.Position.X)
+            dx = -10f;
+        } 
+        else if (this.position.X < (Game.player.playerPosition.X + Game.player.playerSize.X/2))
         {
+            this.position.X = Game.player.playerPosition.X; 
             dx = 0f;
+            currentState = 0;
         }
-        this.position = Game.player.Position + new Vector2(dx, Game.player.playerSize.Y / 2);
+        //this.position.X = Game.player.Position.X;
+        this.position.X += dx;
+        this.position.Y = Game.player.Position.Y + Game.player.playerSize.Y / 2;
     }
 
     private bool canTransition(int transitionTo)

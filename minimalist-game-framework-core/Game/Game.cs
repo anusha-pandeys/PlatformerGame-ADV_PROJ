@@ -87,6 +87,7 @@ class Game
         SDL.SDL_PumpEvents();
         spear.spearLoop();
         // Update game logic based on the current state
+        showStartMenu = false;
         if (showStartMenu)
         {
             StartMenu.Update();
