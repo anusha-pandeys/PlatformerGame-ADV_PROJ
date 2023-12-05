@@ -25,6 +25,10 @@ internal class Camera
     }
     public void UpdateGlobalCy(Vector2 globalPlayer, Vector2 playerSize, Vector2 playerVelocity)
     {
+        offset += globalPlayer.Y - globalCy;
+        globalCy = globalPlayer.Y;
+        
+        
         /*
         float localPlayerY = height - Math.Abs(globalPlayer.Y - globalCy);
         if (localPlayerY < playerSize.Y/2 && playerVelocity.Y == 0)
@@ -35,10 +39,6 @@ internal class Camera
             globalCy += height / 2;
         }
         */
-        offset += globalPlayer.Y - globalCy;
-        globalCy = globalPlayer.Y;
-        
-
 
 
         /*
