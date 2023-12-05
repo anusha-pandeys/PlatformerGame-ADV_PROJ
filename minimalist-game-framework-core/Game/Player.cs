@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Security.Cryptography;
+using static SDL2.SDL;
 
 internal class Player : Entity
 {
@@ -28,6 +29,7 @@ internal class Player : Entity
     private bool blockBelow;
     private Collidable player;
     public HealthBar healthBar;
+    private Texture playerTexture;
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
@@ -40,6 +42,8 @@ internal class Player : Entity
         Game.entities.Add(this);
         blockBelow = false;
         playerSize = new Vector2(50f, 70f);
+        playerTexture = Engine.LoadTexture("Game\\spritesheet (2).png");
+        
     }
 
     public void setHealth(int health)
@@ -199,7 +203,9 @@ internal class Player : Entity
     protected override void Draw(Vector2 position, Vector2 size)
     {
 
-        SDL.SDL_SetRenderDrawColor(Renderer, playerColor.R, playerColor.G, playerColor.B, playerColor.A);
+        Engine.DrawTexture(playerTexture, playerPosition);
+        //Engine.DrawTexture(playerTexture, playerPosition);
+        /*SDL.SDL_SetRenderDrawColor(Renderer, playerColor.R, playerColor.G, playerColor.B, playerColor.A);
 
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
@@ -209,8 +215,9 @@ internal class Player : Entity
             h = (int)size.Y
         };
 
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        SDL.SDL_RenderFillRect(Renderer, ref rect);*/
     }
+
 }
 
 
