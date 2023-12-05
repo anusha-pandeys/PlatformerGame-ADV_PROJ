@@ -13,7 +13,7 @@ internal class Spear : Entity
 
     public Spear()
     {
-        this.position = Game.player.Position + new Vector2(Game.player.playerSize.X + 5f, Game.player.playerSize.Y/2);
+        this.position = Game.player.Position + new Vector2(Game.player.size.X + 5f, Game.player.size.Y/2);
         this.size = new Vector2(50, 5);
         this.spear = new Collidable(this, "spear");
         Game.entities.Add(this);
@@ -21,11 +21,11 @@ internal class Spear : Entity
 
     public void spearLoop()
     {
-        this.position = Game.player.Position + new Vector2(Game.player.playerSize.X + 5f, Game.player.playerSize.Y / 2); 
+        this.position = Game.player.Position + new Vector2(Game.player.size.X + 5f, Game.player.size.Y / 2); 
     }
     public override void Render(Camera camera)
     {
-        Draw(this.position, this.size);
+        Draw(Game.localCamera.globalToLocal(this.position), this.size);
     }
 
     protected override Rectangle CalculateBound()

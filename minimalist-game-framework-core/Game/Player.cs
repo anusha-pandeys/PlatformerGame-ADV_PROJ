@@ -26,7 +26,9 @@ internal class Player : Entity
     private float timeSinceCollision = 0.0f;
     private bool blockBelow;
     private Collidable player;
-    
+    public HealthBar healthBar;
+
+
     public Player(Vector2 position, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.position = position;
@@ -38,7 +40,7 @@ internal class Player : Entity
         healthBar = new HealthBar("playerHealthBar", new Vector2(220,50), 100, new Vector2(100, 50));
         Game.entities.Add(this);
         blockBelow = false;
-        playerSize = new Vector2(50f, 70f);
+        size = new Vector2(50f, 70f);
     }
 
     public void setHealth(int health)
@@ -113,7 +115,7 @@ internal class Player : Entity
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, playerVelocity.Y+2f), secondsElapsed);
         if (collisionDetected.getCollided())
         {
-            playerPosition.Y += collisionDetected.getDistanceY();
+            position.Y += collisionDetected.getDistanceY();
             playerVelocity.Y = 0;
         } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
         {
@@ -126,13 +128,13 @@ internal class Player : Entity
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(2f, 0), secondsElapsed);
         if (collisionDetected.getCollided())
         {
-            playerPosition.X += collisionDetected.getDistanceX();
+            position.X += collisionDetected.getDistanceX();
         } else
         {
             collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(-2f, 0), secondsElapsed);
             if (collisionDetected.getCollided())
             {
-                playerPosition.X += collisionDetected.getDistanceX();
+                position.X += collisionDetected.getDistanceX();
             }
         }
     }
@@ -191,11 +193,10 @@ internal class Player : Entity
     }
     public override void Render(Camera camera)
     {
-        //Vector2 localPosition = camera.globalToLocal(position);
-        //Draw(localPosition, size);
         Game.localCamera.UpdateGlobalCy(position,size,playerVelocity);
-        Draw(position, size);
-
+        Vector2 localPosition = Game.localCamera.globalToLocal(position);
+        Draw(localPosition, size);
+        //Draw(position, size);
     }
 
     protected override void Draw(Vector2 position, Vector2 size)

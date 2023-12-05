@@ -104,11 +104,13 @@ class Game
             map.setBackgroundColor();
             
             
+            /*
             foreach (var block in levelBlocks)
             {
                 block.blockLoop();
                 //CollisionManager.addBlock(block);
             }
+            */
             foreach (var pit in pits)
             {
                 pit.pitsLoop();
@@ -132,8 +134,8 @@ class Game
            // }
             
 
-            localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
             player.playerLoop();
+            localCamera.UpdateGlobalCy(player.position, player.size, player.playerVelocity);
             //localCamera.UpdateGlobalCy(player.position, player.size, player.playerVelocity);
             DisplayPlayerCoordinates();
             redNPC.Update();
@@ -142,11 +144,14 @@ class Game
             //moving.updateCoordinates();
 
             // Render checkpoints
-        /*    foreach (var checkpoint in checkpoints)
+            
+            /*
+            foreach (var checkpoint in checkpoints)
             {
                 checkpoint.Update(localCamera);
-            }*/
-            
+            }
+            */
+
             foreach (Entity i in entities)
             {
                 /*
@@ -224,6 +229,7 @@ class Game
             //block.blockLoop();
             CollisionManager.addBlock(block);
         }
+        
         foreach (var pit in pits)
         {
             //pit.pitsLoop();
