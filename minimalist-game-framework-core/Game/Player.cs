@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Security.Cryptography;
 using static SDL2.SDL;
+using System.IO;
 
 internal class Player : Entity
 {
@@ -42,7 +43,9 @@ internal class Player : Entity
         Game.entities.Add(this);
         blockBelow = false;
         playerSize = new Vector2(50f, 70f);
-        playerTexture = Engine.LoadTexture("Game\\spritesheet (2).png");
+        var path = "Game\\spritesheet (2).png";
+        var dirName = Path.GetDirectoryName(path);
+        playerTexture = Engine.LoadTexture(dirName);
         
     }
 
