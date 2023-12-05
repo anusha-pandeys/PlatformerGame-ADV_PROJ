@@ -26,17 +26,9 @@ internal class Spear : Entity
     {
         if (IsClicked())
         {
-            if (checkCollision("npc"))
-            {
-                //dx = 2f;
-            }
             if (currentState == 0 && canTransition(1))
             {
                 dx = 10f;
-            }
-            if (stateTransitions[2, 0] == 1)
-            {
-                System.Console.WriteLine("hi");
             }
         } 
         else if (this.position.X >= (Game.player.playerPosition.X + Game.player.playerSize.X)
@@ -64,14 +56,7 @@ internal class Spear : Entity
         }
         return false;
     }
-    private bool checkCollision(string target)
-    {
-        if (CollisionManager.checkCollisions("spear", target, new Vector2(2, 0)).getCollided())
-        {
-            return true;
-        }
-        return false;
-    }
+    
     public override void Render(Camera camera)
     {
         Draw(this.position, this.size);

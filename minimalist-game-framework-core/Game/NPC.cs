@@ -20,6 +20,7 @@ internal class NPC : Entity
     private float collisionCooldown = 0.1f;
     private float timeSinceCollision = 0.0f;
     private Collidable npc;
+    private HealthBar healthBar;
 
     public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed)
     {
@@ -32,6 +33,8 @@ internal class NPC : Entity
         this.speed = speed;
         Game.entities.Add(this);
         this.npc = new Collidable(this, "npc");
+        healthBar = new HealthBar("npcHealthBar", new Vector2(this.position.X, this.position.Y), 100,
+            new Vector2(70f, 30f));
     }
 
     private void UpdateCollisionCooldown()
@@ -50,23 +53,27 @@ internal class NPC : Entity
 
     public void Update()
     {
+        healthBar.setPosition(new Vector2(this.position.X, this.position.Y-40f));
         if (IsPlayerInRadius())
         {
             FollowPlayer();
         }
-
+        CollisionObject obj = checkCollision("spear");
+        if (obj.getCollided())
+        {
+            System.Console.WriteLine("hit");
+            healthBar.setHealth(healthBar.getHealth() - 25);
+        }
         // Check for collisions with the player
         //string collisionDetected = CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1);
 
         // Update NPC's position based on collision detection
         if (CollisionManager.checkBlockCollision(player, new Vector2(-1*speed, 0), 1).getCollided())
         {
-            Console.WriteLine("Collision Left");
             position.X -= speed;
         }
         else if (CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1).getCollided())
         {
-            Console.WriteLine("Collision Right");
             position.X += speed;
         }
 
@@ -81,12 +88,18 @@ internal class NPC : Entity
             npcColor = originalColor;
         }
 
-
+        healthBar.Render();
         //Render(Game.localCamera);
     }
-
-
-
+    private CollisionObject checkCollision(string target)
+    {
+        CollisionObject obj = CollisionManager.checkCollisions("npc", target, new Vector2(1, 0));
+        if (obj.getCollided())
+        {
+            return obj;
+        }
+        return new CollisionObject();
+    }
     private bool IsPlayerInRadius()
     {
         // Update the distance field

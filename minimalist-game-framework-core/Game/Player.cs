@@ -89,7 +89,6 @@ internal class Player : Entity
 
     public void playerLoop()
     {
-        healthBar.Render();
         long startTime = DateTime.Now.Ticks;
         HandleInput();
         HandleJump();
@@ -105,6 +104,7 @@ internal class Player : Entity
         }
 
         Render(Game.localCamera);
+        healthBar.Render();
     }
 
     private void HandleCollisionY(double secondsElapsed)
