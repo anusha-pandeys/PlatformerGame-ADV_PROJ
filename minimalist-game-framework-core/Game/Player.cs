@@ -44,7 +44,7 @@ internal class Player : Entity
         blockBelow = false;
         playerSize = new Vector2(50f, 70f);
         ///var path =
-        string relativePath = "Assets\\spritesheet (2).png";
+        string relativePath = "Assets\\player.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         playerTexture = Engine.LoadTexture(absolutePath);
         
@@ -207,19 +207,7 @@ internal class Player : Entity
     protected override void Draw(Vector2 position, Vector2 size)
     {
 
-        Engine.DrawTexture(playerTexture, playerPosition);
-        //Engine.DrawTexture(playerTexture, playerPosition);
-        /*SDL.SDL_SetRenderDrawColor(Renderer, playerColor.R, playerColor.G, playerColor.B, playerColor.A);
-
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-
-        SDL.SDL_RenderFillRect(Renderer, ref rect);*/
+        Engine.DrawTexture(playerTexture, playerPosition, null, playerSize);
     }
 
 }

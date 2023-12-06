@@ -12,14 +12,17 @@ internal class Blocks : Entity
     private GameColor color;
     private Collidable blocks;
     private string sidesInContact;
+    private Texture playerTexture;
     public Blocks(Vector2 position, Vector2 size, GameColor color)
     {
         this.position = position;
         this.size = size;
         this.color = color;
         sidesInContact = "";
-        //blocks.Tag = "block";
         Game.entities.Add(this);
+        string relativePath = "Assets\\blocks.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
     }
 
     public void blockLoop()
@@ -47,14 +50,6 @@ internal class Blocks : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 0, 255, 0, 255); // green
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        Engine.DrawTexture(playerTexture, position, null, size);
     }
 }

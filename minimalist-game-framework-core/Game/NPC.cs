@@ -21,8 +21,9 @@ internal class NPC : Entity
     private float timeSinceCollision = 0.0f;
     private Collidable npc;
     private HealthBar healthBar;
+    private Texture npcTexture;
 
-    public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed)
+    public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed, string filePath)
     {
         this.position = position;
         this.size = size;
@@ -35,6 +36,8 @@ internal class NPC : Entity
         this.npc = new Collidable(this, "npc");
         healthBar = new HealthBar("npcHealthBar", new Vector2(this.position.X, this.position.Y), 100,
             new Vector2(70f, 30f));
+        string absolutePath = System.IO.Path.GetFullPath(filePath);
+        npcTexture = Engine.LoadTexture(absolutePath);
     }
 
     private void UpdateCollisionCooldown()
@@ -179,17 +182,7 @@ internal class NPC : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, npcColor.R, npcColor.G, npcColor.B, npcColor.A);
-
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        Engine.DrawTexture(npcTexture, position, null, size);
     }
 
 }
