@@ -43,9 +43,10 @@ internal class Player : Entity
         Game.entities.Add(this);
         blockBelow = false;
         playerSize = new Vector2(50f, 70f);
-        var path = "Game\\spritesheet (2).png";
-        var dirName = Path.GetDirectoryName(path);
-        playerTexture = Engine.LoadTexture(dirName);
+        ///var path =
+        string relativePath = "Assets\\spritesheet (2).png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
         
     }
 
