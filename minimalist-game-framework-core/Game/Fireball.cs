@@ -5,16 +5,16 @@ using System.Drawing;
 using System.Text;
 
 
-internal class Bullet : Entity
+internal class Fireball : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;
     private Vector2 position;
     private Vector2 size;
     private GameColor color;
     private Vector2 velocity;
-    public Enemy Source { get; set; }
+    public Boss Source { get; set; }
 
-    public Bullet(Vector2 position, Vector2 velocity, Vector2 size, GameColor color)
+    public Fireball(Vector2 position, Vector2 velocity, Vector2 size, GameColor color)
     {
         this.position = position;
         this.velocity = velocity;
@@ -23,12 +23,12 @@ internal class Bullet : Entity
         Game.entities.Add(this);
     }
 
-    public void BulletLoop(Camera camera)
+    public void FireballLoop(Camera camera)
     {
         float fixedTimeStep = 0.016f; // Adjust this value as needed
         float accumulatedTime = 0.0f;
 
-        // Update the bullet's position based on the velocity
+        // Update the fireball's position based on the velocity
         accumulatedTime += Engine.TimeDelta;
 
         while (accumulatedTime >= fixedTimeStep)
@@ -37,7 +37,7 @@ internal class Bullet : Entity
             accumulatedTime -= fixedTimeStep;
         }
 
-        // Remove the bullet if it's off-screen
+        // Remove the fireball if it's off-screen
         if (!IsOnScreen(camera))
         {
             Game.entities.Remove(this);
@@ -52,7 +52,7 @@ internal class Bullet : Entity
         int screenWidth = (int)Game.Resolution.X;
         int screenHeight = (int)Game.Resolution.Y;
 
-        // Check if the bullet is within the visible area
+        // Check if the fireball is within the visible area
         return position.X >= 0 && position.X <= screenWidth &&
                position.Y >= 0 && position.Y <= screenHeight;
     }

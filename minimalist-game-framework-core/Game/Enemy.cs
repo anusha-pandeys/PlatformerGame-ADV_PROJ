@@ -13,9 +13,9 @@ internal class Enemy : Entity
     private Vector2 position;
     private Vector2 size;
     private Color enemyColor;
-    private float shootCooldown = 0.5f;
+    private float shootCooldown = 1.0f; // Set the desired cooldown time in seconds
     private float timeSinceLastShot = 0.0f;
-    private float bulletSpeed = 50.0f;
+    private float bulletSpeed = 100.0f;
 
 
     public Enemy(Vector2 spawnPosition, Vector2 size)
@@ -24,6 +24,7 @@ internal class Enemy : Entity
         this.size = size;
         this.enemyColor = Color.Blue;
         Game.entities.Add(this);
+
     }
 
     public void EnemyLoop()
@@ -52,7 +53,7 @@ internal class Enemy : Entity
 
         if (timeSinceLastShot >= shootCooldown)
         {
-            Console.WriteLine("Shooting at player");
+            Console.WriteLine("Shooting");
             ShootAtPlayer();
             timeSinceLastShot = 0.0f;
         }
@@ -61,22 +62,16 @@ internal class Enemy : Entity
 
     private void ShootAtPlayer()
     {
-        Console.WriteLine("Shooting at player");
-
         Vector2 playerPosition = Game.player.playerPosition;
-        Console.WriteLine($"Player Position: {playerPosition}");
+        Vector2 initialPlayerPosition = playerPosition; // Store initial player position
 
-        Vector2 direction = (playerPosition - position).Normalized();
-        Console.WriteLine($"Direction: {direction}");
-        Console.WriteLine("Creating bullet");
+        Vector2 direction = (initialPlayerPosition - position).Normalized();
         Bullet bullet = new Bullet(position, direction * bulletSpeed, new Vector2(10, 10), GameColor.White);
-
 
         // Set the source of the bullet
         bullet.Source = this;
-
-        Game.entities.Add(bullet);
     }
+
 
 
     protected override Rectangle CalculateBound()
@@ -105,3 +100,4 @@ internal class Enemy : Entity
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
 }
+
