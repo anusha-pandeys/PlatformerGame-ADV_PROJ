@@ -22,10 +22,8 @@ internal class NPC : Entity
     private Collidable npc;
     private HealthBar healthBar;
     private Texture npcTexture;
-    private bool death;
-    private string tag;
 
-    public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed, string tag, string filePath)
+    public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed, string filePath)
     {
         this.position = position;
         this.size = size;
@@ -35,11 +33,11 @@ internal class NPC : Entity
         this.followRadius = followRadius;
         this.speed = speed;
         Game.entities.Add(this);
-        CollisionManager.AddObj(tag, this);
+        this.npc = new Collidable(this, "npc");
         healthBar = new HealthBar("npcHealthBar", new Vector2(this.position.X, this.position.Y), 100,
             new Vector2(70f, 30f));
-        this.death = false;
-        this.tag = tag;
+        string absolutePath = System.IO.Path.GetFullPath(filePath);
+        npcTexture = Engine.LoadTexture(absolutePath);
     }
 
     private void UpdateCollisionCooldown()
@@ -58,63 +56,43 @@ internal class NPC : Entity
 
     public void Update()
     {
-        if (healthBar.getHealth() <= 0)
+        healthBar.setPosition(new Vector2(this.position.X, this.position.Y-40f));
+        if (IsPlayerInRadius())
         {
-            this.death = true;
+            FollowPlayer();
         }
-        if (!death)
+        CollisionObject obj = checkCollision("spear");
+        if (obj.getCollided())
         {
-            healthBar.setPosition(new Vector2(this.position.X, this.position.Y - 40f));
-            if (IsPlayerInRadius())
-            {
-                FollowPlayer();
-            }
-            CollisionObject obj = checkCollision("spear");
-            if (obj.getCollided() && Game.spear.currentState == 2)
-            {
-                System.Console.WriteLine("hit");
-                healthBar.setHealth(healthBar.getHealth() - 25);
-            }
-            // Check for collisions with the player
-            //string collisionDetected = CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1);
-
-            // Update NPC's position based on collision detection
-            if (CollisionManager.checkBlockCollision(player, new Vector2(-1 * speed, 0), 1).getCollided())
-            {
-                position.X -= speed;
-            }
-            else if (CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1).getCollided())
-            {
-                position.X += speed;
-            }
-
-
-            // Handle collision and update color
-            HandleCollision();
-            UpdateCollisionCooldown();  // Update collision cooldown
-
-            // Reset the NPC color if enough time has passed since the last collision
-            if (timeSinceCollision >= collisionCooldown)
-            {
-                npcColor = originalColor;
-            }
-
-            healthBar.Render();
-            //Render(Game.localCamera);
+            System.Console.WriteLine("hit");
+            healthBar.setHealth(healthBar.getHealth() - 25);
         }
-        else
+        // Check for collisions with the player
+        //string collisionDetected = CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1);
+
+        // Update NPC's position based on collision detection
+        if (CollisionManager.checkBlockCollision(player, new Vector2(-1*speed, 0), 1).getCollided())
         {
-            Game.entities.Remove(this);
-            for (int i = 0; i < CollisionManager.collidables.Count; i++)
-            {
-                if (CollisionManager.collidables[i].Tag.Equals(tag))
-                {
-                    CollisionManager.collidables.Remove(CollisionManager.collidables[i]);
-                    break;
-                }
-            }
-            //CollisionManager.collidables.Remove(this);
+            position.X -= speed;
         }
+        else if (CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1).getCollided())
+        {
+            position.X += speed;
+        }
+
+
+        // Handle collision and update color
+        HandleCollision();
+        UpdateCollisionCooldown();  // Update collision cooldown
+
+        // Reset the NPC color if enough time has passed since the last collision
+        if (timeSinceCollision >= collisionCooldown)
+        {
+            npcColor = originalColor;
+        }
+
+        healthBar.Render();
+        //Render(Game.localCamera);
     }
     private CollisionObject checkCollision(string target)
     {

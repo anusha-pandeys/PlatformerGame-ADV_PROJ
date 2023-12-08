@@ -12,7 +12,7 @@ internal class Spear : Entity
     private Vector2 size;
     private Collidable spear;
     private int[,] stateTransitions = { { 1, 1, 0 }, { 0, 1, 1 }, { 1, 0, 1 } };
-    public int currentState = 0; // 0 = notDrawn; 1 = drawing; 2 = pullign back
+    private int currentState = 0; // 0 = notDrawn; 1 = drawing; 2 = pullign back
     private float dx = 0;
     public Spear()
     {
