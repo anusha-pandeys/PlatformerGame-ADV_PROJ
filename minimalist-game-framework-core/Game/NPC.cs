@@ -9,8 +9,8 @@ using System.Drawing;
 internal class NPC : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;
-    private Vector2 position;
-    private Vector2 size;
+    public Vector2 position;
+    public Vector2 size;
     private float followRadius;
     private float speed;
     private Player player;

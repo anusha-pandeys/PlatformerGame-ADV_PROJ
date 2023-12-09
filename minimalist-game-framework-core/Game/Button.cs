@@ -12,8 +12,8 @@ internal class Button
 {
     private IntPtr Renderer => Engine.Renderer2;
     public string Text { get; }
-    private Vector2 position;
-    private Vector2 size;
+    public Vector2 position;
+    public Vector2 size;
     public Vector2 getPosition()
     {
         return position;

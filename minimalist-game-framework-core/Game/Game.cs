@@ -116,7 +116,6 @@ class Game
             
             map.setBackgroundColor();
 
-
             foreach (var block in levelBlocks)
             {
                 block.blockLoop();
@@ -144,8 +143,9 @@ class Game
                 //CollisionManager.addBlock(block);
            // }
             
-            localCamera.UpdateGlobalCy(player.playerPosition, player.playerSize, player.playerVelocity);
+
             player.playerLoop();
+            localCamera.UpdateGlobalCy(player.position, player.size, player.playerVelocity);
             DisplayPlayerCoordinates();
             boss.Update();
             redNPC.Update();
@@ -164,15 +164,25 @@ class Game
             //moving.updateCoordinates();
 
             // Render checkpoints
-        /*    foreach (var checkpoint in checkpoints)
+            
+            /*
+            foreach (var checkpoint in checkpoints)
             {
                 checkpoint.Update(localCamera);
-            }*/
-            
+            }
+            */
+
             foreach (Entity i in entities)
             {
+                /*
+                if (i.Position.Y + i.size.Y > Camera.globalCy - Camera.height/2 && i.Position.Y - i.size.Y < Camera.globalCy - Camera.height / 2)
+                {
+                    i.Render(localCamera);
+                }
+                */
                 i.Render(localCamera);
-                
+
+
             }
 
 
@@ -194,7 +204,7 @@ class Game
                     winScreen.show(); 
                     string path = "Game\\level" + currLevel.ToString() + ".txt";
                     LoadNewLevel(path);
-                    player.playerPosition = new Vector2(100, 300); // Reset position
+                    player.position = new Vector2(100, 300); // Reset position
                     
                     break;
                 }
@@ -211,11 +221,15 @@ class Game
         string playerCoordinates = string.Format("{0}, {1}", player.getCoordinates()[0].X, player.getCoordinates()[0].Y);
         textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
 
-        string redNPCCoordinates = string.Format("Red NPC: {0}, {1}", redNPC.Position.X, redNPC.Position.Y);
-        textRenderer.displayText(redNPCCoordinates, new Vector2(0, 20), Color.Black, font);
+        //string redNPCCoordinates = string.Format("Red NPC: {0}, {1}", redNPC.Position.X, redNPC.Position.Y);
+        //textRenderer.displayText(redNPCCoordinates, new Vector2(0, 20), Color.Black, font);
 
-        string greyNPCCoordinates = string.Format("Grey NPC: {0}, {1}", greyNPC.Position.X, greyNPC.Position.Y);
-        textRenderer.displayText(greyNPCCoordinates, new Vector2(0, 40), Color.Black, font);
+        //string greyNPCCoordinates = string.Format("Grey NPC: {0}, {1}", greyNPC.Position.X, greyNPC.Position.Y);
+        //textRenderer.displayText(greyNPCCoordinates, new Vector2(0, 40), Color.Black, font);
+
+        string floorCoordinates = string.Format("Floor: {0}, {1}", levelBlocks[0].Position.X, levelBlocks[0].Position.Y);
+        textRenderer.displayText(floorCoordinates, new Vector2(0, 20), Color.Black, font);
+
     }
 
     private void LoadNewLevel(string levelPath)
@@ -235,6 +249,7 @@ class Game
             //block.blockLoop();
             CollisionManager.addBlock(block);
         }
+        
         foreach (var pit in pits)
         {
             //pit.pitsLoop();

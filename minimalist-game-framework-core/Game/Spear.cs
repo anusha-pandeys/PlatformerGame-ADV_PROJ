@@ -16,6 +16,7 @@ internal class Spear : Entity
     private float dx = 0;
     public Spear()
     {
+
         this.position = Game.player.Position + new Vector2(0, Game.player.playerSize.Y/2);
         this.size = new Vector2(50, 5);
         this.spear = new Collidable(this, "spear");
@@ -24,6 +25,7 @@ internal class Spear : Entity
 
     public void spearLoop()
     {
+
         if (IsClicked())
         {
             if (currentState == 0 && canTransition(1))
@@ -59,7 +61,7 @@ internal class Spear : Entity
     
     public override void Render(Camera camera)
     {
-        Draw(this.position, this.size);
+        Draw(Game.localCamera.globalToLocal(this.position), this.size);
     }
 
     protected override Rectangle CalculateBound()

@@ -7,8 +7,8 @@ using System.Text;
 internal class Pits : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;
-    private Vector2 position;
-    private Vector2 size;
+    public Vector2 position;
+    public Vector2 size;
     private Collidable pits;
     private Color originalColor;
     private Color pitColor;
