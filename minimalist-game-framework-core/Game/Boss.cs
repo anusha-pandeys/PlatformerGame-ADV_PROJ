@@ -36,9 +36,12 @@ internal class Boss : Entity
 
     public void Update()
     {
+        long startTime = DateTime.Now.Ticks;
+        double secondsElapsed = 0;
         if (IsPlayerInRadius())
         {
-            MoveTowardsPlayer();
+            secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
+            MoveTowardsPlayer(secondsElapsed);
         }
         else
         {
@@ -52,10 +55,10 @@ internal class Boss : Entity
         position += velocity;
 
         // Collision detection to adjust the position if needed
-        string collisionDetected = CollisionManager.checkBlockCollision(this, velocity);
+        secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
 
-        if (collisionDetected != "na")
-        {
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, velocity, secondsElapsed);
+        if (collisionDetected.getCollided()) { 
             AdjustPositionOnCollision(collisionDetected);
             accumulatedGravity = 0.0f; // Reset accumulated gravity on collision
         }
@@ -109,21 +112,22 @@ internal class Boss : Entity
     }
 
 
-    private void MoveTowardsPlayer()
+    private void MoveTowardsPlayer(double time)
     {
+        
         Vector2 direction = CalculateDirection(player.Position - position);
 
         // Update boss's position only if it doesn't collide with any blocks
-        string collisionDetected = CollisionManager.checkBlockCollision(this, direction * speed);
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, direction * speed, time);
 
-        if (collisionDetected == "na")
+        if (collisionDetected.getCollided())
         {
             // Adjust the boss's velocity based on the direction towards the player
             velocity = direction * speed;
         }
     }
 
-    private void AdjustPositionOnCollision(string collisionDetected)
+    private void AdjustPositionOnCollision(CollisionObject collisionDetected)
     {
         Console.WriteLine($"Collision Detected: {collisionDetected}");
         // Handle collision logic here
@@ -133,22 +137,22 @@ internal class Boss : Entity
         // Adjust the boss's position based on collision direction
         if (position.Y <= 400) // Check if the boss is not on the ground
         {
-            if (collisionDetected.Contains("left"))
+            if (collisionDetected.getLeft())
             {
                 // Move the boss to the right of the block
                 position.X += 1;
             }
-            else if (collisionDetected.Contains("right"))
+            else if (collisionDetected.getRight())
             {
                 // Move the boss to the left of the block
                 position.X -= 1;
             }
-            else if (collisionDetected.Contains("up"))
+            else if (collisionDetected.getUp())
             {
                 // Move the boss downwards
                 position.Y += 1;
             }
-            else if (collisionDetected.Contains("down"))
+            else if (collisionDetected.getDown())
             {
                 // Move the boss upwards
                 position.Y -= 1;

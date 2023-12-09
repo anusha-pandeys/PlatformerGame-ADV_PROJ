@@ -46,7 +46,8 @@ internal class Pits : Entity
 
     public bool checkCollision()
     {
-        if (CollisionManager.checkCollisions("player", "pit"))
+        CollisionObject collisionDetected = CollisionManager.checkCollisions("player", "pit", new Vector2(0, 0));
+        if (collisionDetected.getCollided())
         {
             return true;
         }
