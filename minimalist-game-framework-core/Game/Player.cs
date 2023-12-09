@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Security.Cryptography;
+using static SDL2.SDL;
+using System.IO;
 
 internal class Player : Entity
 {
@@ -27,7 +29,7 @@ internal class Player : Entity
     private bool blockBelow;
     private Collidable player;
     public HealthBar healthBar;
-
+    private Texture playerTexture;
 
     public Player(Vector2 position, Vector2 playerVelocity, TextRenderer text, Font font)
     {
@@ -40,7 +42,13 @@ internal class Player : Entity
         healthBar = new HealthBar("playerHealthBar", new Vector2(220,50), 100, new Vector2(100, 50));
         Game.entities.Add(this);
         blockBelow = false;
+
         size = new Vector2(50f, 70f);
+        ///var path =
+        string relativePath = "Assets\\player.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
+        
     }
 
     public void setHealth(int health)
@@ -91,7 +99,6 @@ internal class Player : Entity
 
     public void playerLoop()
     {
-        healthBar.Render();
         long startTime = DateTime.Now.Ticks;
         HandleInput();
         HandleJump();
@@ -106,7 +113,8 @@ internal class Player : Entity
             playerVelocity.Y = 0; // Stop downward movement
         }
 
-        //Render(Game.localCamera);
+        Render(Game.localCamera);
+        healthBar.Render();
     }
 
     private void HandleCollisionY(double secondsElapsed)
@@ -202,18 +210,9 @@ internal class Player : Entity
     protected override void Draw(Vector2 position, Vector2 size)
     {
 
-        SDL.SDL_SetRenderDrawColor(Renderer, playerColor.R, playerColor.G, playerColor.B, playerColor.A);
-
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        Engine.DrawTexture(playerTexture, playerPosition, null, playerSize);
     }
+
 }
 
 

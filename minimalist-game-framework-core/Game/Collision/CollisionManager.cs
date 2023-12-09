@@ -40,7 +40,7 @@ internal class CollisionManager
         return new CollisionObject();
     }
 
-    public static CollisionObject checkCollisions(string objA, string objB) 
+    public static CollisionObject checkCollisions(string objA, string objB, Vector2 velocity) 
     {
         for (int i = 0; i < collidables.Count - 1; i++)
         {
@@ -54,13 +54,14 @@ internal class CollisionManager
                 }
                 else if (((objA == obj1.Tag) && (objB == obj2.Tag)) || ((objA == obj2.Tag) && (objB == obj1.Tag)))
                 {
-                    return isCollided(obj1, obj2);
+                    CollisionObject obj = isCollided(obj1, obj2, velocity);
+                    obj.setBlock(blocks[j]);
                 }
             }
         }
-        return null;
+        return new CollisionObject();
     }
-    public static CollisionObject isCollided(ICollidable entityA, ICollidable entityB)
+    public static CollisionObject isCollided(ICollidable entityA, ICollidable entityB, Vector2 vel)
     {
 
         Entity a = entityA.GameObject;
@@ -68,7 +69,9 @@ internal class CollisionManager
 
         Rectangle rectA = a.Bound;
         Rectangle rectB = b.Bound;
-        return isCollided(rectA, rectB, new CollisionObject());
+
+        Rectangle bound = new Rectangle((int)(rectA.X + vel.X), (int)(rectA.Y + vel.Y), rectA.Width, rectA.Height);
+        return isCollided(bound, rectB, new CollisionObject());
     }
       
     public static CollisionObject isCollided(Rectangle rectA, Rectangle rectB, CollisionObject sideCollided)

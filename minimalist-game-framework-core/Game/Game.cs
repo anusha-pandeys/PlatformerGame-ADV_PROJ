@@ -37,6 +37,8 @@ class Game
     private List<Pits> pits;
     private List<Ladder> ladders;
     private static int currLevel = 1;
+    private Enemy enemy;
+    private Boss boss;
     private Spear spear;
     //private Ladder ladder;
 
@@ -54,10 +56,16 @@ class Game
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
         spear = new Spear();
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
-        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 1.5f);
+        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 1.5f, "Assets\\redGhost.png");
 
         Vector2 greyNPCPosition = new Vector2(500, 300); // Set the grey NPC's initial position
-        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 300f, 1.0f);
+        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 300f, 1.0f, "Assets\\greyGhost.png");
+
+        Vector2 enemySpawnPosition = new Vector2(400, 100); // Set the desired spawn position
+        Enemy enemy = new Enemy(enemySpawnPosition, new Vector2(50, 50)); // Adjust size as needed
+
+        Vector2 bossPosition = new Vector2(500, 300); // Set the boss's initial position
+        boss = new Boss(bossPosition, new Vector2(50, 50), player, 150f, 1.0f);
 
         levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
@@ -72,8 +80,10 @@ class Game
         //CollisionManager.AddObj("pit", pit);
         loadEntities();
         CollisionManager.AddObj("player", player);
-        
-
+        CollisionManager.AddObj("boss", boss);
+        CollisionManager.AddObj("npc", redNPC);
+        CollisionManager.AddObj("npc", greyNPC);
+        CollisionManager.AddObj("spear", spear);
         //CollisionManager.AddObj("player", player);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
@@ -84,8 +94,11 @@ class Game
     {
         // Poll for events
         SDL.SDL_PumpEvents();
+        // Measure the time elapsed between one frame and the next:
         spear.spearLoop();
+
         // Update game logic based on the current state
+        showStartMenu = false;
         if (showStartMenu)
         {
             StartMenu.Update();
@@ -102,15 +115,12 @@ class Game
         {
             
             map.setBackgroundColor();
-            
-            
-            /*
+
             foreach (var block in levelBlocks)
             {
                 block.blockLoop();
                 //CollisionManager.addBlock(block);
             }
-            */
             foreach (var pit in pits)
             {
                 pit.pitsLoop();
@@ -136,11 +146,21 @@ class Game
 
             player.playerLoop();
             localCamera.UpdateGlobalCy(player.position, player.size, player.playerVelocity);
-            //localCamera.UpdateGlobalCy(player.position, player.size, player.playerVelocity);
             DisplayPlayerCoordinates();
+            boss.Update();
             redNPC.Update();
             greyNPC.Update();
-            
+
+            foreach (var entity in Game.entities.ToArray())
+            {
+                if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
+                {
+                    enemyEntity.EnemyLoop();
+                }
+            }
+
+
+
             //moving.updateCoordinates();
 
             // Render checkpoints
