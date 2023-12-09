@@ -22,7 +22,7 @@ internal class Boss : Entity
     private float shootCooldown = 2.0f; // Set the desired cooldown time in seconds
     private float timeSinceLastShot = 0.0f;
     private float bulletSpeed = 100.0f;
-
+    private Texture bossTexture;
     public Boss(Vector2 position, Vector2 size, Player player, float followRadius, float speed)
     {
         this.position = position;
@@ -32,6 +32,9 @@ internal class Boss : Entity
         this.speed = speed;
         this.velocity = Vector2.Zero;
         Game.entities.Add(this);
+        string relativePath = "Assets\\Boss.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        bossTexture = Engine.LoadTexture(absolutePath);
     }
 
     public void Update()
@@ -203,16 +206,7 @@ internal class Boss : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 255, 0, 0, 255); // Customize color if needed
 
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        Engine.DrawTexture(bossTexture, position, null, size);
     }
 }

@@ -13,6 +13,7 @@ internal class Bullet : Entity
     private GameColor color;
     private Vector2 velocity;
     public Enemy Source { get; set; }
+    private Texture bulletTexture;
 
     public Bullet(Vector2 position, Vector2 velocity, Vector2 size, GameColor color)
     {
@@ -21,6 +22,9 @@ internal class Bullet : Entity
         this.size = size;
         this.color = color;
         Game.entities.Add(this);
+        string relativePath = "Assets\\Bullet.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        bulletTexture = Engine.LoadTexture(absolutePath);
     }
 
     public void BulletLoop(Camera camera)
@@ -70,14 +74,7 @@ internal class Bullet : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 255, 0, 0, 255); // red
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        
+        Engine.DrawTexture(bulletTexture, position, null, size);
     }
 }
