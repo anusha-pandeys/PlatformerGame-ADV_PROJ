@@ -9,6 +9,7 @@ using System.Text;
 internal class Checkpoint : Entity
 {
     private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
+
     private Vector2 position;
     private Vector2 size;
     private Texture checkpointTexture;

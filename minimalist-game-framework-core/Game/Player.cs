@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Security.Cryptography;
+using static SDL2.SDL;
+using System.IO;
 
 internal class Player : Entity
 {
@@ -15,10 +17,9 @@ internal class Player : Entity
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
     private const float JUMP_STRENGTH = -3f;
-    public Vector2 playerPosition;
+    public Vector2 position;
     public Vector2 playerVelocity;
-    public Vector2 globalPos;
-    public Vector2 playerSize;
+    public Vector2 size;
     private TextRenderer text;
     private Font font;
     private Color originalColor = new Color(255, 0, 0, 255); // Original color (red)
@@ -28,9 +29,11 @@ internal class Player : Entity
     private bool blockBelow;
     private Collidable player;
     public HealthBar healthBar;
-    public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
+    private Texture playerTexture;
+
+    public Player(Vector2 position, Vector2 playerVelocity, TextRenderer text, Font font)
     {
-        this.playerPosition = playerPosition;
+        this.position = position;
         this.playerVelocity = playerVelocity;
         this.text = text;
         this.font = font;
@@ -39,7 +42,13 @@ internal class Player : Entity
         healthBar = new HealthBar("playerHealthBar", new Vector2(220,50), 100, new Vector2(100, 50));
         Game.entities.Add(this);
         blockBelow = false;
-        playerSize = new Vector2(50f, 70f);
+
+        size = new Vector2(50f, 70f);
+        ///var path =
+        string relativePath = "Assets\\player.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
+        
     }
 
     public void setHealth(int health)
@@ -54,7 +63,7 @@ internal class Player : Entity
 
     protected override Rectangle CalculateBound()
     {
-        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(playerSize.X), (int)(playerSize.Y));
+        return new Rectangle((int)position.X, (int)position.Y, (int)(size.X), (int)(size.Y));
     }
 
 
@@ -62,7 +71,7 @@ internal class Player : Entity
 
     public Vector2 Position
     {
-        get { return playerPosition; }
+        get { return position; }
     }
 
     
@@ -71,7 +80,7 @@ internal class Player : Entity
     {
 
         List<Vector2> result = new List<Vector2>();
-        result.Add(playerPosition);
+        result.Add(position);
         result.Add(new Vector2(50, 70));
         return result;
     }
@@ -82,29 +91,30 @@ internal class Player : Entity
         {
             playerVelocity.X = 0;
             playerVelocity.Y = 0.1f;
-            playerPosition.Y -= playerVelocity.Y;
-           // Render(Game.localCamera);
+            position.Y -= playerVelocity.Y;
+           
+            Render(Game.localCamera);
         }
     }*/
 
     public void playerLoop()
     {
-        healthBar.Render();
         long startTime = DateTime.Now.Ticks;
         HandleInput();
         HandleJump();
         double secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
         HandleCollisionY(secondsElapsed);
         HandleCollisionX(secondsElapsed);
-        playerPosition += playerVelocity;
+        position += playerVelocity;
         // Collision detection for the floor
-        if (playerPosition.Y > 400) // Assuming 500 is ground level
+        if (position.Y > 400) // Assuming 500 is ground level
         {
-            playerPosition.Y = 400;
+            position.Y = 400;
             playerVelocity.Y = 0; // Stop downward movement
         }
 
         Render(Game.localCamera);
+        healthBar.Render();
     }
 
     private void HandleCollisionY(double secondsElapsed)
@@ -113,7 +123,7 @@ internal class Player : Entity
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, playerVelocity.Y+2f), secondsElapsed);
         if (collisionDetected.getCollided())
         {
-            playerPosition.Y += collisionDetected.getDistanceY();
+            position.Y += collisionDetected.getDistanceY();
             playerVelocity.Y = 0;
         } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
         {
@@ -126,13 +136,13 @@ internal class Player : Entity
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(2f, 0), secondsElapsed);
         if (collisionDetected.getCollided())
         {
-            playerPosition.X += collisionDetected.getDistanceX();
+            position.X += collisionDetected.getDistanceX();
         } else
         {
             collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(-2f, 0), secondsElapsed);
             if (collisionDetected.getCollided())
             {
-                playerPosition.X += collisionDetected.getDistanceX();
+                position.X += collisionDetected.getDistanceX();
             }
         }
     }
@@ -191,26 +201,18 @@ internal class Player : Entity
     }
     public override void Render(Camera camera)
     {
-        //Vector2 localPosition = camera.globalToLocal(playerPosition);
-        //Draw(localPosition, playerSize);
-        Draw(playerPosition, playerSize);
+        Game.localCamera.UpdateGlobalCy(position,size,playerVelocity);
+        Vector2 localPosition = Game.localCamera.globalToLocal(position);
+        Draw(localPosition, size);
+        //Draw(position, size);
     }
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
 
-        SDL.SDL_SetRenderDrawColor(Renderer, playerColor.R, playerColor.G, playerColor.B, playerColor.A);
-
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        Engine.DrawTexture(playerTexture, position, null, size);
     }
+
 }
 
 

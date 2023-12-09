@@ -16,6 +16,7 @@ internal class Slides : Entity
         this.position = position;
         this.size = size;
         this.slide = new Collidable(this, "slide");
+        Game.entities.Add(this);
     }
 
     public void slidesLoop()
