@@ -31,6 +31,7 @@ internal class Player : Entity
     private Collidable player;
     public HealthBar healthBar;
     private Texture playerTexture;
+
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;

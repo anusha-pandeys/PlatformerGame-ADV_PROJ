@@ -10,37 +10,72 @@ internal class Pits : Entity
     private Vector2 position;
     private Vector2 size;
     private Collidable pits;
+    private Color originalColor;
+    private Color pitColor;
+    private float collisionCooldown = 0.1f;
+    private float timeSinceCollision = 0.0f;
+
     public bool playerDeath = false;
-    //private bool first;
+
     public Pits(Vector2 position, Vector2 size)
     {
         this.position = position;
         this.size = size;
         this.pits = new Collidable(this, "pit");
-        //first = false;
+        this.originalColor = new Color(0, 255, 0, 255); // Original color (green)
+        this.pitColor = originalColor;
         Game.entities.Add(this);
     }
+
     public bool getPlayerDeath()
     {
-        return playerDeath; 
+        return playerDeath;
     }
+
     public void pitsLoop()
     {
         //Render(new Camera());
         if (checkCollision())
         {
+
+            HandleCollision();
             //playerDeath = true;
             Game.player.setHealth(50);
         }
     }
+
     public bool checkCollision()
     {
-        //Dictionary<string, bool> ret = CollisionManager.checkCollisions("pit", "player");
-        //if(CollisionManager.checkCollisions("player", "pit"))
-        //{
-        //    return true;
-      //  }
+        CollisionObject collisionDetected = CollisionManager.checkCollisions("player", "pit", new Vector2(0, 0));
+        if (collisionDetected.getCollided())
+        {
+            return true;
+        }
+
         return false;
+    }
+
+    private void HandleCollision()
+    {
+        // Check if the collision is with the player
+        if (checkCollision())
+        {
+            // Handle collision logic here for Pits colliding with the player
+            // Change the Pits' color to red
+            pitColor = new Color(255, 0, 0, 255); // Red color
+        }
+    }
+
+    private void UpdateCollisionCooldown()
+    {
+        // Update the elapsed time since the last collision
+        timeSinceCollision += Engine.TimeDelta;
+
+        // Check if enough time has passed since the last collision to revert to the original color
+        if (timeSinceCollision >= collisionCooldown)
+        {
+            pitColor = originalColor;
+        }
     }
 
     protected override Rectangle CalculateBound()
@@ -55,7 +90,8 @@ internal class Pits : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 102, 51, 0, 255); // green
+
+        SDL.SDL_SetRenderDrawColor(Renderer, pitColor.R, pitColor.G, pitColor.B, pitColor.A);
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
             x = (int)position.X,
@@ -63,6 +99,7 @@ internal class Pits : Entity
             w = (int)size.X,
             h = (int)size.Y
         };
+
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
 }

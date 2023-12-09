@@ -12,6 +12,21 @@ internal class Blocks : Entity
     private GameColor color;
     private Collidable blocks;
     private string sidesInContact;
+    private Vector2 velocity; // New property to store the velocity
+
+    public void SetVelocity(Vector2 velocity)
+    {
+        this.velocity = velocity;
+    }
+
+    public void blockLoop()
+    {
+        // Update the block's position based on the velocity
+        position += velocity * Engine.TimeDelta;
+
+        // Render(Game.localCamera);
+    }
+
     private Texture playerTexture;
     public Blocks(Vector2 position, Vector2 size, GameColor color)
     {
@@ -23,11 +38,6 @@ internal class Blocks : Entity
         string relativePath = "Assets\\blocks.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         playerTexture = Engine.LoadTexture(absolutePath);
-    }
-
-    public void blockLoop()
-    {
-        //Render(Game.localCamera);
     }
 
     public List<Vector2> getCoordinates()
