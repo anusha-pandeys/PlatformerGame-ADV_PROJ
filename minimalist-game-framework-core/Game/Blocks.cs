@@ -8,8 +8,9 @@ internal class Blocks : Entity
 {
     private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
     private Vector2 position;
-    private Vector2 size;
+    public Vector2 size;
     private GameColor color;
+    private Collidable blocks;
     private string sidesInContact;
     private Vector2 velocity; // New property to store the velocity
 
@@ -26,6 +27,7 @@ internal class Blocks : Entity
         // Render(Game.localCamera);
     }
 
+    private Texture playerTexture;
     public Blocks(Vector2 position, Vector2 size, GameColor color)
     {
         this.position = position;
@@ -33,6 +35,9 @@ internal class Blocks : Entity
         this.color = color;
         sidesInContact = "";
         Game.entities.Add(this);
+        string relativePath = "Assets\\blocks.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
     }
 
     public List<Vector2> getCoordinates()
@@ -55,14 +60,6 @@ internal class Blocks : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 0, 255, 0, 255); // green
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        Engine.DrawTexture(playerTexture, position, null, size);
     }
 }

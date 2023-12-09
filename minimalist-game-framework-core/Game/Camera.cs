@@ -24,28 +24,7 @@ internal class Camera
     }
     public void UpdateGlobalCy(Vector2 globalPlayer, Vector2 playerSize, Vector2 playerVelocity)
     {
-        /*
-        float localPlayerY = height - Math.Abs(globalPlayer.Y - globalCy);
-        if (localPlayerY < playerSize.Y/2 && playerVelocity.Y == 0)
-        {
-            globalCy -= height / 2;
-        } else if (localPlayerY > height-playerSize.Y/2 && playerVelocity.Y == 0)
-        {
-            globalCy += height / 2;
-        }
-        */
-
-
-
-        /*
-        int newCy = (int) playerPosition.Y - height / 2;
-        globalCy = Math.Max(480, newCy);
-        /*
-        if (playerPosition.Y >= 50)
-        {
-            globalCy += (int) (0.75 * height);
-        }
-        */
+        
 
     }
 

@@ -1,4 +1,4 @@
-﻿using SDL2;
+using SDL2;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -37,8 +37,10 @@ internal class Pits : Entity
         //Render(new Camera());
         if (checkCollision())
         {
+
             HandleCollision();
-            playerDeath = true;
+            //playerDeath = true;
+            Game.player.setHealth(50);
         }
     }
 
@@ -48,6 +50,7 @@ internal class Pits : Entity
         {
             return true;
         }
+
         return false;
     }
 
@@ -86,8 +89,8 @@ internal class Pits : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, pitColor.R, pitColor.G, pitColor.B, pitColor.A);
 
+        SDL.SDL_SetRenderDrawColor(Renderer, pitColor.R, pitColor.G, pitColor.B, pitColor.A);
         SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
             x = (int)position.X,

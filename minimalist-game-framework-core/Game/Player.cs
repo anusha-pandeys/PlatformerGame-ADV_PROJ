@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.Security.Cryptography;
+using static SDL2.SDL;
+using System.IO;
 
 internal class Player : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;  // Gets the SDL Renderer from the Engine class
-    private const float PLAYER_WIDTH = 50f;
-    private const float PLAYER_HEIGHT = 50f;
     private const int BLOCK_SIZE = 50;
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
@@ -19,16 +20,18 @@ internal class Player : Entity
     public Vector2 playerPosition;
     public Vector2 playerVelocity;
     public Vector2 globalPos;
-    public Vector2 playerSize = new Vector2(PLAYER_WIDTH, PLAYER_HEIGHT);
+    public Vector2 playerSize;
     private TextRenderer text;
     private Font font;
     private Color originalColor = new Color(255, 0, 0, 255); // Original color (red)
     private Color playerColor;
     private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
     private float timeSinceCollision = 0.0f;
+    private bool blockBelow;
     private Collidable player;
+    public HealthBar healthBar;
+    private Texture playerTexture;
 
-    
     public Player(Vector2 playerPosition, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.playerPosition = playerPosition;
@@ -37,10 +40,21 @@ internal class Player : Entity
         this.font = font;
         this.playerColor = originalColor;
         this.player = new Collidable(this, "player");
+        healthBar = new HealthBar("playerHealthBar", new Vector2(220,50), 100, new Vector2(100, 50));
         Game.entities.Add(this);
+        blockBelow = false;
+        playerSize = new Vector2(50f, 70f);
+        ///var path =
+        string relativePath = "Assets\\player.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
+        
     }
 
-
+    public void setHealth(int health)
+    {
+        healthBar.setHealth(health);
+    }
     internal Rectangle GetPlayerBounds()
     {
         return CalculateBound();
@@ -49,7 +63,7 @@ internal class Player : Entity
 
     protected override Rectangle CalculateBound()
     {
-        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(PLAYER_HEIGHT), (int)(PLAYER_WIDTH));
+        return new Rectangle((int)playerPosition.X, (int)playerPosition.Y, (int)(playerSize.X), (int)(playerSize.Y));
     }
 
 
@@ -71,7 +85,7 @@ internal class Player : Entity
         return result;
     }
 
-    public void translateUpLadder()
+    /*public void translateUpLadder()
     {
         while(CollisionManager.checkCollisions("player", "ladder"))
         {
@@ -80,38 +94,17 @@ internal class Player : Entity
             playerPosition.Y -= playerVelocity.Y;
            // Render(Game.localCamera);
         }
-    }
+    }*/
 
     public void playerLoop()
     {
-        string collisionDetected = CollisionManager.checkBlockCollision(this, playerVelocity);
-
+        long startTime = DateTime.Now.Ticks;
         HandleInput();
         HandleJump();
-
-        // Apply gravity
+        double secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
+        HandleCollisionY(secondsElapsed);
+        HandleCollisionX(secondsElapsed);
         playerPosition += playerVelocity;
-
-        if (collisionDetected.Contains("down") && !keyPressed())
-        {
-            HandleCollision();
-            playerVelocity.Y = 0;
-            playerVelocity.Y -= (GRAVITY);
-            playerPosition.Y -= 1f;
-            System.Console.WriteLine("down");
-        }
-        else if (collisionDetected.Contains("up"))
-        {
-            HandleCollision();
-            System.Console.WriteLine("up");
-            playerVelocity.Y = playerVelocity.Y * -1;
-        }
-
-        playerVelocity.Y += (GRAVITY);
-
-        // Update player position
-        playerPosition += playerVelocity;
-
         // Collision detection for the floor
         if (playerPosition.Y > 400) // Assuming 500 is ground level
         {
@@ -119,42 +112,47 @@ internal class Player : Entity
             playerVelocity.Y = 0; // Stop downward movement
         }
 
-        // Collision detection for the walls (placeholder logic)
-        if (playerPosition.X < 0 || playerPosition.X + PLAYER_WIDTH > 800) // Assuming screen width is 800
-        {
-            playerVelocity.X = 0; // Stop horizontal movement
-        }
-
-        // Update the elapsed time since the last collision
-        timeSinceCollision += Engine.TimeDelta;
-
-        // Check if enough time has passed since the last collision to revert to the original color
-        if (timeSinceCollision >= collisionCooldown)
-        {
-            playerColor = originalColor;
-        }
-        
-        //Render(Game.localCamera);
+        Render(Game.localCamera);
+        healthBar.Render();
     }
 
-    private void HandleCollision()
+    private void HandleCollisionY(double secondsElapsed)
     {
-        // Handle collision logic here
-        // For example, change the player's color to black
-        playerColor = new Color(0, 0, 0, 255);
-        timeSinceCollision = 0.0f; // Reset the timer
+        
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, playerVelocity.Y+2f), secondsElapsed);
+        if (collisionDetected.getCollided())
+        {
+            playerPosition.Y += collisionDetected.getDistanceY();
+            playerVelocity.Y = 0;
+        } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
+        {
+            playerVelocity.Y += (GRAVITY);
+        }
     }
+    private void HandleCollisionX(double secondsElapsed)
+    {
+        float horizontalMovement = playerVelocity.X;
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(2f, 0), secondsElapsed);
+        if (collisionDetected.getCollided())
+        {
+            playerPosition.X += collisionDetected.getDistanceX();
+        } else
+        {
+            collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(-2f, 0), secondsElapsed);
+            if (collisionDetected.getCollided())
+            {
+                playerPosition.X += collisionDetected.getDistanceX();
+            }
+        }
+    }
+
 
     private void HandleInput()
     {
         int numKeys;
         IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
-
-        // Convert IntPtr to byte array
         byte[] keys = new byte[numKeys];
         Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
-
-        // Reset the horizontal velocity to 0.
         playerVelocity.X = 0.0f;
 
 
@@ -162,54 +160,16 @@ internal class Player : Entity
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
         {
             text.displayText("left", new Vector2(10, 30), Color.Black, font);     
-            Vector2 prospectiveVelocity = new Vector2(-2.0f, 0);
-            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
-            if (collisionDetected.Contains("left")) 
-            {
-                //System.Console.WriteLine("left");
-                playerVelocity.X = 0;
-            }
-            else
-            {
-                playerVelocity.X = -2.0f;
-            }
+            playerVelocity.X = -2.0f;
         }    
-        // Check RIGHT arrow key.
         // Check RIGHT arrow key.
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
             text.displayText("right", new Vector2(10, 30), Color.Black, font);
-            Vector2 prospectiveVelocity = new Vector2(2.0f, 0);
-            string collisionDetected = CollisionManager.checkBlockCollision(this, prospectiveVelocity);
-            if (collisionDetected.Contains("right"))
-            {
-                System.Console.WriteLine("right");
-                playerVelocity.X = 0;
-            }
-            else
-            {
-                playerVelocity.X = 2.0f;
-            }
+            playerVelocity.X = 2.0f;
         }
-
-        // You can also add other key checks here, e.g., for jumping:
     }
 
-    private bool keyPressed()
-    {
-        int numKeys;
-        IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
-
-        // Convert IntPtr to byte array
-        byte[] keys = new byte[numKeys];
-        Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
-        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
-        {
-
-            return true;
-        }
-        return false;
-    }
     private void HandleJump()
     {
         int numKeys;
@@ -221,7 +181,6 @@ internal class Player : Entity
 
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
         {
-
             Jump();
         }
 
@@ -230,18 +189,17 @@ internal class Player : Entity
     {
         if (playerVelocity.Y == 0)
         {
-            //GRAVITY = 0.25f;
-            //NORMALF = 0;
             playerVelocity.Y = JUMP_STRENGTH;
         }
     }
 
 
-
+    public void renderOutside(Camera camera)
+    {
+        Render(camera);
+    }
     public override void Render(Camera camera)
     {
-        int numKeys;
-        IntPtr keyStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
         //Vector2 localPosition = camera.globalToLocal(playerPosition);
         //Draw(localPosition, playerSize);
         Draw(playerPosition, playerSize);
@@ -250,18 +208,9 @@ internal class Player : Entity
     protected override void Draw(Vector2 position, Vector2 size)
     {
 
-        SDL.SDL_SetRenderDrawColor(Renderer, playerColor.R, playerColor.G, playerColor.B, playerColor.A);
-
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        Engine.DrawTexture(playerTexture, playerPosition, null, playerSize);
     }
+
 }
 
 
