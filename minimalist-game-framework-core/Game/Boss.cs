@@ -93,7 +93,7 @@ internal class Boss : Entity
 
     private void ShootAtPlayer()
     {
-        Vector2 playerPosition = Game.player.playerPosition;
+        Vector2 playerPosition = Game.player.position;
         Vector2 initialPlayerPosition = playerPosition; // Store initial player position
 
         Vector2 direction = (initialPlayerPosition - position).Normalized();

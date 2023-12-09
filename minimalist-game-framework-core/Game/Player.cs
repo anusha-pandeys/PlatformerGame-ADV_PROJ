@@ -210,7 +210,7 @@ internal class Player : Entity
     protected override void Draw(Vector2 position, Vector2 size)
     {
 
-        Engine.DrawTexture(playerTexture, playerPosition, null, playerSize);
+        Engine.DrawTexture(playerTexture, position, null, size);
     }
 
 }

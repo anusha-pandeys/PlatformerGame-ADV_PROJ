@@ -17,7 +17,7 @@ internal class Spear : Entity
     public Spear()
     {
 
-        this.position = Game.player.Position + new Vector2(0, Game.player.playerSize.Y/2);
+        this.position = Game.player.Position + new Vector2(0, Game.player.size.Y/2);
         this.size = new Vector2(50, 5);
         this.spear = new Collidable(this, "spear");
         Game.entities.Add(this);
@@ -33,20 +33,20 @@ internal class Spear : Entity
                 dx = 10f;
             }
         } 
-        else if (this.position.X >= (Game.player.playerPosition.X + Game.player.playerSize.X)
+        else if (this.position.X >= (Game.player.position.X + Game.player.size.X)
             && currentState == 1 && canTransition(2))
         {
             dx = -10f;
         } 
-        else if (this.position.X < (Game.player.playerPosition.X + Game.player.playerSize.X/2))
+        else if (this.position.X < (Game.player.position.X + Game.player.size.X/2))
         {
-            this.position.X = Game.player.playerPosition.X; 
+            this.position.X = Game.player.position.X; 
             dx = 0f;
             currentState = 0;
         }
         //this.position.X = Game.player.Position.X;
         this.position.X += dx;
-        this.position.Y = Game.player.Position.Y + Game.player.playerSize.Y / 2;
+        this.position.Y = Game.player.Position.Y + Game.player.size.Y / 2;
     }
 
     private bool canTransition(int transitionTo)
