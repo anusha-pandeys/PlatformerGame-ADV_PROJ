@@ -9,13 +9,18 @@ using System.Text;
 internal class Checkpoint : Entity
 {
     private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
-    public Vector2 position;
-    public Vector2 size;
+
+    private Vector2 position;
+    private Vector2 size;
+    private Texture checkpointTexture;
     public Checkpoint(Vector2 position, Vector2 size)
     {
         this.position = position;
         this.size = size;
         Game.entities.Add(this);
+        string relativePath = "Assets\\checkpoint.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        checkpointTexture = Engine.LoadTexture(absolutePath);
     }
 
     public Rectangle Bound
@@ -40,15 +45,9 @@ internal class Checkpoint : Entity
     protected override void Draw(Vector2 position, Vector2 size)
     {
         // Set the checkpoint color to yellow
-        SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 0, 255); // yellow
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        Engine.DrawTexture(checkpointTexture, this.position, null, this.size);
+        //;
+        //SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
 
     public void Update(Camera camera)
