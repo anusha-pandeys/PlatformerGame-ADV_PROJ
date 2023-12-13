@@ -39,6 +39,13 @@ internal class Boss : Entity
 
     public void Update()
     {
+        foreach (var entity in Game.entities.ToArray())
+        {
+            if (entity is Bullet bullet && bullet.Source == this)
+            {
+                bullet.BulletLoop(Game.localCamera); // Pass the camera here
+            }
+        }
         long startTime = DateTime.Now.Ticks;
         double secondsElapsed = 0;
         if (IsPlayerInRadius())
@@ -100,10 +107,10 @@ internal class Boss : Entity
         Vector2 initialPlayerPosition = playerPosition; // Store initial player position
 
         Vector2 direction = (initialPlayerPosition - position).Normalized();
-        Fireball fireball = new Fireball(position, direction * bulletSpeed, new Vector2(10, 10), GameColor.White);
+        Bullet bullet = new Bullet(position, direction * bulletSpeed, new Vector2(10, 10), GameColor.White);
 
         // Set the source of the fireball
-        fireball.Source = this;
+        bullet.Source = this;
     }
 
     private void ApplyGravity()

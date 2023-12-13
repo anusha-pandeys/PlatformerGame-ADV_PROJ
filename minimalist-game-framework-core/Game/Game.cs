@@ -65,7 +65,7 @@ class Game
         Enemy enemy = new Enemy(enemySpawnPosition, new Vector2(50, 50)); // Adjust size as needed
 
         Vector2 bossPosition = new Vector2(500, 300); // Set the boss's initial position
-        boss = new Boss(bossPosition, new Vector2(50, 50), player, 150f, 1.0f);
+        Boss boss = new Boss(bossPosition, new Vector2(50, 50), player, 150f, 1.0f);
 
         levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
@@ -147,7 +147,6 @@ class Game
             player.playerLoop();
             localCamera.UpdateGlobalCy(player.position, player.size, player.playerVelocity);
             DisplayPlayerCoordinates();
-            boss.Update();
             redNPC.Update();
             greyNPC.Update();
 
@@ -159,12 +158,21 @@ class Game
                 }
             }
 
+            foreach (var entity in Game.entities.ToArray())
+            {
+                if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
+                {
+                    bossEntity.Update();
+                }
+            }
+
+
 
 
             //moving.updateCoordinates();
 
             // Render checkpoints
-            
+
             /*
             foreach (var checkpoint in checkpoints)
             {
