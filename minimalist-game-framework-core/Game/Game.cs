@@ -41,6 +41,7 @@ class Game
     private Boss boss;
     private Spear spear;
     //private Ladder ladder;
+    private Music bgMusic;
 
     public Game()
     {
@@ -71,6 +72,8 @@ class Game
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
                                                                             //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
                                                                             //startMenu = new StartMenu();
+
+        bgMusic = Engine.LoadMusic("Assets\\bg music.mp3");
 
         pits = LevelLoader.loadPits("Game\\levelPractice.txt", 50);
         //ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
@@ -107,7 +110,8 @@ class Game
             // If start button is clicked, hide the start menu and start the game
             if (StartMenu.IsStartButtonClicked())
             {
-                showStartMenu = false;
+                Engine.PlayMusic(bgMusic, true, 0); 
+                
             }
 
         }//
@@ -211,7 +215,9 @@ class Game
                     
                     break;
                 }
-            }*/
+            
+            }
+            */
 
         }
         SDL.SDL_RenderPresent(Engine.Renderer2);
@@ -266,6 +272,7 @@ class Game
     }
     public void RenderGrid(IntPtr renderer)
     {
+        
         for (int row = 0; row < 32; row++)
         {
             for (int col = 0; col < 32; col++)
@@ -285,6 +292,7 @@ class Game
                 SDL.SDL_RenderDrawRect(renderer, ref tileRect);
             }
         }
+        
     }
 
     public Player getPlayer()

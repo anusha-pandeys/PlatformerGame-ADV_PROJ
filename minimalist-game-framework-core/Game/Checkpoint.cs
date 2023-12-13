@@ -22,6 +22,7 @@ internal class Checkpoint : Entity
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         checkpointTexture = Engine.LoadTexture(absolutePath);
     }
+    
 
     public Rectangle Bound
     {
