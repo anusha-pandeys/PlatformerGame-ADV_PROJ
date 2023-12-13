@@ -96,13 +96,15 @@ class Game
     public void Update()
     {
         // Poll for events
-        Engine.PlayMusic(bgMusic, true, 0);
+        //Engine.PlayMusic(bgMusic, true, 0);
+
+
+
         SDL.SDL_PumpEvents();
         // Measure the time elapsed between one frame and the next:
         spear.spearLoop();
 
         // Update game logic based on the current state
-        showStartMenu = false;
         if (showStartMenu)
         {
             StartMenu.Update();
@@ -111,11 +113,11 @@ class Game
             // If start button is clicked, hide the start menu and start the game
             if (StartMenu.IsStartButtonClicked())
             {
-                //Engine.PlayMusic(bgMusic, true, 0); 
-                
+                showStartMenu = false;
+                // Start the background music when the game starts and loop it
+                Engine.PlayMusic(bgMusic, true, 0);
             }
-
-        }//
+        }
         else
         {
 
