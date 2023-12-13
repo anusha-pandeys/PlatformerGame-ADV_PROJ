@@ -73,7 +73,7 @@ class Game
                                                                             //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
                                                                             //startMenu = new StartMenu();
 
-        bgMusic = Engine.LoadMusic("Assets\\bg music.mp3");
+        bgMusic = Engine.LoadMusic("bg music.mp3");
 
         pits = LevelLoader.loadPits("Game\\levelPractice.txt", 50);
         //ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
@@ -96,6 +96,7 @@ class Game
     public void Update()
     {
         // Poll for events
+        Engine.PlayMusic(bgMusic, true, 0);
         SDL.SDL_PumpEvents();
         // Measure the time elapsed between one frame and the next:
         spear.spearLoop();
@@ -110,7 +111,7 @@ class Game
             // If start button is clicked, hide the start menu and start the game
             if (StartMenu.IsStartButtonClicked())
             {
-                Engine.PlayMusic(bgMusic, true, 0); 
+                //Engine.PlayMusic(bgMusic, true, 0); 
                 
             }
 
