@@ -14,6 +14,7 @@ internal class Spear : Entity
     private int[,] stateTransitions = { { 1, 1, 0 }, { 0, 1, 1 }, { 1, 0, 1 } };
     private int currentState = 0; // 0 = notDrawn; 1 = drawing; 2 = pullign back
     private float dx = 0;
+    private Sound spearMusic;
     public Spear()
     {
 
@@ -21,6 +22,7 @@ internal class Spear : Entity
         this.size = new Vector2(50, 5);
         this.spear = new Collidable(this, "spear");
         Game.entities.Add(this);
+        spearMusic = Engine.LoadSound("Spear 1.mp3");
     }
 
     public void spearLoop()
@@ -28,8 +30,10 @@ internal class Spear : Entity
 
         if (IsClicked())
         {
+            
             if (currentState == 0 && canTransition(1))
             {
+                Engine.PlaySound(spearMusic, false, 0);
                 dx = 10f;
             }
         } 
