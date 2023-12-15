@@ -17,9 +17,9 @@ internal class Player : Entity
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
     private const float JUMP_STRENGTH = -3f;
-    public Vector2 position;
+    //public Vector2 position;
     public Vector2 playerVelocity;
-    public Vector2 size;
+    //public Vector2 size;
     private TextRenderer text;
     private Font font;
     private Color originalColor = new Color(255, 0, 0, 255); // Original color (red)
@@ -69,11 +69,12 @@ internal class Player : Entity
 
 
 
+    /*
     public Vector2 Position
     {
         get { return position; }
     }
-
+    */
     
 
     public List<Vector2> getCoordinates()
@@ -201,7 +202,7 @@ internal class Player : Entity
     }
     public override void Render(Camera camera)
     {
-        Game.localCamera.UpdateGlobalCy(position,size,playerVelocity);
+        //Game.localCamera.updateGlobalCy(position,size,playerVelocity);
         Vector2 localPosition = Game.localCamera.globalToLocal(position);
         Draw(localPosition, size);
         //Draw(position, size);

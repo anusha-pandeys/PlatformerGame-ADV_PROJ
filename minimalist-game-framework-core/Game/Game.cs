@@ -113,8 +113,10 @@ class Game
         }//
         else
         {
-            
-            map.setBackgroundColor();
+
+            //map.setBackgroundColor();
+            Texture background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
+            Engine.DrawTexture(background, new Vector2(0,0), null, new Vector2 (640, 480));
 
             foreach (var block in levelBlocks)
             {
@@ -145,7 +147,8 @@ class Game
             
 
             player.playerLoop();
-            localCamera.UpdateGlobalCy(player.position, player.size, player.playerVelocity);
+            localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
+            localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
             DisplayPlayerCoordinates();
             boss.Update();
             redNPC.Update();
