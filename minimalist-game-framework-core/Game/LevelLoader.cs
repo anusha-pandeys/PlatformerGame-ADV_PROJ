@@ -90,5 +90,25 @@ internal class LevelLoader
 
         return ladders;
     }
+
+    public static List<MovingPlatform> loadMovingPlatform(string filePath, Vector2 platformSize)
+    {
+        List<MovingPlatform> platform = new List<MovingPlatform>();
+        string[] lines = File.ReadAllLines(filePath);
+
+        for (int y = 0; y < lines.Length; y++)
+        {
+            for (int x = 0; x < lines[y].Length; x++)
+            {
+                if (lines[y][x] == 'l')
+                {
+                    Vector2 position = new Vector2(x * platformSize, y * platformSize);
+                    platform.Add(new MovingPlatform(position, platformSize, GameColor.White, new Vector2(3f, 0));
+                }
+            }
+        }
+
+        return platform;
+    }
 }
 
