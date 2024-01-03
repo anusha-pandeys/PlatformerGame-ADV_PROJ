@@ -12,7 +12,7 @@ internal class Bullet : Entity
     private Vector2 size;
     private GameColor color;
     private Vector2 velocity;
-    public Enemy Source { get; set; }
+    public Entity Source { get; set; }
     private Texture bulletTexture;
 
     public Bullet(Vector2 position, Vector2 velocity, Vector2 size, GameColor color)

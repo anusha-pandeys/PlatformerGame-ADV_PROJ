@@ -19,10 +19,12 @@ internal class Boss : Entity
     private Player player;
     private const float GRAVITY = 0.25f;
     private float accumulatedGravity = 0.0f;
-    private float shootCooldown = 2.0f; // Set the desired cooldown time in seconds
+    private float shootCooldown = 2.0f;
     private float timeSinceLastShot = 0.0f;
     private float bulletSpeed = 100.0f;
     private Texture bossTexture;
+    private Collidable bossCollidable;  // New collidable for the boss
+
     public Boss(Vector2 position, Vector2 size, Player player, float followRadius, float speed)
     {
         this.position = position;
@@ -31,7 +33,13 @@ internal class Boss : Entity
         this.followRadius = followRadius;
         this.speed = speed;
         this.velocity = Vector2.Zero;
+
+        // Create a new Collidable for the boss
+        bossCollidable = new Collidable(this, "boss");
+        CollisionManager.AddObj("boss", this);  // Register the boss with the collision manager
+
         Game.entities.Add(this);
+
         string relativePath = "Assets\\Boss.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         bossTexture = Engine.LoadTexture(absolutePath);
@@ -39,8 +47,17 @@ internal class Boss : Entity
 
     public void Update()
     {
+        foreach (var entity in Game.entities.ToArray())
+        {
+            if (entity is Bullet bullet && bullet.Source == this)
+            {
+                bullet.BulletLoop(Game.localCamera);
+            }
+        }
+
         long startTime = DateTime.Now.Ticks;
         double secondsElapsed = 0;
+
         if (IsPlayerInRadius())
         {
             secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
@@ -51,38 +68,75 @@ internal class Boss : Entity
             velocity = Vector2.Zero;
         }
 
-        // Apply gravity to the boss
         ApplyGravity();
 
-        // Update boss position based on velocity
+        // Check collisions along the Y-axis before updating the position
+        HandleCollisionY(secondsElapsed);
+
+        // Update the position here
         position += velocity;
 
-        // Collision detection to adjust the position if needed
+        // Handle collisions along the X-axis
+        HandleCollisionX(secondsElapsed);
+
+        // Collision detection
         secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
-
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, velocity, secondsElapsed);
-        if (collisionDetected.getCollided()) { 
-            AdjustPositionOnCollision(collisionDetected);
-            accumulatedGravity = 0.0f; // Reset accumulated gravity on collision
-        }
 
-        // Check if the boss is hitting the left or right boundary
-        if (position.X < 0 || position.X + size.X > 800) // Assuming screen width is 800
+        if (collisionDetected.getCollided())
         {
-            velocity.X = 0; // Stop horizontal movement
+            AdjustPositionOnCollision(collisionDetected);
+            accumulatedGravity = 0.0f;
         }
 
-        // Check if the boss is hitting the ground
-        if (position.Y > 400) // Assuming 500 is ground level
+        // Check if hitting the left or right boundary
+        if (position.X < 0 || position.X + size.X > 800)
+        {
+            velocity.X = 0;
+        }
+
+        // Check if hitting the ground
+        if (position.Y > 400)
         {
             position.Y = 400;
-            velocity.Y = 0; // Stop downward movement
-            velocity.X = 0; // Stop horizontal movement
+            velocity.Y = 0;
         }
 
         UpdateShooting();
     }
 
+
+    private void HandleCollisionY(double secondsElapsed)
+    {
+
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, velocity.Y + 2f), secondsElapsed);
+        if (collisionDetected.getCollided())
+        {
+            position.Y += collisionDetected.getDistanceY();
+            velocity.Y = 0;
+        }
+        else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
+        {
+            velocity.Y += (GRAVITY);
+        }
+    }
+    private void HandleCollisionX(double secondsElapsed)
+    {
+        float horizontalMovement = velocity.X;
+        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(2f, 0), secondsElapsed);
+        if (collisionDetected.getCollided())
+        {
+            position.X += collisionDetected.getDistanceX();
+        }
+        else
+        {
+            collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(-2f, 0), secondsElapsed);
+            if (collisionDetected.getCollided())
+            {
+                position.X += collisionDetected.getDistanceX();
+            }
+        }
+    }
     private void UpdateShooting()
     {
         timeSinceLastShot += Engine.TimeDelta;
@@ -97,68 +151,65 @@ internal class Boss : Entity
     private void ShootAtPlayer()
     {
         Vector2 playerPosition = Game.player.position;
-        Vector2 initialPlayerPosition = playerPosition; // Store initial player position
+        Vector2 initialPlayerPosition = playerPosition;
 
         Vector2 direction = (initialPlayerPosition - position).Normalized();
-        Fireball fireball = new Fireball(position, direction * bulletSpeed, new Vector2(10, 10), GameColor.White);
-
-        // Set the source of the fireball
-        fireball.Source = this;
+        Bullet bullet = new Bullet(position, direction * bulletSpeed, new Vector2(10, 10), GameColor.White);
+        bullet.Source = this;
     }
 
     private void ApplyGravity()
     {
-        // Accumulate gravity over time
-        accumulatedGravity += GRAVITY;
-        velocity.Y += accumulatedGravity;
-        Console.WriteLine($"Velocity Y: {velocity.Y}");
+        if (position.Y >= 400)  // Adjust the value if the ground level is different
+        {
+            accumulatedGravity = 0.0f;
+            velocity.Y = 0;
+        }
+        else
+        {
+            accumulatedGravity += GRAVITY;
+            velocity.Y += accumulatedGravity;
+            Console.WriteLine($"Velocity Y: {velocity.Y}");
+        }
     }
-
 
     private void MoveTowardsPlayer(double time)
     {
-        
         Vector2 direction = CalculateDirection(player.Position - position);
-
-        // Update boss's position only if it doesn't collide with any blocks
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, direction * speed, time);
 
-        if (collisionDetected.getCollided())
+        if (!collisionDetected.getCollided())
         {
-            // Adjust the boss's velocity based on the direction towards the player
             velocity = direction * speed;
         }
     }
 
+
+
+
     private void AdjustPositionOnCollision(CollisionObject collisionDetected)
     {
-        Console.WriteLine($"Collision Detected: {collisionDetected}");
-        // Handle collision logic here
-        // For example, change the boss's color to black
-        SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255); // Change color if needed
+        Console.WriteLine($"Collision Detected: Left={collisionDetected.getLeft()}, Right={collisionDetected.getRight()}, Up={collisionDetected.getUp()}, Down={collisionDetected.getDown()}");
 
-        // Adjust the boss's position based on collision direction
-        if (position.Y <= 400) // Check if the boss is not on the ground
+        SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+
+        if (position.Y <= 400)
         {
             if (collisionDetected.getLeft())
             {
-                // Move the boss to the right of the block
-                position.X += 1;
+                position.X += collisionDetected.getDistanceX();
             }
             else if (collisionDetected.getRight())
             {
-                // Move the boss to the left of the block
-                position.X -= 1;
+                position.X -= collisionDetected.getDistanceX();
             }
             else if (collisionDetected.getUp())
             {
-                // Move the boss downwards
-                position.Y += 1;
+                position.Y += collisionDetected.getDistanceY();
             }
             else if (collisionDetected.getDown())
             {
-                // Move the boss upwards
-                position.Y -= 1;
+                position.Y -= collisionDetected.getDistanceY();
             }
         }
     }
@@ -193,6 +244,7 @@ internal class Boss : Entity
         float dy = point1.Y - point2.Y;
         return (float)Math.Sqrt(dx * dx + dy * dy);
     }
+
     protected override Rectangle CalculateBound()
     {
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
@@ -206,7 +258,7 @@ internal class Boss : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-
         Engine.DrawTexture(bossTexture, position, null, size);
     }
 }
+
