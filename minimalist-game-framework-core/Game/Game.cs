@@ -32,7 +32,7 @@ class Game
     //private Blocks floor2;
     private List<Blocks> levelBlocks;
     private List<Blocks> levelBlocks2;
-    public static Camera localCamera;
+    public static Camera localCamera;//
     private List<Checkpoint> checkpoints;
     private List<Pits> pits;
     private List<Ladder> ladders;
