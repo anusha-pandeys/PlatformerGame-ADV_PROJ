@@ -89,7 +89,7 @@ internal class NPC : Entity
 
             // Update NPC's position based on collision detection
             if (CollisionManager.checkBlockCollision(player, new Vector2(-1 * speed, 0), 1).getCollided())
-            {
+            {//
                 position.X -= speed;
             }
             else if (CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1).getCollided())
