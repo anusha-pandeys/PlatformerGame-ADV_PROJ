@@ -68,7 +68,9 @@ internal class NPC : Entity
             CollisionObject obj = checkCollision("player");
             if (obj.getCollided())
             {
-                Game.player.healthBar.setHealth(0);
+
+                Game.player.chargeBar.setCharge(0);
+
             }
             else
             {
