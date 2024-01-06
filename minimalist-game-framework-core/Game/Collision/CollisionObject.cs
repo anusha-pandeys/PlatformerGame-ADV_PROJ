@@ -14,7 +14,7 @@ internal class CollisionObject
     private float distanceY;
     private float distanceX;
     private double distance;
-    private Entity block;
+    private Blocks block;
     public CollisionObject()
     {
         distanceY = 0f;
@@ -28,7 +28,7 @@ internal class CollisionObject
         block = null;
     }
 
-    public Entity getBlock()
+    public Blocks getBlock()
     {
         return block;
     }
@@ -101,7 +101,7 @@ internal class CollisionObject
         this.distance = distance;
     }
 
-    public void setBlock(Entity block)
+    public void setBlock(Blocks block)
     {
         this.block = block;
     }

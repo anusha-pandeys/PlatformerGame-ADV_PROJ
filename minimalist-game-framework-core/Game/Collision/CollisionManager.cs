@@ -31,7 +31,7 @@ internal class CollisionManager
         for (int i = 0; i < blocks.Count; i++)
         {
             collision = isCollided(bound, blocks[i].Bound , new CollisionObject());
-            if(collision.getCollided()) 
+            if(collision.getCollided() && entity != blocks[i]) 
             {
                 collision.setBlock(blocks[i]);
                 return collision;

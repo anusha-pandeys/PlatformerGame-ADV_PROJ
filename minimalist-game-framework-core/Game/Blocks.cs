@@ -16,24 +16,35 @@ internal class Blocks : Entity
 
     public void SetVelocity(Vector2 velocity)
     {
-        this.velocity = velocity;
+        CollisionObject collision = CollisionManager.checkBlockCollision(this, velocity, 1);
+        if (collision.getCollided())
+        {
+            this.velocity *= -1;
+        }
+    }
+
+    public Vector2 getVelcoity()
+    {
+        return velocity;
     }
 
     public void blockLoop()
     {
         // Update the block's position based on the velocity
-        position += velocity * Engine.TimeDelta;
+        SetVelocity(velocity);
+        position += velocity;
 
         // Render(Game.localCamera);
     }
 
     private Texture playerTexture;
-    public Blocks(Vector2 position, Vector2 size, GameColor color)
+    public Blocks(Vector2 position, Vector2 size, GameColor color, Vector2 velocity)
     {
         this.position = position;
         this.size = size;
         this.color = color;
         sidesInContact = "";
+        this.velocity = velocity;
         Game.entities.Add(this);
         string relativePath = "Assets\\blocks.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
