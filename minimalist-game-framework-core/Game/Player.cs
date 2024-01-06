@@ -16,7 +16,7 @@ internal class Player : Entity
     private const int BLOCK_SIZE = 50;
     private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
     private float NORMALF = -0.25f;
-    private const float JUMP_STRENGTH = -3f;
+    private const float JUMP_STRENGTH = -6f;
     //public Vector2 position;
     public Vector2 playerVelocity;
     //public Vector2 size;
@@ -114,7 +114,6 @@ internal class Player : Entity
             playerVelocity.Y = 0; // Stop downward movement
         }
 
-        Render(Game.localCamera);
         healthBar.Render();
     }
 
@@ -126,6 +125,7 @@ internal class Player : Entity
         {
             position.Y += collisionDetected.getDistanceY();
             playerVelocity.Y = 0;
+            playerVelocity.X += collisionDetected.getBlock().getVelcoity().X;
         } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
         {
             playerVelocity.Y += (GRAVITY);
