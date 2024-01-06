@@ -288,6 +288,7 @@ class Game
             //pit.pitsLoop();
         //    CollisionManager.AddObj("ladder", ladder);
        // }
+
     }
     public void RenderGrid(IntPtr renderer)
     {

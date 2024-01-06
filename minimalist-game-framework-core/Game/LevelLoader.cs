@@ -94,5 +94,27 @@ internal class LevelLoader
 
         return ladders;
     }
+
+    // In the LevelLoader class, add this new method
+    public static List<Flower> LoadFlowers(string filePath, int blockSize)
+    {
+        List<Flower> flowers = new List<Flower>();
+        string[] lines = File.ReadAllLines(filePath);
+
+        for (int y = 0; y < lines.Length; y++)
+        {
+            for (int x = 0; x < lines[y].Length; x++)
+            {
+                if (lines[y][x] == '*')
+                {
+                    Vector2 position = new Vector2(x * blockSize, y * blockSize);
+                    flowers.Add(new Flower(position));
+                }
+            }
+        }
+
+        return flowers;
+    }
+
 }
 
