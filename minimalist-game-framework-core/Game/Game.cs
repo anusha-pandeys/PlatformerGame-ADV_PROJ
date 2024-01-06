@@ -136,7 +136,11 @@ class Game
                 if (pit.checkCollision())
                 {
                     //implement death/game over
+
                     Game.player.chargeBar.setCharge(0);
+
+  
+
                 }
                 //CollisionManager.addBlock(block);
             }
@@ -202,7 +206,9 @@ class Game
 
             }
 
+
             if (Game.player.chargeBar.getCharge() <= 0)
+
             {
                 loseScreen.show();
             }
