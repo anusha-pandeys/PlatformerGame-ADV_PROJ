@@ -29,7 +29,7 @@ internal class Enemy : Entity
 
     public void EnemyLoop()
     {
-        Console.WriteLine("EnemyLoop called");
+        //Console.WriteLine("EnemyLoop called");
         UpdateShooting();
 
         // Update and render bullets
@@ -46,14 +46,14 @@ internal class Enemy : Entity
 
     private void UpdateShooting()
     {
-        Console.WriteLine("UpdateShooting called");
-        Console.WriteLine($"Time Delta: {Engine.TimeDelta}");
+       // Console.WriteLine("UpdateShooting called");
+       // Console.WriteLine($"Time Delta: {Engine.TimeDelta}");
         
         timeSinceLastShot += Engine.TimeDelta;
 
         if (timeSinceLastShot >= shootCooldown)
         {
-            Console.WriteLine("Shooting");
+           // Console.WriteLine("Shooting");
             ShootAtPlayer();
             timeSinceLastShot = 0.0f;
         }
