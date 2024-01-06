@@ -28,7 +28,7 @@ internal class Player : Entity
     private float timeSinceCollision = 0.0f;
     private bool blockBelow;
     private Collidable player;
-    public HealthBar healthBar;
+    public ChargeBar chargeBar;
     private Texture playerTexture;
 
     public Player(Vector2 position, Vector2 playerVelocity, TextRenderer text, Font font)
@@ -39,7 +39,7 @@ internal class Player : Entity
         this.font = font;
         this.playerColor = originalColor;
         this.player = new Collidable(this, "player");
-        healthBar = new HealthBar("playerHealthBar", new Vector2(220,50), 100, new Vector2(100, 50));
+        chargeBar = new ChargeBar("playerChargeBar", new Vector2(220,50), 10, new Vector2(100, 50));
         Game.entities.Add(this);
         blockBelow = false;
 
@@ -51,9 +51,9 @@ internal class Player : Entity
         
     }
 
-    public void setHealth(int health)
+    public void setCharge(int charge)
     {
-        healthBar.setHealth(health);
+        chargeBar.setCharge(charge);
     }
     internal Rectangle GetPlayerBounds()
     {
@@ -114,7 +114,7 @@ internal class Player : Entity
             playerVelocity.Y = 0; // Stop downward movement
         }
 
-        healthBar.Render();
+        chargeBar.Render();
     }
 
     private void HandleCollisionY(double secondsElapsed)
