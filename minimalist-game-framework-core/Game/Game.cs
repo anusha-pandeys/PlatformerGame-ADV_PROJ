@@ -57,10 +57,10 @@ class Game
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
         spear = new Spear();
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
-        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 1.5f, "Assets\\redGhost.png");
+        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 1.5f, "Assets\\redGhost.png", "npc1");
 
         Vector2 greyNPCPosition = new Vector2(500, 300); // Set the grey NPC's initial position
-        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 300f, 1.0f, "Assets\\greyGhost.png");
+        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 300f, 1.0f, "Assets\\greyGhost.png", "npc2");
 
         Vector2 enemySpawnPosition = new Vector2(400, 100); // Set the desired spawn position
         Enemy enemy = new Enemy(enemySpawnPosition, new Vector2(50, 50)); // Adjust size as needed
@@ -75,7 +75,7 @@ class Game
 
         bgMusic = Engine.LoadMusic("bg music.mp3");
 
-        pits = LevelLoader.loadPits("Game\\levelPractice.txt", 50);
+        pits = LevelLoader.loadPits("Game\\levelPractice.txt", new Vector2(50, 20));
         //ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
         //loading checkpoints
         //checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
@@ -84,8 +84,8 @@ class Game
         loadEntities();
         CollisionManager.AddObj("player", player);
         CollisionManager.AddObj("boss", boss);
-        CollisionManager.AddObj("npc", redNPC);
-        CollisionManager.AddObj("npc", greyNPC);
+        CollisionManager.AddObj("npc1", redNPC);
+        CollisionManager.AddObj("npc2", greyNPC);
         CollisionManager.AddObj("spear", spear);
         //CollisionManager.AddObj("player", player);
         //CollisionManager.AddObj("slide", slide);
@@ -133,11 +133,10 @@ class Game
             foreach (var pit in pits)
             {
                 pit.pitsLoop();
-                if (pit.getPlayerDeath())
+                if (pit.checkCollision())
                 {
                     //implement death/game over
-                    System.Console.WriteLine("dead");
-                    loseScreen.show();
+                    Game.player.healthBar.setHealth(0);
                 }
                 //CollisionManager.addBlock(block);
             }
@@ -203,7 +202,10 @@ class Game
 
             }
 
-
+            if (Game.player.healthBar.getHealth() <= 0)
+            {
+                loseScreen.show();
+            }
             // Check if back button is clicked in RulesMenu or CreditScreen
             if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
             {
@@ -256,7 +258,7 @@ class Game
     {
         // Clear existing checkpoints
         levelBlocks = LevelLoader.LoadLevel(levelPath, 50);
-        pits = LevelLoader.loadPits(levelPath, 50);
+        pits = LevelLoader.loadPits(levelPath, new Vector2(50, 20));
         ladders = LevelLoader.loadLadder(levelPath, 50);
         checkpoints = LevelLoader.LoadCheckpoints(levelPath, 50);
         loadEntities();

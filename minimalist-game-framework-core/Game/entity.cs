@@ -8,6 +8,7 @@ internal abstract class Entity : IDisposable
     string name;
     public Vector2 position;
     public Vector2 size;
+    public Boolean dead;
     public Rectangle Bound { get { return CalculateBound(); } }
     public string Name { get { return name; } }
     public Vector2 Position { get { return position; } set { position = value; } }

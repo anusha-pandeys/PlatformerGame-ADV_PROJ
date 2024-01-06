@@ -55,7 +55,7 @@ internal class LevelLoader
         return checkpoints;
     }
 
-    public static List<Pits> loadPits(string filePath, int pitsSize)
+    public static List<Pits> loadPits(string filePath, Vector2 pitsSize)
     {
         List<Pits> pits = new List<Pits>();
         string[] lines = File.ReadAllLines(filePath);
@@ -66,8 +66,8 @@ internal class LevelLoader
             {
                 if (lines[y][x] == 'p')
                 {
-                    Vector2 position = new Vector2(x * pitsSize, y * pitsSize);
-                    pits.Add(new Pits(position, new Vector2(pitsSize, pitsSize)));
+                    Vector2 position = new Vector2(x * pitsSize.X, y * pitsSize.Y);
+                    pits.Add(new Pits(position, new Vector2(pitsSize.X, pitsSize.Y)));
                 }
             }
         }

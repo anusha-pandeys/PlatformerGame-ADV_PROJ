@@ -169,7 +169,7 @@ internal class Boss : Entity
         {
             accumulatedGravity += GRAVITY;
             velocity.Y += accumulatedGravity;
-            Console.WriteLine($"Velocity Y: {velocity.Y}");
+            //Console.WriteLine($"Velocity Y: {velocity.Y}");
         }
     }
 
@@ -189,7 +189,7 @@ internal class Boss : Entity
 
     private void AdjustPositionOnCollision(CollisionObject collisionDetected)
     {
-        Console.WriteLine($"Collision Detected: Left={collisionDetected.getLeft()}, Right={collisionDetected.getRight()}, Up={collisionDetected.getUp()}, Down={collisionDetected.getDown()}");
+        //Console.WriteLine($"Collision Detected: Left={collisionDetected.getLeft()}, Right={collisionDetected.getRight()}, Up={collisionDetected.getUp()}, Down={collisionDetected.getDown()}");
 
         SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 

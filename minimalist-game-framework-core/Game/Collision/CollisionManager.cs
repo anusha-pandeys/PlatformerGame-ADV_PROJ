@@ -42,7 +42,7 @@ internal class CollisionManager
 
     public static CollisionObject checkCollisions(string objA, string objB, Vector2 velocity) 
     {
-        for (int i = 0; i < collidables.Count - 1; i++)
+        for (int i = 0; i < collidables.Count; i++)
         {
             var obj1 = collidables[i];
             for (int j = i + 1; j < collidables.Count; j++)
@@ -56,6 +56,7 @@ internal class CollisionManager
                 {
                     CollisionObject obj = isCollided(obj1, obj2, velocity);
                     obj.setBlock(blocks[j]);
+                    return obj;
                 }
             }
         }

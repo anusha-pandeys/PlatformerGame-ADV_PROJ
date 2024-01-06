@@ -14,7 +14,7 @@ internal class Pits : Entity
     private Color pitColor;
     private float collisionCooldown = 0.1f;
     private float timeSinceCollision = 0.0f;
-
+    private Texture playerTexture;
     public bool playerDeath = false;
 
     public Pits(Vector2 position, Vector2 size)
@@ -25,6 +25,9 @@ internal class Pits : Entity
         this.originalColor = new Color(0, 255, 0, 255); // Original color (green)
         this.pitColor = originalColor;
         Game.entities.Add(this);
+        string relativePath = "Assets\\blocks.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
     }
 
     public bool getPlayerDeath()
@@ -40,7 +43,7 @@ internal class Pits : Entity
 
             HandleCollision();
             //playerDeath = true;
-            Game.player.setHealth(50);
+            Game.player.setHealth(0);
         }
     }
 
@@ -85,21 +88,15 @@ internal class Pits : Entity
 
     public override void Render(Camera camera)
     {
-        Draw(position, size);
+        Vector2 localPosition = camera.globalToLocal(position);
+        Draw(localPosition, size);
+
+
+
     }
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-
-        SDL.SDL_SetRenderDrawColor(Renderer, pitColor.R, pitColor.G, pitColor.B, pitColor.A);
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        Engine.DrawTexture(playerTexture, position, null, size);
     }
 }
