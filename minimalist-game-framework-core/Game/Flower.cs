@@ -10,13 +10,19 @@ internal class Flower : Entity
     private Vector2 position;
     private Vector2 size;
     private bool isCollected = false;
+    private Texture playerTexture;
 
     public Flower(Vector2 position)
     {
         this.position = position;
         this.size = new Vector2(20, 20);
         // Register the flower with the CollisionManager
+        Game.entities.Add(this);
         CollisionManager.AddObj("flower", this);
+
+        string relativePath = "Assets\\blocks.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
     }
 
     public bool IsCollected => isCollected;
@@ -28,10 +34,8 @@ internal class Flower : Entity
 
     public override void Render(Camera camera)
     {
-        if (!isCollected)
-        {
-            Draw(position, size);
-        }
+        Vector2 localPosition = camera.globalToLocal(position);
+        Draw(localPosition, size);
     }
 
     protected override Rectangle CalculateBound()
@@ -41,16 +45,9 @@ internal class Flower : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 255, 105, 180, 255); // Pink color
-        SDL.SDL_Rect flowerRect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-        SDL.SDL_RenderFillRect(Renderer, ref flowerRect);
+        Engine.DrawTexture(playerTexture, position, null, size);
     }
+
     /*
     public void FlowerLoop(Player player)
     {
@@ -84,7 +81,7 @@ internal class Flower : Entity
 
                 // Increase the player's charge
                 int currentCharge = player.chargeBar.getCharge();
-                player.chargeBar.setCharge(Game.player.chargeBar.getCharge() + 100);
+                player.chargeBar.setCharge(Game.player.chargeBar.getCharge() + 50);
 
                 // Remove the flower from the game entities list
                 Game.entities.Remove(this);
