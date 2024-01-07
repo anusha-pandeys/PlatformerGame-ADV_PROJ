@@ -68,9 +68,9 @@ internal class Spear : Entity
             currentState = 0;
         }
         //this.position.X = Game.player.Position.X;
-        if(Game.player.playerVelocity.X > 0 && currentState == 0)
+        if (currentState == 0 && this.position.X != Game.player.Position.X)
         {
-            this.position.X += Game.player.position.X;
+            this.position.X = Game.player.position.X;
         }
         this.position.X += dx;
         this.position.Y = Game.player.Position.Y + Game.player.size.Y / 2;
