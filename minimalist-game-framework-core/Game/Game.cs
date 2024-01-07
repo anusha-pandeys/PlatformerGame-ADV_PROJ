@@ -93,14 +93,6 @@ class Game
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
         flowers = LevelLoader.LoadFlowers("Game\\levelPractice.txt", 50);
-
-        flowers = LevelLoader.LoadFlowers("Game\\levelPractice.txt", 50);
-        foreach (var flower in flowers)
-        {
-            entities.Add(flower);  // Add each flower to the entities list
-        }
-
-
     }
     //
 
@@ -166,38 +158,15 @@ class Game
             //CollisionManager.addBlock(block);
             // }
 
-            /*
+            
+            
             foreach (var flower in flowers)
             {
                 flower.FlowerLoop(player);
+                
             }
 
-            // Remove collected flowers from the list and entities
-            flowers.RemoveAll(flower =>
-            {
-                if (flower.IsCollected)
-                {
-                    Game.entities.Remove(flower);
-                    return true;
-                }
-                return false;
-            });
-            */
-            foreach (var flower in flowers)
-            {
-                flower.FlowerLoop(player);
-                if (flower.IsCollected)
-                {
-                    flowersToRemove.Add(flower);
-                }
-            }
-
-            // Step 2: Remove Collected Flowers
-            foreach (var flower in flowersToRemove)
-            {
-                flowers.Remove(flower); // Remove from flowers list
-                entities.Remove(flower); // Remove from entities list for rendering
-            }
+            
 
             // Step 3: Clear the flowersToRemove list
             flowersToRemove.Clear();

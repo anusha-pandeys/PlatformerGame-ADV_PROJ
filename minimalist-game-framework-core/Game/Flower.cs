@@ -76,14 +76,12 @@ internal class Flower : Entity
             CollisionObject obj = CollisionManager.checkCollisions("flower", "player", new Vector2(0, 0));
             if (obj.getCollided())
             {
-                // Collect the flower
-                this.Collect();
+               
+                Collect();
 
-                // Increase the player's charge
-                int currentCharge = player.chargeBar.getCharge();
                 player.chargeBar.setCharge(Game.player.chargeBar.getCharge() + 50);
 
-                // Remove the flower from the game entities list
+                
                 Game.entities.Remove(this);
             }
         }
