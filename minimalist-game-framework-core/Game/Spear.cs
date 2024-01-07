@@ -49,7 +49,7 @@ internal class Spear : Entity
                 }
             }
         }
-        if (IsClickedLeft() && (timeSinceLastShot >= shootCooldown))
+        while (IsClickedLeft() && (timeSinceLastShot >= shootCooldown))
         {
             timeSinceLastShot = 0;
 
