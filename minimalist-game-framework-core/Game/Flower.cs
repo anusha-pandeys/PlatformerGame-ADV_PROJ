@@ -27,6 +27,23 @@ internal class Flower : Entity
 
     public bool IsCollected => isCollected;
 
+    public void FlowerLoop(Player player)
+    {
+        if (!isCollected)
+        {
+            CollisionObject obj = CollisionManager.checkCollisions("flower", "player", new Vector2(0, 0));
+            if (obj.getCollided())
+            {
+
+                Collect();
+
+                player.chargeBar.setCharge(Game.player.chargeBar.getCharge() + 50);
+
+
+                Game.entities.Remove(this);
+            }
+        }
+    }
     public void Collect()
     {
         isCollected = true;
@@ -69,24 +86,5 @@ internal class Flower : Entity
         }
     }
     */
-    public void FlowerLoop(Player player)
-    {
-        if (!isCollected)
-        {
-            CollisionObject obj = CollisionManager.checkCollisions("flower", "player", new Vector2(0, 0));
-            if (obj.getCollided())
-            {
-               
-                Collect();
-
-                player.chargeBar.setCharge(Game.player.chargeBar.getCharge() + 50);
-
-                
-                Game.entities.Remove(this);
-            }
-        }
-    }
-
-
 }
 
