@@ -24,7 +24,7 @@ internal class Spear : Entity
         Game.entities.Add(this);
         spearMusic = Engine.LoadSound("Spear 1.mp3");
     }
-
+    
     public void spearLoop()
     {
         if (IsClickedRight())
