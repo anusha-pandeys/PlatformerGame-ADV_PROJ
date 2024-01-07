@@ -14,7 +14,9 @@ internal class Flower : Entity
     public Flower(Vector2 position)
     {
         this.position = position;
-        this.size = new Vector2(20, 20); 
+        this.size = new Vector2(20, 20);
+        // Register the flower with the CollisionManager
+        CollisionManager.AddObj("flower", this);
     }
 
     public bool IsCollected => isCollected;
@@ -49,5 +51,47 @@ internal class Flower : Entity
         };
         SDL.SDL_RenderFillRect(Renderer, ref flowerRect);
     }
+    /*
+    public void FlowerLoop(Player player)
+    {
+        if (!isCollected)
+        {
+            // Check for collisions with the player using the CollisionManager
+            CollisionObject obj = CollisionManager.checkCollisions("flower", "player", new Vector2(0, 0));
+            if (obj.getCollided())
+            {
+                // Collect the flower
+                this.Collect();
+
+                // Remove the flower from the game entities list
+                Game.entities.Remove(this);
+
+                // Increase the player's charge
+                player.IncreaseCharge(10);
+            }
+        }
+    }
+    */
+    public void FlowerLoop(Player player)
+    {
+        if (!isCollected)
+        {
+            CollisionObject obj = CollisionManager.checkCollisions("flower", "player", new Vector2(0, 0));
+            if (obj.getCollided())
+            {
+                // Collect the flower
+                this.Collect();
+
+                // Increase the player's charge
+                int currentCharge = player.chargeBar.getCharge();
+                player.chargeBar.setCharge(Game.player.chargeBar.getCharge() + 100);
+
+                // Remove the flower from the game entities list
+                Game.entities.Remove(this);
+            }
+        }
+    }
+
+
 }
 

@@ -42,6 +42,7 @@ class Game
     private Spear spear;
     //private Ladder ladder;
     private Music bgMusic;
+    private List<Flower> flowers = new List<Flower>();
 
     public Game()
     {
@@ -90,6 +91,13 @@ class Game
         //CollisionManager.AddObj("player", player);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
+        flowers = LevelLoader.LoadFlowers("Game\\levelPractice.txt", 50);
+
+        flowers = LevelLoader.LoadFlowers("Game\\levelPractice.txt", 50);
+        foreach (var flower in flowers)
+        {
+            entities.Add(flower);  // Add each flower to the entities list
+        }
     }
     //
 
@@ -178,7 +186,22 @@ class Game
                     bossEntity.Update();
                 }
             }
+            foreach (var flower in flowers)
+            {
+                flower.FlowerLoop(player);
+                CollisionManager.AddObj("flower", flower);
+            }
 
+            // Remove collected flowers from the list and entities
+            flowers.RemoveAll(flower =>
+            {
+                if (flower.IsCollected)
+                {
+                    entities.Remove(flower);
+                    return true;
+                }
+                return false;
+            });
 
 
 
@@ -285,9 +308,17 @@ class Game
         }
         //foreach (var ladder in ladders)
         //{
-            //pit.pitsLoop();
+        //pit.pitsLoop();
         //    CollisionManager.AddObj("ladder", ladder);
-       // }
+        // }
+        // Update the flowers
+        foreach (var flower in flowers)
+        {
+            flower.FlowerLoop(player);
+        }
+
+        // despawns flowers
+        flowers.RemoveAll(flower => flower.IsCollected);
 
     }
     public void RenderGrid(IntPtr renderer)
