@@ -20,7 +20,7 @@ internal class NPC : Entity
     private float collisionCooldown = 0.1f;
     private float timeSinceCollision = 0.0f;
     private Collidable npc;
-    private HealthBar healthBar;
+    public HealthBar healthBar;
     private Texture npcTexture;
     private string tag;
     
