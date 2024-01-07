@@ -66,17 +66,6 @@ internal class Player : Entity
         return new Rectangle((int)position.X, (int)position.Y, (int)(size.X), (int)(size.Y));
     }
 
-
-
-
-    /*
-    public Vector2 Position
-    {
-        get { return position; }
-    }
-    */
-    
-
     public List<Vector2> getCoordinates()
     {
 

@@ -22,7 +22,7 @@ internal class NPC : Entity
     private Collidable npc;
     public HealthBar healthBar;
     private Texture npcTexture;
-    private string tag;
+    public string tag;
     
     public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed, string filePath, string tag)
     {
@@ -70,20 +70,7 @@ internal class NPC : Entity
             {
                 Game.player.chargeBar.setCharge(0);
             }
-            else
-            {
-                obj = checkCollision("spear");
-                if (obj.getCollided())
-                {
-                    System.Console.WriteLine("hit");
-                    if (healthBar.getHealth() > 0)
-                    {
-                        healthBar.setHealth(healthBar.getHealth() - 25);
-                    }
-                }
-
-            }
-
+            
             // Check for collisions with the player
             //string collisionDetected = CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1);
 

@@ -15,6 +15,9 @@ internal class Spear : Entity
     public static int currentState = 0; // 0 = notDrawn; 1 = drawing; 2 = pullign back
     private float dx = 0;
     private Sound spearMusic;
+    private float shootCooldown = 1.25f; // Set the desired cooldown time in seconds
+    private float timeSinceLastShot = 0.0f;
+    private bool ableToDamage = true;
     public Spear()
     {
 
@@ -27,8 +30,10 @@ internal class Spear : Entity
     
     public void spearLoop()
     {
-        if (IsClickedRight())
+        timeSinceLastShot += Engine.TimeDelta;
+        if (IsClickedRight() && (timeSinceLastShot >= shootCooldown))
         {
+            timeSinceLastShot = 0;
             for (int i = 0; i < Game.entities.Count; i++)
             {
                 if (Game.entities[i] is NPC)
@@ -44,8 +49,9 @@ internal class Spear : Entity
                 }
             }
         }
-        if (IsClickedLeft())
+        if (IsClickedLeft() && (timeSinceLastShot >= shootCooldown))
         {
+            timeSinceLastShot = 0;
 
             if (currentState == 0 && canTransition(1))
             {
@@ -66,12 +72,30 @@ internal class Spear : Entity
             this.position.X = Game.player.position.X;
             dx = 0f;
             currentState = 0;
+            ableToDamage = true;
         }
         //this.position.X = Game.player.Position.X;
         if (currentState == 0 && this.position.X != Game.player.Position.X)
         {
             this.position.X = Game.player.position.X;
         }
+
+        if(currentState == 1 && ableToDamage)
+        {
+            for (int i = 0; i < Game.entities.Count; i++)
+            {
+                if (Game.entities[i] is NPC)
+                {
+                    NPC npc = (NPC)Game.entities[i];
+                    if (CollisionManager.checkCollisions("spear", npc.tag, new Vector2(0, 0)).getCollided())
+                    {
+                        npc.healthBar.setHealth(npc.healthBar.getHealth() - 30);
+                        ableToDamage = false;
+                    }
+                }
+                else continue;
+            }
+        } 
         this.position.X += dx;
         this.position.Y = Game.player.Position.Y + Game.player.size.Y / 2;
     }
