@@ -44,7 +44,7 @@ class Game
     private Music bgMusic;
     private List<Flower> flowers = new List<Flower>();
     List<Flower> flowersToRemove = new List<Flower>();
-
+    List<Slides> slides = new List<Slides>();
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 300); // Initial position
@@ -70,7 +70,7 @@ class Game
         Vector2 bossPosition = new Vector2(500, 300); // Set the boss's initial position
         Boss boss = new Boss(bossPosition, new Vector2(50, 50), player, 150f, 1.0f);
 
-        levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
+        levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path\
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
                                                                             //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
                                                                             //startMenu = new StartMenu();
@@ -78,6 +78,7 @@ class Game
         bgMusic = Engine.LoadMusic("bg music.mp3");
 
         pits = LevelLoader.loadPits("Game\\levelPractice.txt", new Vector2(50, 20));
+        slides = LevelLoader.LoadSlides("Game\\levelPractice.txt", new Vector2(50, 50));
         //ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
         //loading checkpoints
         //checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
@@ -302,8 +303,10 @@ class Game
             CollisionManager.AddObj("flower", flower);
         }
 
-      
-
+        foreach (var slide in slides)
+        {
+            CollisionManager.AddObj("slide", slide);
+        }
     }
     public void RenderGrid(IntPtr renderer)
     {

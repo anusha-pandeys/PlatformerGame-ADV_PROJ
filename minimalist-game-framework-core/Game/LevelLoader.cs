@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Drawing;
 
 
 internal class LevelLoader
@@ -27,6 +28,12 @@ internal class LevelLoader
                 {
                     Vector2 position = new Vector2(x * blockSize, y * blockSize);
                     blocks.Add(new Blocks(position, new Vector2(blockSize, blockSize), GameColor.Block1, new Vector2(2f, 0)));
+                } else if (lines[y][x] == 's')
+                {
+                    Vector2 position = new Vector2(x * blockSize, y * blockSize);
+                    Blocks slideBlock = new Blocks(position, new Vector2(blockSize, blockSize), GameColor.White, new Vector2(0, 0));
+                    slideBlock.slide = true;
+                    blocks.Add(slideBlock);
                 }
                 else continue;
             }
@@ -114,6 +121,26 @@ internal class LevelLoader
         }
 
         return flowers;
+    }
+
+    public static List<Slides> LoadSlides(string filePath, Vector2 blockSize)
+    {
+        List<Slides> slide = new List<Slides>();
+        string[] lines = File.ReadAllLines(filePath);
+
+        for (int y = 0; y < lines.Length; y++)
+        {
+            for (int x = 0; x < lines[y].Length; x++)
+            {
+                if (lines[y][x] == 's')
+                {
+                    Vector2 position = new Vector2(x * blockSize.X, y * blockSize.Y);
+                    slide.Add(new Slides(position, blockSize, GameColor.White, new Vector2(0,0)));
+                }
+            }
+        }
+
+        return slide;
     }
 
 }

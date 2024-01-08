@@ -13,7 +13,7 @@ internal class Blocks : Entity
     private Collidable blocks;
     private string sidesInContact;
     private Vector2 velocity; // New property to store the velocity
-
+    public Boolean slide;
     public void SetVelocity(Vector2 velocity)
     {
         CollisionObject collision = CollisionManager.checkBlockCollision(this, velocity, 1);

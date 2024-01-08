@@ -1,72 +1,62 @@
-﻿using System;
+﻿using SDL2;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using SDL2;
 
 internal class Slides : Entity
 {
-    private IntPtr Renderer => Engine.Renderer2;
-    private Vector2 position;
-    private Vector2 size;
-    private Collidable slide;
+    private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
+    public Vector2 position;
+    public Vector2 size;
+    private GameColor color;
+    private Collidable blocks;
+    private string sidesInContact;
 
-    public Slides(Vector2 position, Vector2 size)
+
+
+    private Texture playerTexture;
+    public Slides(Vector2 position, Vector2 size, GameColor color, Vector2 velocity)
     {
         this.position = position;
         this.size = size;
-        this.slide = new Collidable(this, "slide");
+        this.color = color;
+        sidesInContact = "";
         Game.entities.Add(this);
+        string relativePath = "Assets\\blocks.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
     }
-
-    public void slidesLoop()
+    public void slideLoop()
     {
-        Render(Game.localCamera);
-        //Dictionary<string, bool> collided = CollisionManager.checkCollisions("player", "slide");
-        /*if (collided.)
-        {
-            System.Console.WriteLine("collided with slide");
-        }*/
-    }
+        // Update the block's position based on the velocity
 
+
+        // Render(Game.localCamera);
+    }
+    public List<Vector2> getCoordinates()
+    {
+        List<Vector2> result = new List<Vector2>();
+        result.Add(position);
+        result.Add(size);
+        return result;
+    }
     protected override Rectangle CalculateBound()
     {
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
     }
 
-    protected override void Draw(Vector2 position, Vector2 size)
-    {
-        int partitions = 100;
-        Vector2 currPos = position;
-        Vector2 currSize = size;
-        currSize.X = currSize.X/partitions;
-
-        while (!(currSize.Y <= 0)) 
-        {
-            drawRect(currPos, currSize);
-            currPos.X += currSize.X;
-            currPos.Y += 1f;
-            currSize.Y -= 1f;
-            //currSize.X -= size.X / partitions;
-        }
-    }
-
-
-    private void drawRect(Vector2 position, Vector2 size)
-    {
-        SDL.SDL_SetRenderDrawColor(Renderer, 0, 255, 0, 255); // green
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
-    }
-
     public override void Render(Camera camera)
     {
-        Draw(this.position, this.size);
+        Vector2 localPosition = camera.globalToLocal(position);
+        Draw(localPosition, size);
+
+
+
+    }
+
+    protected override void Draw(Vector2 position, Vector2 size)
+    {
+        Engine.DrawTexture(playerTexture, position, null, size);
     }
 }

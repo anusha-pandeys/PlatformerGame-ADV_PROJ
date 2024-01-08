@@ -95,6 +95,14 @@ internal class Player : Entity
         double secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
         HandleCollisionY(secondsElapsed);
         HandleCollisionX(secondsElapsed);
+        CollisionObject obj = CollisionManager.checkCollisions("player", "slide", new Vector2(0, 30));
+        if (obj.getCollided())
+        {
+            Console.WriteLine("hi");
+            position.Y += obj.getDistanceY();
+            playerVelocity.Y = 0;
+            playerVelocity.X = 2f;
+        }
         position += playerVelocity;
         // Collision detection for the floor
         if (position.Y > 400) // Assuming 500 is ground level
@@ -102,10 +110,7 @@ internal class Player : Entity
             position.Y = 400;
             playerVelocity.Y = 0; // Stop downward movement
         }
-
-
         chargeBar.Render();
-
     }
 
     private void HandleCollisionY(double secondsElapsed)
@@ -115,8 +120,15 @@ internal class Player : Entity
         if (collisionDetected.getCollided())
         {
             position.Y += collisionDetected.getDistanceY();
+            if (collisionDetected.getBlock().slide)
+            {
+                playerVelocity.X = 10f;
+            }
+            else
+            {
+                playerVelocity.X += collisionDetected.getBlock().getVelcoity().X;
+            }
             playerVelocity.Y = 0;
-            playerVelocity.X += collisionDetected.getBlock().getVelcoity().X;
         } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
         {
             playerVelocity.Y += (GRAVITY);
