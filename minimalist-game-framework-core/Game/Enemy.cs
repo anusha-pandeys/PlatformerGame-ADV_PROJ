@@ -13,9 +13,9 @@ internal class Enemy : Entity
     private Vector2 position;
     private Vector2 size;
     private Color enemyColor;
-    private float shootCooldown = 1.0f; // Set the desired cooldown time in seconds
+    private float shootCooldown = 5.0f; // Set the desired cooldown time in seconds
     private float timeSinceLastShot = 0.0f;
-    private float bulletSpeed = 100.0f;
+    private float bulletSpeed = 20.0f;
 
 
     public Enemy(Vector2 spawnPosition, Vector2 size)
