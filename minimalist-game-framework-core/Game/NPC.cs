@@ -23,7 +23,7 @@ internal class NPC : Entity
     public HealthBar healthBar;
     private Texture npcTexture;
     public string tag;
-    
+    private Boolean dead = false;
     public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed, string filePath, string tag)
     {
         this.position = position;
@@ -101,7 +101,14 @@ internal class NPC : Entity
             //Render(Game.localCamera);
         } else
         {
+            
             Game.entities.Remove(this);
+            if (!dead)
+            {
+                Game.enemiesKilled++;
+            }
+            dead = true;
+            //
         }
     }
     private CollisionObject checkCollision(string target)

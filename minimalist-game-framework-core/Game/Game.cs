@@ -45,6 +45,7 @@ class Game
     private List<Flower> flowers = new List<Flower>();
     List<Flower> flowersToRemove = new List<Flower>();
     List<Slides> slides = new List<Slides>();
+    public static int enemiesKilled = 0;
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 300); // Initial position
@@ -166,8 +167,6 @@ class Game
                 
             }
 
-            
-
             // Step 3: Clear the flowersToRemove list
             flowersToRemove.Clear();
 
@@ -219,7 +218,10 @@ class Game
             if (Game.player.chargeBar.getCharge() <= 0)
 
             {
+                FileIO file = new FileIO();
+                file.writeToFile();
                 loseScreen.show();
+                
             }
             // Check if back button is clicked in RulesMenu or CreditScreen
             if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
@@ -336,6 +338,11 @@ class Game
     public Player getPlayer()
     {
         return player;
+    }
+
+    public void increaseEnemiesKilled()
+    {
+        enemiesKilled++;
     }
 }
 
