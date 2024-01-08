@@ -42,7 +42,7 @@ internal class Player : Entity
         chargeBar = new ChargeBar("playerChargeBar", new Vector2(220,50), 10, new Vector2(100, 50));
         Game.entities.Add(this);
         blockBelow = false;
-
+        chargeBar.setCharge(50);
         size = new Vector2(50f, 70f);
         ///var path =
         string relativePath = "Assets\\player.png";
@@ -168,7 +168,12 @@ internal class Player : Entity
             playerVelocity.X = -2.0f;
             if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
             {
-                playerVelocity.X -= 2.0f;
+                if(chargeBar.getCharge() > 10)
+                {
+                    playerVelocity.X -= 2.0f;
+                    chargeBar.setCharge(chargeBar.getCharge() - 1);
+                }
+                
             }
         }    
         // Check RIGHT arrow key.
@@ -179,7 +184,11 @@ internal class Player : Entity
 
             if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
             {
-                playerVelocity.X += 2.0f;
+                if (chargeBar.getCharge() > 10)
+                {
+                    playerVelocity.X += 2.0f;
+                    chargeBar.setCharge(chargeBar.getCharge() - 1);
+                }
             }
         } 
         
