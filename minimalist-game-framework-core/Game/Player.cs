@@ -65,24 +65,6 @@ internal class Player : Entity
     {
         return new Rectangle((int)position.X, (int)position.Y, (int)(size.X), (int)(size.Y));
     }
-    /*
-    public void IncreaseCharge(int amount)
-    {
-        this.chargeBar.setCharge(this.chargeBar.getCharge() + amount);
-        // Ensure that the charge does not exceed the maximum value
-        if (this.chargeBar.getCharge() > 100)
-            this.chargeBar.setCharge(100);
-    }
-    */
-
-
-    /*
-    public Vector2 Position
-    {
-        get { return position; }
-    }
-    */
-
 
     public List<Vector2> getCoordinates()
     {

@@ -12,9 +12,12 @@ internal class Spear : Entity
     private Vector2 size;
     private Collidable spear;
     private int[,] stateTransitions = { { 1, 1, 0 }, { 0, 1, 1 }, { 1, 0, 1 } };
-    private int currentState = 0; // 0 = notDrawn; 1 = drawing; 2 = pullign back
+    public static int currentState = 0; // 0 = notDrawn; 1 = drawing; 2 = pullign back
     private float dx = 0;
     private Sound spearMusic;
+    private float shootCooldown = 1.25f; // Set the desired cooldown time in seconds
+    private float timeSinceLastShot = 0.0f;
+    private bool ableToDamage = true;
     public Spear()
     {
 
@@ -24,31 +27,75 @@ internal class Spear : Entity
         Game.entities.Add(this);
         spearMusic = Engine.LoadSound("Spear 1.mp3");
     }
-
+    
     public void spearLoop()
     {
-
-        if (IsClicked())
+        timeSinceLastShot += Engine.TimeDelta;
+        if (IsClickedRight() && (timeSinceLastShot >= shootCooldown))
         {
-            
+            timeSinceLastShot = 0;
+            for (int i = 0; i < Game.entities.Count; i++)
+            {
+                if (Game.entities[i] is NPC)
+                {
+                    NPC npc = (NPC)Game.entities[i];
+
+                    double distance = Math.Sqrt(Math.Pow((Game.player.position.X - npc.position.X), 2) + Math.Pow((Game.player.position.Y - npc.position.Y), 2));
+                    if (distance < 100)
+                    {
+                        npc.healthBar.setHealth(npc.healthBar.getHealth() - 50);
+                        break;
+                    }
+                }
+            }
+        }
+        while (IsClickedLeft() && (timeSinceLastShot >= shootCooldown))
+        {
+            timeSinceLastShot = 0;
+
             if (currentState == 0 && canTransition(1))
             {
                 Engine.PlaySound(spearMusic, false, 0);
                 dx = 10f;
             }
-        } 
-        else if (this.position.X >= (Game.player.position.X + Game.player.size.X)
-            && currentState == 1 && canTransition(2))
+            this.position.X += dx;
+            this.position.Y = Game.player.Position.Y + Game.player.size.Y / 2;
+        }
+        if ((this.position.X >= (Game.player.position.X + 100f)
+            && currentState == 1 && canTransition(2)))
         {
             dx = -10f;
-        } 
-        else if (this.position.X < (Game.player.position.X + Game.player.size.X/2))
+        }
+
+        else if ((this.position.X <= (Game.player.position.X)))
         {
-            this.position.X = Game.player.position.X; 
+            this.position.X = Game.player.position.X;
             dx = 0f;
             currentState = 0;
+            ableToDamage = true;
         }
         //this.position.X = Game.player.Position.X;
+        if (currentState == 0 && this.position.X != Game.player.Position.X)
+        {
+            this.position.X = Game.player.position.X;
+        }
+
+        if(currentState == 1 && ableToDamage)
+        {
+            for (int i = 0; i < Game.entities.Count; i++)
+            {
+                if (Game.entities[i] is NPC)
+                {
+                    NPC npc = (NPC)Game.entities[i];
+                    if (CollisionManager.checkCollisions("spear", npc.tag, new Vector2(0, 0)).getCollided())
+                    {
+                        npc.healthBar.setHealth(npc.healthBar.getHealth() - 30);
+                        ableToDamage = false;
+                    }
+                }
+                else continue;
+            }
+        } 
         this.position.X += dx;
         this.position.Y = Game.player.Position.Y + Game.player.size.Y / 2;
     }
@@ -86,7 +133,7 @@ internal class Spear : Entity
         SDL.SDL_RenderFillRect(Renderer, ref rect);
     }
 
-    public bool IsClicked()
+    public bool IsClickedLeft()
     {
 
         int mouseX, mouseY;
@@ -95,6 +142,19 @@ internal class Spear : Entity
         bool isClicked = (mouseX >= 0 && mouseX <= Game.Resolution.X &&
                           mouseY >= 0 && mouseY <= Game.Resolution.Y &&
                           SDL.SDL_GetMouseState(IntPtr.Zero, IntPtr.Zero) == SDL.SDL_BUTTON(SDL.SDL_BUTTON_LEFT));
+
+        return isClicked;
+    }
+
+    public bool IsClickedRight()
+    {
+
+        int mouseX, mouseY;
+        SDL.SDL_GetMouseState(out mouseX, out mouseY);
+
+        bool isClicked = (mouseX >= 0 && mouseX <= Game.Resolution.X &&
+                          mouseY >= 0 && mouseY <= Game.Resolution.Y &&
+                          SDL.SDL_GetMouseState(IntPtr.Zero, IntPtr.Zero) == SDL.SDL_BUTTON(SDL.SDL_BUTTON_RIGHT));
 
         return isClicked;
     }

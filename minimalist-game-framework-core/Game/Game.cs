@@ -104,8 +104,7 @@ class Game
 
 
         SDL.SDL_PumpEvents();
-        // Measure the time elapsed between one frame and the next:
-        spear.spearLoop();
+        // Measure the time elapsed between one frame and the next
 
         // Update game logic based on the current state
         if (showStartMenu)
@@ -118,7 +117,7 @@ class Game
             {
                 showStartMenu = false;
                 // Start the background music when the game starts and loop it
-                Engine.PlayMusic(bgMusic, true, 0);
+                //Engine.PlayMusic(bgMusic, true, 0);
             }
         }
         else
@@ -177,6 +176,7 @@ class Game
             DisplayPlayerCoordinates();
             redNPC.Update();
             greyNPC.Update();
+            spear.spearLoop();
 
             foreach (var entity in Game.entities.ToArray())
             {
@@ -184,18 +184,11 @@ class Game
                 {
                     enemyEntity.EnemyLoop();
                 }
-            }
-
-            foreach (var entity in Game.entities.ToArray())
-            {
                 if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
                 {
                     bossEntity.Update();
                 }
             }
-            
-
-
 
             //moving.updateCoordinates();
 
