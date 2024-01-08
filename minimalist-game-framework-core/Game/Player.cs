@@ -30,7 +30,7 @@ internal class Player : Entity
     private Collidable player;
     public ChargeBar chargeBar;
     private Texture playerTexture;
-
+    private Boolean run = false;
     public Player(Vector2 position, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.position = position;
@@ -42,7 +42,7 @@ internal class Player : Entity
         chargeBar = new ChargeBar("playerChargeBar", new Vector2(220,50), 10, new Vector2(100, 50));
         Game.entities.Add(this);
         blockBelow = false;
-
+        chargeBar.setCharge(50);
         size = new Vector2(50f, 70f);
         ///var path =
         string relativePath = "Assets\\player.png";
@@ -65,17 +65,6 @@ internal class Player : Entity
     {
         return new Rectangle((int)position.X, (int)position.Y, (int)(size.X), (int)(size.Y));
     }
-
-
-
-
-    /*
-    public Vector2 Position
-    {
-        get { return position; }
-    }
-    */
-    
 
     public List<Vector2> getCoordinates()
     {
@@ -106,6 +95,14 @@ internal class Player : Entity
         double secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
         HandleCollisionY(secondsElapsed);
         HandleCollisionX(secondsElapsed);
+        CollisionObject obj = CollisionManager.checkCollisions("player", "slide", new Vector2(0, 30));
+        if (obj.getCollided())
+        {
+            Console.WriteLine("hi");
+            position.Y += obj.getDistanceY();
+            playerVelocity.Y = 0;
+            playerVelocity.X = 2f;
+        }
         position += playerVelocity;
         // Collision detection for the floor
         if (position.Y > 400) // Assuming 500 is ground level
@@ -113,10 +110,7 @@ internal class Player : Entity
             position.Y = 400;
             playerVelocity.Y = 0; // Stop downward movement
         }
-
-
         chargeBar.Render();
-
     }
 
     private void HandleCollisionY(double secondsElapsed)
@@ -126,8 +120,15 @@ internal class Player : Entity
         if (collisionDetected.getCollided())
         {
             position.Y += collisionDetected.getDistanceY();
+            if (collisionDetected.getBlock().slide)
+            {
+                playerVelocity.X = 10f;
+            }
+            else
+            {
+                playerVelocity.X += collisionDetected.getBlock().getVelcoity().X;
+            }
             playerVelocity.Y = 0;
-            playerVelocity.X += collisionDetected.getBlock().getVelcoity().X;
         } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
         {
             playerVelocity.Y += (GRAVITY);
@@ -165,13 +166,32 @@ internal class Player : Entity
         {
             text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             playerVelocity.X = -2.0f;
+            if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
+            {
+                if(chargeBar.getCharge() > 10)
+                {
+                    playerVelocity.X -= 2.0f;
+                    chargeBar.setCharge(chargeBar.getCharge() - 1);
+                }
+                
+            }
         }    
         // Check RIGHT arrow key.
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
             text.displayText("right", new Vector2(10, 30), Color.Black, font);
             playerVelocity.X = 2.0f;
-        }
+
+            if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
+            {
+                if (chargeBar.getCharge() > 10)
+                {
+                    playerVelocity.X += 2.0f;
+                    chargeBar.setCharge(chargeBar.getCharge() - 1);
+                }
+            }
+        } 
+        
     }
 
     private void HandleJump()

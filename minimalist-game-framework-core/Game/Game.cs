@@ -43,7 +43,9 @@ class Game
     private Fire fire;
     //private Ladder ladder;
     private Music bgMusic;
-
+    private List<Flower> flowers = new List<Flower>();
+    List<Flower> flowersToRemove = new List<Flower>();
+    List<Slides> slides = new List<Slides>();
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 300); // Initial position
@@ -73,7 +75,7 @@ class Game
         Vector2 bossPosition = new Vector2(500, 300); // Set the boss's initial position
         Boss boss = new Boss(bossPosition, new Vector2(50, 50), player, 150f, 1.0f);
 
-        levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path
+        levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path\
                                                                             // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
                                                                             //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
                                                                             //startMenu = new StartMenu();
@@ -81,6 +83,7 @@ class Game
         bgMusic = Engine.LoadMusic("bg music.mp3");
 
         pits = LevelLoader.loadPits("Game\\levelPractice.txt", new Vector2(50, 20));
+        slides = LevelLoader.LoadSlides("Game\\levelPractice.txt", new Vector2(50, 50));
         //ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
         //loading checkpoints
         //checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
@@ -96,6 +99,7 @@ class Game
         //CollisionManager.AddObj("player", player);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
+        flowers = LevelLoader.LoadFlowers("Game\\levelPractice.txt", 50);
     }
     //
 
@@ -107,8 +111,7 @@ class Game
 
 
         SDL.SDL_PumpEvents();
-        // Measure the time elapsed between one frame and the next:
-        spear.spearLoop();
+        // Measure the time elapsed between one frame and the next
 
         // Update game logic based on the current state
         if (showStartMenu)
@@ -121,7 +124,7 @@ class Game
             {
                 showStartMenu = false;
                 // Start the background music when the game starts and loop it
-                Engine.PlayMusic(bgMusic, true, 0);
+                //Engine.PlayMusic(bgMusic, true, 0);
             }
         }
         else
@@ -160,8 +163,17 @@ class Game
             }*/
             //CollisionManager.addBlock(block);
             // }
+            
+            foreach (var flower in flowers)
+            {
+                flower.FlowerLoop(player);
+                
+            }
 
-     
+            
+
+            // Step 3: Clear the flowersToRemove list
+            flowersToRemove.Clear();
 
             player.playerLoop();
             localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
@@ -170,25 +182,19 @@ class Game
             redNPC.Update();
             greyNPC.Update();
             fire.FireLoop();
-
+            spear.spearLoop();
+          
             foreach (var entity in Game.entities.ToArray())
             {
                 if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
                 {
                     enemyEntity.EnemyLoop();
                 }
-            }
-
-            foreach (var entity in Game.entities.ToArray())
-            {
                 if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
                 {
                     bossEntity.Update();
                 }
             }
-
-
-
 
             //moving.updateCoordinates();
 
@@ -293,9 +299,19 @@ class Game
         }
         //foreach (var ladder in ladders)
         //{
-            //pit.pitsLoop();
+        //pit.pitsLoop();
         //    CollisionManager.AddObj("ladder", ladder);
-       // }
+        // }
+        
+        foreach (var flower in flowers)
+        {
+            CollisionManager.AddObj("flower", flower);
+        }
+
+        foreach (var slide in slides)
+        {
+            CollisionManager.AddObj("slide", slide);
+        }
     }
     public void RenderGrid(IntPtr renderer)
     {

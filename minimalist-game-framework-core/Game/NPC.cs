@@ -20,9 +20,9 @@ internal class NPC : Entity
     private float collisionCooldown = 0.1f;
     private float timeSinceCollision = 0.0f;
     private Collidable npc;
-    private HealthBar healthBar;
+    public HealthBar healthBar;
     private Texture npcTexture;
-    private string tag;
+    public string tag;
     
     public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed, string filePath, string tag)
     {
