@@ -29,7 +29,6 @@ internal class Player : Entity
     private Collidable player;
     public ChargeBar chargeBar;
     private Texture playerTexture;
-
     private Boolean run = false;
     private Boolean jumped = false;
     //private float floor = 400;
