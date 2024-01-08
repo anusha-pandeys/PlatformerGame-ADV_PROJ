@@ -30,7 +30,7 @@ internal class Player : Entity
     private Collidable player;
     public ChargeBar chargeBar;
     private Texture playerTexture;
-
+    private Boolean run = false;
     public Player(Vector2 position, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.position = position;
@@ -166,13 +166,23 @@ internal class Player : Entity
         {
             text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             playerVelocity.X = -2.0f;
+            if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
+            {
+                playerVelocity.X -= 2.0f;
+            }
         }    
         // Check RIGHT arrow key.
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
             text.displayText("right", new Vector2(10, 30), Color.Black, font);
             playerVelocity.X = 2.0f;
-        }
+
+            if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
+            {
+                playerVelocity.X += 2.0f;
+            }
+        } 
+        
     }
 
     private void HandleJump()
