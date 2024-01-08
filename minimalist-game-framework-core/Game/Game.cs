@@ -42,6 +42,8 @@ class Game
     private Spear spear;
     //private Ladder ladder;
     private Music bgMusic;
+    private List<Flower> flowers = new List<Flower>();
+    List<Flower> flowersToRemove = new List<Flower>();
 
     public Game()
     {
@@ -90,6 +92,7 @@ class Game
         //CollisionManager.AddObj("player", player);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
+        flowers = LevelLoader.LoadFlowers("Game\\levelPractice.txt", 50);
     }
     //
 
@@ -135,21 +138,37 @@ class Game
                 if (pit.checkCollision())
                 {
                     //implement death/game over
+
                     Game.player.chargeBar.setCharge(0);
+
+  
+
                 }
                 //CollisionManager.addBlock(block);
             }
 
             //foreach (var ladder in ladders)
             //{
-                /*ladder.ladderLoop();
-                if (ladder.getTranslate())
-                {
-                    player.translateUpLadder();
-                }*/
-                //CollisionManager.addBlock(block);
-           // }
+            /*ladder.ladderLoop();
+            if (ladder.getTranslate())
+            {
+                player.translateUpLadder();
+            }*/
+            //CollisionManager.addBlock(block);
+            // }
+
             
+            
+            foreach (var flower in flowers)
+            {
+                flower.FlowerLoop(player);
+                
+            }
+
+            
+
+            // Step 3: Clear the flowersToRemove list
+            flowersToRemove.Clear();
 
             player.playerLoop();
             localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
@@ -170,11 +189,6 @@ class Game
                     bossEntity.Update();
                 }
             }
-
-        
-
-
-
 
             //moving.updateCoordinates();
 
@@ -200,7 +214,9 @@ class Game
 
             }
 
+
             if (Game.player.chargeBar.getCharge() <= 0)
+
             {
                 loseScreen.show();
             }
@@ -277,9 +293,17 @@ class Game
         }
         //foreach (var ladder in ladders)
         //{
-            //pit.pitsLoop();
+        //pit.pitsLoop();
         //    CollisionManager.AddObj("ladder", ladder);
-       // }
+        // }
+        
+        foreach (var flower in flowers)
+        {
+            CollisionManager.AddObj("flower", flower);
+        }
+
+      
+
     }
     public void RenderGrid(IntPtr renderer)
     {

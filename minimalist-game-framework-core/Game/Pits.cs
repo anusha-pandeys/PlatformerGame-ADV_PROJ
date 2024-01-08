@@ -43,7 +43,9 @@ internal class Pits : Entity
 
             HandleCollision();
             //playerDeath = true;
+
             Game.player.setCharge(0);
+
         }
     }
 

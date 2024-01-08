@@ -103,7 +103,9 @@ internal class Player : Entity
             playerVelocity.Y = 0; // Stop downward movement
         }
 
+
         chargeBar.Render();
+
     }
 
     private void HandleCollisionY(double secondsElapsed)

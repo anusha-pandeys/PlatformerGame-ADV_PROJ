@@ -68,7 +68,9 @@ internal class NPC : Entity
             CollisionObject obj = checkCollision("player");
             if (obj.getCollided())
             {
+
                 Game.player.chargeBar.setCharge(0);
+
             }
             
             // Check for collisions with the player
