@@ -35,6 +35,7 @@ class Game
     public static Camera localCamera;//
     private List<Checkpoint> checkpoints;
     private List<Pits> pits;
+    private List<LevelSeperator> levelSeperators;
     private List<Ladder> ladders;
     private static int currLevel = 1;
     private Enemy enemy;
@@ -48,7 +49,7 @@ class Game
     List<Slides> slides = new List<Slides>();
     public Game()
     {
-        Vector2 playerPosition = new Vector2(100, 300); // Initial position
+        Vector2 playerPosition = LevelLoader.loadPlayerPosition("Game\\levelPractice.txt", player.size); // Initial position
         Vector2 playerVelocity = new Vector2(0, 0);     // Initial velocity
         map = new Map();
         textRenderer = new TextRenderer();
@@ -83,6 +84,7 @@ class Game
         bgMusic = Engine.LoadMusic("bg music.mp3");
 
         pits = LevelLoader.loadPits("Game\\levelPractice.txt", new Vector2(50, 20));
+        levelSeperators = LevelLoader.loadLevelSeperator("Game\\levelPractice.txt", 50);
         slides = LevelLoader.LoadSlides("Game\\levelPractice.txt", new Vector2(50, 50));
         //ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
         //loading checkpoints
@@ -138,6 +140,10 @@ class Game
             {
                 block.blockLoop();
                 //CollisionManager.addBlock(block);
+            }
+            foreach (var levelSep in levelSeperators)
+            {
+                levelSep.Update();
             }
             foreach (var pit in pits)
             {

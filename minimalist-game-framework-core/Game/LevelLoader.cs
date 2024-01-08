@@ -4,6 +4,17 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 
+/*
+ * KEY
+ * # = block
+ * C = checkpoint
+ * p = pit
+ * l = ladder
+ * S = levelSeperator
+ * s = slide
+ * * = flower
+ */
+
 
 internal class LevelLoader
 {
@@ -40,6 +51,26 @@ internal class LevelLoader
         }
 
         return blocks;
+    }
+
+    public static Vector2 loadPlayerPosition(string filePath, Vector2 size)
+    {
+        List<Ladder> ladders = new List<Ladder>();
+        string[] lines = File.ReadAllLines(filePath);
+
+        for (int y = 0; y < lines.Length; y++)
+        {
+            for (int x = 0; x < lines[y].Length; x++)
+            {
+                if (lines[y][x] == 'P')
+                {
+                    return new Vector2(x * size.X, y * size.Y);
+                    
+                }
+            }
+        }
+
+        return new Vector2 (0,0);
     }
 
     public static List<Checkpoint> LoadCheckpoints(string filePath, int checkpointSize)
@@ -123,6 +154,26 @@ internal class LevelLoader
         return flowers;
     }
 
+    public static List<LevelSeperator> loadLevelSeperator(string filePath, int size)
+    {
+        List<LevelSeperator> levelSep = new List<LevelSeperator>();
+        string[] lines = File.ReadAllLines(filePath);
+
+        for (int y = 0; y < lines.Length; y++)
+        {
+            for (int x = 0; x < lines[y].Length; x++)
+            {
+                if (lines[y][x] == 'S')
+                {
+                    Vector2 position = new Vector2(x * size, y * size);
+                    levelSep.Add(new LevelSeperator(position, new Vector2(size, size)));
+                }
+            }
+        }
+
+        return levelSep;
+    }
+
     public static List<Slides> LoadSlides(string filePath, Vector2 blockSize)
     {
         List<Slides> slide = new List<Slides>();
@@ -135,13 +186,12 @@ internal class LevelLoader
                 if (lines[y][x] == 's')
                 {
                     Vector2 position = new Vector2(x * blockSize.X, y * blockSize.Y);
-                    slide.Add(new Slides(position, blockSize, GameColor.White, new Vector2(0,0)));
+                    slide.Add(new Slides(position, blockSize, GameColor.White, new Vector2(0, 0)));
                 }
             }
         }
 
         return slide;
     }
-
 }
 
