@@ -49,8 +49,6 @@ class Game
     List<Slides> slides = new List<Slides>();
     public Game()
     {
-        Vector2 playerPosition = LevelLoader.loadPlayerPosition("Game\\levelPractice.txt", player.size); // Initial position
-        Vector2 playerVelocity = new Vector2(0, 0);     // Initial velocity
         map = new Map();
         textRenderer = new TextRenderer();
         StartMenu = new StartMenu();
@@ -58,7 +56,7 @@ class Game
         creditScreen = new CreditScreen();
         //slide = new Slides(new Vector2(300,100), new Vector2(100,100));
         //entities.Add(moving);
-        player = new Player(playerPosition, playerVelocity, textRenderer, font);
+        player = new Player(textRenderer, font);
         spear = new Spear();
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
         redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 0.5f, "Assets\\redGhost.png", "npc1");
@@ -226,12 +224,14 @@ class Game
 
             }
 
-
+            //NOTE
+            /*
             if (Game.player.chargeBar.getCharge() <= 0)
 
             {
                 loseScreen.show();
             }
+            */
             // Check if back button is clicked in RulesMenu or CreditScreen
             if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
             {

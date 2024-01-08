@@ -55,14 +55,13 @@ internal class LevelLoader
 
     public static Vector2 loadPlayerPosition(string filePath, Vector2 size)
     {
-        List<Ladder> ladders = new List<Ladder>();
         string[] lines = File.ReadAllLines(filePath);
 
         for (int y = 0; y < lines.Length; y++)
         {
             for (int x = 0; x < lines[y].Length; x++)
             {
-                if (lines[y][x] == 'P')
+                if (lines[y][x] == 'Q')
                 {
                     return new Vector2(x * size.X, y * size.Y);
                     
