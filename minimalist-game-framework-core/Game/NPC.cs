@@ -61,20 +61,16 @@ internal class NPC : Entity
         if (healthBar.getHealth() > 0)
         {
             healthBar.setPosition(new Vector2(this.position.X, this.position.Y - 40f));
+
             if (IsPlayerInRadius())
             {
                 FollowPlayer();
             }
-            CollisionObject obj = checkCollision("player");
-            if (obj.getCollided())
-            {
 
-                Game.player.chargeBar.setCharge(0);
-
-            }
-            else
+            // Check for collisions with the spear only if it's not the red ghost
+            if (tag != "npc1")
             {
-                obj = checkCollision("spear");
+                CollisionObject obj = checkCollision("spear");
                 if (obj.getCollided())
                 {
                     System.Console.WriteLine("hit");
@@ -83,22 +79,24 @@ internal class NPC : Entity
                         healthBar.setHealth(healthBar.getHealth() - 25);
                     }
                 }
-
             }
 
             // Check for collisions with the player
-            //string collisionDetected = CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1);
+            CollisionObject playerCollision = checkCollision("player");
+            if (playerCollision.getCollided())
+            {
+                Game.player.chargeBar.setCharge(0);
+            }
 
             // Update NPC's position based on collision detection
             if (CollisionManager.checkBlockCollision(player, new Vector2(-1 * speed, 0), 1).getCollided())
-            {//
+            {
                 position.X -= speed;
             }
             else if (CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1).getCollided())
             {
                 position.X += speed;
             }
-
 
             // Handle collision and update color
             HandleCollision();
@@ -111,12 +109,13 @@ internal class NPC : Entity
             }
 
             healthBar.Render();
-            //Render(Game.localCamera);
-        } else
+        }
+        else
         {
             Game.entities.Remove(this);
         }
     }
+
     private CollisionObject checkCollision(string target)
     {
         CollisionObject obj = CollisionManager.checkCollisions(tag, target, new Vector2(1, 0));

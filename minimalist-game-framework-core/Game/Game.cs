@@ -40,6 +40,7 @@ class Game
     private Enemy enemy;
     private Boss boss;
     private Spear spear;
+    private Fire fire;
     //private Ladder ladder;
     private Music bgMusic;
 
@@ -57,10 +58,14 @@ class Game
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
         spear = new Spear();
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
-        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 1.5f, "Assets\\redGhost.png", "npc1");
+        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 0.5f, "Assets\\redGhost.png", "npc1");
 
         Vector2 greyNPCPosition = new Vector2(500, 300); // Set the grey NPC's initial position
-        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 300f, 1.0f, "Assets\\greyGhost.png", "npc2");
+        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 500f, 1.0f, "Assets\\greyGhost.png", "npc2");
+
+        fire = new Fire(new Vector2(100, 100), new Vector2(50, 50));                                                
+
+
 
         Vector2 enemySpawnPosition = new Vector2(400, 100); // Set the desired spawn position
         Enemy enemy = new Enemy(enemySpawnPosition, new Vector2(50, 50)); // Adjust size as needed
@@ -87,6 +92,7 @@ class Game
         CollisionManager.AddObj("npc1", redNPC);
         CollisionManager.AddObj("npc2", greyNPC);
         CollisionManager.AddObj("spear", spear);
+        CollisionManager.AddObj("fire", fire);
         //CollisionManager.AddObj("player", player);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
@@ -147,14 +153,15 @@ class Game
 
             //foreach (var ladder in ladders)
             //{
-                /*ladder.ladderLoop();
-                if (ladder.getTranslate())
-                {
-                    player.translateUpLadder();
-                }*/
-                //CollisionManager.addBlock(block);
-           // }
-            
+            /*ladder.ladderLoop();
+            if (ladder.getTranslate())
+            {
+                player.translateUpLadder();
+            }*/
+            //CollisionManager.addBlock(block);
+            // }
+
+     
 
             player.playerLoop();
             localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
@@ -162,6 +169,7 @@ class Game
             DisplayPlayerCoordinates();
             redNPC.Update();
             greyNPC.Update();
+            fire.FireLoop();
 
             foreach (var entity in Game.entities.ToArray())
             {
