@@ -21,8 +21,8 @@ internal class Spear : Entity
     public Spear()
     {
 
-        this.position = Game.player.Position + new Vector2(0, Game.player.size.Y/2);
-        this.size = new Vector2(50, 5);
+        this.size = new Vector2(30, 5);
+        this.position = Game.player.Position + new Vector2(Game.player.size.X/2-size.X/2, Game.player.size.Y/2);
         this.spear = new Collidable(this, "spear");
         Game.entities.Add(this);
         spearMusic = Engine.LoadSound("Spear 1.mp3");

@@ -31,12 +31,12 @@ internal class Player : Entity
     private Texture playerTexture;
     private Boolean run = false;
     private Boolean jumped = false;
-    //private float floor = 400;
+    public float floorY;
     public Player(TextRenderer text, Font font)
     {
-        
-        this.position = LevelLoader.loadPlayerPosition("Game\\levelPractice.txt", size);
-        size = new Vector2(50, 70);
+
+        size = new Vector2(30, 30);
+        this.position = new Vector2(100, 300); //LevelLoader.loadPlayerPosition("Game\\levelPractice.txt", size);
         this.text = text;
         this.font = font;
         this.playerColor = originalColor;
@@ -108,11 +108,13 @@ internal class Player : Entity
         position += playerVelocity;
         // Collision detection for the floor
         
-        if (position.Y > 400) // Assuming 500 is ground level
+        
+        if (position.Y > floorY - size.Y)
         {
-            position.Y = 400;
+            position.Y = floorY - size.Y;
             playerVelocity.Y = 0; // Stop downward movement
         }
+        
         chargeBar.Render();
     }
 
@@ -239,6 +241,7 @@ internal class Player : Entity
     {
 
         Engine.DrawTexture(playerTexture, position, null, size);
+        
     }
 
 }

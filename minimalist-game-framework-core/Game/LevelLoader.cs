@@ -7,6 +7,7 @@ using System.Drawing;
 /*
  * KEY
  * # = block
+ * m = moving block
  * C = checkpoint
  * p = pit
  * l = ladder
@@ -15,9 +16,10 @@ using System.Drawing;
  * * = flower
  */
 
-
 internal class LevelLoader
 {
+    public const int BLOCK_SIZE = 50;
+
     public static List<Blocks> LoadLevel(string filePath, int blockSize)
     {
         List<Blocks> blocks = new List<Blocks>();
@@ -27,10 +29,16 @@ internal class LevelLoader
         {
             for (int x = 0; x < lines[y].Length; x++)
             {
+                
+                
                 if (lines[y][x] == '#')
                 {
                     Vector2 position = new Vector2(x * blockSize, y * blockSize);
                     blocks.Add(new Blocks(position, new Vector2(blockSize, blockSize), GameColor.Block1, new Vector2(0, 0)));
+                    if (y == lines.Length-1)
+                    {
+                        Game.player.floorY = y * blockSize;
+                    }
                 }
                 else if (lines[y][x] == 'p')
                 {
@@ -63,7 +71,7 @@ internal class LevelLoader
             {
                 if (lines[y][x] == 'Q')
                 {
-                    return new Vector2(x * size.X, y * size.Y);
+                    return new Vector2(x * size.X, Math.Abs(640 - y * size.Y));
                     
                 }
             }

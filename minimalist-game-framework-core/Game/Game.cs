@@ -173,6 +173,7 @@ class Game
                 flower.FlowerLoop(player);
                 
             }
+            
 
             
 
@@ -187,7 +188,9 @@ class Game
             greyNPC.Update();
             fire.FireLoop();
             spear.spearLoop();
-          
+
+            
+            
             foreach (var entity in Game.entities.ToArray())
             {
                 if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
@@ -222,6 +225,15 @@ class Game
                 i.Render(localCamera);
 
 
+            }
+
+            foreach (var sep in levelSeperators)
+            {
+                if (player.position.Y < sep.position.Y - player.size.Y && player.floorY > sep.position.Y)
+                {
+                    player.floorY = sep.position.Y;
+                    break;
+                }
             }
 
             //NOTE
