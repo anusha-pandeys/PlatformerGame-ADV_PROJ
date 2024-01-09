@@ -168,34 +168,34 @@ class Game
                 // }
 
             
-            foreach (var flower in flowers)
-            {
-                flower.FlowerLoop(player);
+                foreach (var flower in flowers)
+                {
+                    flower.FlowerLoop(player);
                 
-            }
-
-
-
-            player.playerLoop();
-            localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
-            localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
-            DisplayPlayerCoordinates();
-            redNPC.Update();
-            greyNPC.Update();
-            fire.FireLoop();
-            spear.spearLoop();
-          
-            foreach (var entity in Game.entities.ToArray())
-            {
-                if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                {
-                    enemyEntity.EnemyLoop();
-                }
-                if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                {
-                    bossEntity.Update();
                 }
 
+
+
+                player.playerLoop();
+                localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
+                localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
+                DisplayPlayerCoordinates();
+                redNPC.Update();
+                greyNPC.Update();
+                fire.FireLoop();
+                spear.spearLoop();
+
+                foreach (var entity in Game.entities.ToArray())
+                {
+                    if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
+                    {
+                        enemyEntity.EnemyLoop();
+                    }
+                    if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
+                    {
+                        bossEntity.Update();
+                    }
+                }
                 //moving.updateCoordinates();
 
                 // Render checkpoints
@@ -256,6 +256,7 @@ class Game
                 }
                 */
             }
+
 
         }
         SDL.SDL_RenderPresent(Engine.Renderer2);
