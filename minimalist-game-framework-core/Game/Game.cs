@@ -46,6 +46,7 @@ class Game
     List<Flower> flowersToRemove = new List<Flower>();
     List<Slides> slides = new List<Slides>();
     public static int enemiesKilled = 0;
+    public Boolean playerDeath = false;
     public Game()
     {
         Vector2 playerPosition = new Vector2(100, 300); // Initial position
@@ -124,130 +125,133 @@ class Game
         }
         else
         {
-
-            //map.setBackgroundColor();
-            Texture background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
-            Engine.DrawTexture(background, new Vector2(0,0), null, new Vector2 (640, 480));
-
-            foreach (var block in levelBlocks)
+            if (!playerDeath)
             {
-                block.blockLoop();
+                //map.setBackgroundColor();
+                Texture background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
+                Engine.DrawTexture(background, new Vector2(0, 0), null, new Vector2(640, 480));
+
+                foreach (var block in levelBlocks)
+                {
+                    block.blockLoop();
+                    //CollisionManager.addBlock(block);
+                }
+                foreach (var pit in pits)
+                {
+                    pit.pitsLoop();
+                    if (pit.checkCollision())
+                    {
+                        //implement death/game over
+
+                        Game.player.chargeBar.setCharge(0);
+
+
+
+                    }
+                    //CollisionManager.addBlock(block);
+                }
+
+                //foreach (var ladder in ladders)
+                //{
+                /*ladder.ladderLoop();
+                if (ladder.getTranslate())
+                {
+                    player.translateUpLadder();
+                }*/
                 //CollisionManager.addBlock(block);
-            }
-            foreach (var pit in pits)
-            {
-                pit.pitsLoop();
-                if (pit.checkCollision())
+                // }
+
+
+
+                foreach (var flower in flowers)
                 {
-                    //implement death/game over
-
-                    Game.player.chargeBar.setCharge(0);
-
-  
+                    flower.FlowerLoop(player);
 
                 }
-                //CollisionManager.addBlock(block);
-            }
 
-            //foreach (var ladder in ladders)
-            //{
-            /*ladder.ladderLoop();
-            if (ladder.getTranslate())
-            {
-                player.translateUpLadder();
-            }*/
-            //CollisionManager.addBlock(block);
-            // }
+                // Step 3: Clear the flowersToRemove list
+                flowersToRemove.Clear();
 
-            
-            
-            foreach (var flower in flowers)
-            {
-                flower.FlowerLoop(player);
-                
-            }
+                player.playerLoop();
+                localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
+                localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
+                DisplayPlayerCoordinates();
+                redNPC.Update();
+                greyNPC.Update();
+                spear.spearLoop();
 
-            // Step 3: Clear the flowersToRemove list
-            flowersToRemove.Clear();
-
-            player.playerLoop();
-            localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
-            localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
-            DisplayPlayerCoordinates();
-            redNPC.Update();
-            greyNPC.Update();
-            spear.spearLoop();
-
-            foreach (var entity in Game.entities.ToArray())
-            {
-                if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
+                foreach (var entity in Game.entities.ToArray())
                 {
-                    enemyEntity.EnemyLoop();
+                    if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
+                    {
+                        enemyEntity.EnemyLoop();
+                    }
+                    if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
+                    {
+                        bossEntity.Update();
+                    }
                 }
-                if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                {
-                    bossEntity.Update();
-                }
-            }
 
-            //moving.updateCoordinates();
+                //moving.updateCoordinates();
 
-            // Render checkpoints
+                // Render checkpoints
 
-            /*
-            foreach (var checkpoint in checkpoints)
-            {
-                checkpoint.Update(localCamera);
-            }
-            */
-
-            foreach (Entity i in entities)
-            {
                 /*
-                if (i.Position.Y + i.size.Y > Camera.globalCy - Camera.height/2 && i.Position.Y - i.size.Y < Camera.globalCy - Camera.height / 2)
+                foreach (var checkpoint in checkpoints)
                 {
-                    i.Render(localCamera);
+                    checkpoint.Update(localCamera);
                 }
                 */
-                i.Render(localCamera);
 
-
-            }
-
-
-            if (Game.player.chargeBar.getCharge() <= 0)
-
-            {
-                FileIO file = new FileIO();
-                file.writeToFile();
-                loseScreen.show();
-                
-            }
-            // Check if back button is clicked in RulesMenu or CreditScreen
-            if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
-            {
-                showStartMenu = true;
-            }
-
-            // Checkpoint collision detection
-            /*foreach (var checkpoint in checkpoints)
-            {
-                if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
+                foreach (Entity i in entities)
                 {
-                    currLevel++;
-                    checkpoints.Clear();
-                    CollisionManager.blocks.Clear();
-                    CollisionManager.collidables.Clear();
-                    winScreen.show(); 
-                    string path = "Game\\level" + currLevel.ToString() + ".txt";
-                    LoadNewLevel(path);
-                    player.position = new Vector2(100, 300); // Reset position
-                    
-                    break;
+                    /*
+                    if (i.Position.Y + i.size.Y > Camera.globalCy - Camera.height/2 && i.Position.Y - i.size.Y < Camera.globalCy - Camera.height / 2)
+                    {
+                        i.Render(localCamera);
+                    }
+                    */
+                    i.Render(localCamera);
+
+
                 }
+
+
+                if (Game.player.chargeBar.getCharge() <= 0)
+
+                {
+                    FileIO file = new FileIO();
+                    file.writeToFile();
+                    playerDeath = true;
+                    loseScreen.show();
+
+                }
+                // Check if back button is clicked in RulesMenu or CreditScreen
+                if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
+                {
+                    showStartMenu = true;
+                }
+
+                // Checkpoint collision detection
+                /*foreach (var checkpoint in checkpoints)
+                {
+                    if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
+                    {
+                        currLevel++;
+                        checkpoints.Clear();
+                        CollisionManager.blocks.Clear();
+                        CollisionManager.collidables.Clear();
+                        winScreen.show(); 
+                        string path = "Game\\level" + currLevel.ToString() + ".txt";
+                        LoadNewLevel(path);
+                        player.position = new Vector2(100, 300); // Reset position
+                    
+                        break;
+                    }
             
+                }
+                */
             }
-            */
 
         }
         SDL.SDL_RenderPresent(Engine.Renderer2);
@@ -332,7 +336,6 @@ class Game
                 SDL.SDL_RenderDrawRect(renderer, ref tileRect);
             }
         }
-        
     }
 
     public Player getPlayer()
