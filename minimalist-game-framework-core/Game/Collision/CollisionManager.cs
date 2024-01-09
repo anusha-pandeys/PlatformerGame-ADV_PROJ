@@ -117,4 +117,16 @@ internal class CollisionManager
         }
         return false;
     }
+
+    public static bool checkOneWayCollision(Entity entity, Entity oneWay)
+    {
+        Rectangle entityBound = entity.Bound;
+        Rectangle oneWayBound = oneWay.Bound;
+        // Check if entityBound intersects with checkpointBound
+        if (entityBound.Bottom <= oneWayBound.Top && entityBound.IntersectsWith(oneWay.Bound))
+        {
+            return true;
+        }
+        return false;
+    }
 }

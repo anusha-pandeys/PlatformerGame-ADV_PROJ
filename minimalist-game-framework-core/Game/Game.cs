@@ -35,6 +35,7 @@ class Game
     public static Camera localCamera;//
     private List<Checkpoint> checkpoints;
     private List<Pits> pits;
+    private List<LevelSeperator> levelSeperators;
     private List<Ladder> ladders;
     private static int currLevel = 1;
     private Enemy enemy;
@@ -50,8 +51,6 @@ class Game
     public Boolean playerDeath = false;
     public Game()
     {
-        Vector2 playerPosition = new Vector2(100, 300); // Initial position
-        Vector2 playerVelocity = new Vector2(0, 0);     // Initial velocity
         map = new Map();
         textRenderer = new TextRenderer();
         StartMenu = new StartMenu();
@@ -59,7 +58,7 @@ class Game
         creditScreen = new CreditScreen();
         //slide = new Slides(new Vector2(300,100), new Vector2(100,100));
         //entities.Add(moving);
-        player = new Player(playerPosition, playerVelocity, textRenderer, font);
+        player = new Player(textRenderer, font);
         spear = new Spear();
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
         redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 0.5f, "Assets\\redGhost.png", "npc1");
@@ -85,6 +84,7 @@ class Game
         bgMusic = Engine.LoadMusic("bg music.mp3");
 
         pits = LevelLoader.loadPits("Game\\levelPractice.txt", new Vector2(50, 20));
+        levelSeperators = LevelLoader.loadLevelSeperator("Game\\levelPractice.txt", 50);
         slides = LevelLoader.LoadSlides("Game\\levelPractice.txt", new Vector2(50, 50));
         //ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
         //loading checkpoints
@@ -137,17 +137,21 @@ class Game
                 Texture background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
                 Engine.DrawTexture(background, new Vector2(0, 0), null, new Vector2(640, 480));
 
-                foreach (var block in levelBlocks)
+            foreach (var block in levelBlocks)
+            {
+                block.blockLoop();
+                //CollisionManager.addBlock(block);
+            }
+            foreach (var levelSep in levelSeperators)
+            {
+                levelSep.Update();
+            }
+            foreach (var pit in pits)
+            {
+                pit.pitsLoop();
+                if (pit.checkCollision())
                 {
-                    block.blockLoop();
-                    //CollisionManager.addBlock(block);
-                }
-                foreach (var pit in pits)
-                {
-                    pit.pitsLoop();
-                    if (pit.checkCollision())
-                    {
-                        //implement death/game over
+                    //implement death/game over
 
                         Game.player.chargeBar.setCharge(0);
 
@@ -220,6 +224,14 @@ class Game
 
                 }
 
+            foreach (var sep in levelSeperators)
+            {
+                if (player.position.Y < sep.position.Y - player.size.Y && player.floorY > sep.position.Y)
+                {
+                    player.floorY = sep.position.Y;
+                    break;
+                }
+            }
 
                 if (Game.player.chargeBar.getCharge() <= 0)
 

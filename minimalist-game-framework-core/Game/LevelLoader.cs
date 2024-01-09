@@ -4,9 +4,22 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 
+/*
+ * KEY
+ * # = block
+ * m = moving block
+ * C = checkpoint
+ * p = pit
+ * l = ladder
+ * S = levelSeperator
+ * s = slide
+ * * = flower
+ */
 
 internal class LevelLoader
 {
+    public const int BLOCK_SIZE = 50;
+
     public static List<Blocks> LoadLevel(string filePath, int blockSize)
     {
         List<Blocks> blocks = new List<Blocks>();
@@ -16,10 +29,16 @@ internal class LevelLoader
         {
             for (int x = 0; x < lines[y].Length; x++)
             {
+                
+                
                 if (lines[y][x] == '#')
                 {
                     Vector2 position = new Vector2(x * blockSize, y * blockSize);
                     blocks.Add(new Blocks(position, new Vector2(blockSize, blockSize), GameColor.Block1, new Vector2(0, 0)));
+                    if (y == lines.Length-1)
+                    {
+                        Game.player.floorY = y * blockSize;
+                    }
                 }
                 else if (lines[y][x] == 'p')
                 {
@@ -40,6 +59,25 @@ internal class LevelLoader
         }
 
         return blocks;
+    }
+
+    public static Vector2 loadPlayerPosition(string filePath, Vector2 size)
+    {
+        string[] lines = File.ReadAllLines(filePath);
+
+        for (int y = 0; y < lines.Length; y++)
+        {
+            for (int x = 0; x < lines[y].Length; x++)
+            {
+                if (lines[y][x] == 'Q')
+                {
+                    return new Vector2(x * size.X, Math.Abs(640 - y * size.Y));
+                    
+                }
+            }
+        }
+
+        return new Vector2 (0,0);
     }
 
     public static List<Checkpoint> LoadCheckpoints(string filePath, int checkpointSize)
@@ -123,6 +161,26 @@ internal class LevelLoader
         return flowers;
     }
 
+    public static List<LevelSeperator> loadLevelSeperator(string filePath, int size)
+    {
+        List<LevelSeperator> levelSep = new List<LevelSeperator>();
+        string[] lines = File.ReadAllLines(filePath);
+
+        for (int y = 0; y < lines.Length; y++)
+        {
+            for (int x = 0; x < lines[y].Length; x++)
+            {
+                if (lines[y][x] == 'S')
+                {
+                    Vector2 position = new Vector2(x * size, y * size);
+                    levelSep.Add(new LevelSeperator(position, new Vector2(size, size)));
+                }
+            }
+        }
+
+        return levelSep;
+    }
+
     public static List<Slides> LoadSlides(string filePath, Vector2 blockSize)
     {
         List<Slides> slide = new List<Slides>();
@@ -135,13 +193,12 @@ internal class LevelLoader
                 if (lines[y][x] == 's')
                 {
                     Vector2 position = new Vector2(x * blockSize.X, y * blockSize.Y);
-                    slide.Add(new Slides(position, blockSize, GameColor.White, new Vector2(0,0)));
+                    slide.Add(new Slides(position, blockSize, GameColor.White, new Vector2(0, 0)));
                 }
             }
         }
 
         return slide;
     }
-
 }
 
