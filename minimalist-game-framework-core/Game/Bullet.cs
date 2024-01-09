@@ -34,7 +34,15 @@ internal class Bullet : Entity
 
         // Update the bullet's position based on the velocity
         accumulatedTime += Engine.TimeDelta;
+        // Check for collision with the player
+        if (CheckPlayerCollision())
+        {
+            // Handle player collision logic here
+            Game.player.chargeBar.setCharge(0);
 
+            // Remove the bullet from the entities list
+            Game.entities.Remove(this);
+        }
         while (accumulatedTime >= fixedTimeStep)
         {
             position += velocity * fixedTimeStep;
@@ -48,6 +56,13 @@ internal class Bullet : Entity
         }
 
         Render(camera);
+    }
+
+    private bool CheckPlayerCollision()
+    {
+        Rectangle bulletBounds = CalculateBound();
+        Rectangle playerBounds = Game.player.GetPlayerBounds();
+        return bulletBounds.IntersectsWith(playerBounds);
     }
 
     private bool IsOnScreen(Camera camera)

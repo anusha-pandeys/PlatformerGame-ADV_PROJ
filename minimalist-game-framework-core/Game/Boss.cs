@@ -19,9 +19,9 @@ internal class Boss : Entity
     private Player player;
     private const float GRAVITY = 0.25f;
     private float accumulatedGravity = 0.0f;
-    private float shootCooldown = 2.0f;
+    private float shootCooldown = 4.0f;
     private float timeSinceLastShot = 0.0f;
-    private float bulletSpeed = 100.0f;
+    private float bulletSpeed = 30.0f;
     private Texture bossTexture;
     private Collidable bossCollidable;  // New collidable for the boss
 

@@ -40,6 +40,7 @@ class Game
     private Enemy enemy;
     private Boss boss;
     private Spear spear;
+    private Fire fire;
     //private Ladder ladder;
     private Music bgMusic;
     private List<Flower> flowers = new List<Flower>();
@@ -61,10 +62,14 @@ class Game
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
         spear = new Spear();
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
-        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 1.5f, "Assets\\redGhost.png", "npc1");
+        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 0.5f, "Assets\\redGhost.png", "npc1");
 
         Vector2 greyNPCPosition = new Vector2(500, 300); // Set the grey NPC's initial position
-        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 300f, 1.0f, "Assets\\greyGhost.png", "npc2");
+        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 500f, 1.0f, "Assets\\greyGhost.png", "npc2");
+
+        fire = new Fire(new Vector2(100, 100), new Vector2(50, 50));                                                
+
+
 
         Vector2 enemySpawnPosition = new Vector2(400, 100); // Set the desired spawn position
         Enemy enemy = new Enemy(enemySpawnPosition, new Vector2(50, 50)); // Adjust size as needed
@@ -92,6 +97,7 @@ class Game
         CollisionManager.AddObj("npc1", redNPC);
         CollisionManager.AddObj("npc2", greyNPC);
         CollisionManager.AddObj("spear", spear);
+        CollisionManager.AddObj("fire", fire);
         //CollisionManager.AddObj("player", player);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
@@ -161,35 +167,33 @@ class Game
                 //CollisionManager.addBlock(block);
                 // }
 
+            
+            foreach (var flower in flowers)
+            {
+                flower.FlowerLoop(player);
+                
+            }
 
 
-                foreach (var flower in flowers)
+
+            player.playerLoop();
+            localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
+            localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
+            DisplayPlayerCoordinates();
+            redNPC.Update();
+            greyNPC.Update();
+            fire.FireLoop();
+            spear.spearLoop();
+          
+            foreach (var entity in Game.entities.ToArray())
+            {
+                if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
                 {
-                    flower.FlowerLoop(player);
-
+                    enemyEntity.EnemyLoop();
                 }
-
-                // Step 3: Clear the flowersToRemove list
-                flowersToRemove.Clear();
-
-                player.playerLoop();
-                localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
-                localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
-                DisplayPlayerCoordinates();
-                redNPC.Update();
-                greyNPC.Update();
-                spear.spearLoop();
-
-                foreach (var entity in Game.entities.ToArray())
+                if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
                 {
-                    if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                    {
-                        enemyEntity.EnemyLoop();
-                    }
-                    if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                    {
-                        bossEntity.Update();
-                    }
+                    bossEntity.Update();
                 }
 
                 //moving.updateCoordinates();
