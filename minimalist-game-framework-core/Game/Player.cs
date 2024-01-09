@@ -31,6 +31,9 @@ internal class Player : Entity
     public ChargeBar chargeBar;
     private Texture playerTexture;
     private Boolean run = false;
+    private Boolean direction = false;
+    private float timeOrig = 0.0f;
+    private float animationTime = 1f;
     public Player(Vector2 position, Vector2 playerVelocity, TextRenderer text, Font font)
     {
         this.position = position;
@@ -45,7 +48,8 @@ internal class Player : Entity
         chargeBar.setCharge(50);
         size = new Vector2(50f, 70f);
         ///var path =
-        string relativePath = "Assets\\player.png";
+        
+        string relativePath = "Assets\\persephoneStanding.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         playerTexture = Engine.LoadTexture(absolutePath);
         
@@ -131,6 +135,7 @@ internal class Player : Entity
             playerVelocity.Y = 0;
         } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
         {
+            timeOrig = 0;
             playerVelocity.Y += (GRAVITY);
         }
     }
@@ -164,6 +169,24 @@ internal class Player : Entity
         // Check LEFT arrow key.
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
         {
+            timeOrig += Engine.TimeDelta;
+            if (timeOrig < animationTime)
+            {
+                string relativePat = "Assets\\persephoneWalking1.png";
+                string absolutePat = System.IO.Path.GetFullPath(relativePat);
+                playerTexture = Engine.LoadTexture(absolutePat);
+                direction = false;
+            }
+            else if ((timeOrig >= animationTime) && (timeOrig <= animationTime+1f))
+            {
+                string relativePath = "Assets\\persephoneWalking2.png";
+                string absolutePath = System.IO.Path.GetFullPath(relativePath);
+                playerTexture = Engine.LoadTexture(absolutePath);
+                direction = false;
+            } else
+            {
+                timeOrig = 0.0f;
+            }
             text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             playerVelocity.X = -2.0f;
             if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
@@ -175,10 +198,15 @@ internal class Player : Entity
                 }
                 
             }
-        }    
+        }
+        //timeOrig = 0;
         // Check RIGHT arrow key.
-        else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
+        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
+            string relativePath = "Assets\\persephoneWalking1.png";
+            string absolutePath = System.IO.Path.GetFullPath(relativePath);
+            playerTexture = Engine.LoadTexture(absolutePath);
+            direction = true;
             text.displayText("right", new Vector2(10, 30), Color.Black, font);
             playerVelocity.X = 2.0f;
 
@@ -191,7 +219,13 @@ internal class Player : Entity
                 }
             }
         } 
-        
+        else
+        {
+            timeOrig = 0;
+            string relativePath = "Assets\\persephoneStanding.png";
+            string absolutePath = System.IO.Path.GetFullPath(relativePath);
+            playerTexture = Engine.LoadTexture(absolutePath);
+        }
     }
 
     private void HandleJump()
@@ -232,8 +266,14 @@ internal class Player : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-
-        Engine.DrawTexture(playerTexture, position, null, size);
+        if (!direction)
+        {
+            Engine.DrawTexture(playerTexture, position, null, size, 0, null, TextureMirror.Horizontal);
+        }
+        else
+        {
+            Engine.DrawTexture(playerTexture, position, null, size);
+        }
     }
 
 }
