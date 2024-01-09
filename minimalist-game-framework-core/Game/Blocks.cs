@@ -37,7 +37,7 @@ internal class Blocks : Entity
         // Render(Game.localCamera);
     }
 
-    private Texture playerTexture;
+    private Texture texture;
     public Blocks(Vector2 position, Vector2 size, GameColor color, Vector2 velocity)
     {
         this.position = position;
@@ -48,7 +48,7 @@ internal class Blocks : Entity
         Game.entities.Add(this);
         string relativePath = "Assets\\blocks.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
-        playerTexture = Engine.LoadTexture(absolutePath);
+        texture = Engine.LoadTexture(absolutePath);
     }
 
     public List<Vector2> getCoordinates()
@@ -74,6 +74,6 @@ internal class Blocks : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        Engine.DrawTexture(playerTexture, position, null, size);
+        Engine.DrawTexture(texture, position, null, size);
     }
 }

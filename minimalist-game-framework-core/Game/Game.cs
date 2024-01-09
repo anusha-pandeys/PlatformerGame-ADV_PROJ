@@ -49,6 +49,9 @@ class Game
     List<Slides> slides = new List<Slides>();
     public static int enemiesKilled = 0;
     public Boolean playerDeath = false;
+    Texture background;
+    
+
     public Game()
     {
         map = new Map();
@@ -102,6 +105,7 @@ class Game
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
         flowers = LevelLoader.LoadFlowers("Game\\levelPractice.txt", 50);
+        background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
     }
     //
 
@@ -134,7 +138,6 @@ class Game
             if (!playerDeath)
             {
                 //map.setBackgroundColor();
-                Texture background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
                 Engine.DrawTexture(background, new Vector2(0, 0), null, new Vector2(640, 480));
 
             foreach (var block in levelBlocks)
