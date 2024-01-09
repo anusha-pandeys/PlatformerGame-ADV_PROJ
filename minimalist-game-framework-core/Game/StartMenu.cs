@@ -15,20 +15,21 @@ internal class StartMenu
     private TextRenderer textRenderer = new TextRenderer();
     private CreditScreen creditScreen = new CreditScreen();
     private RulesMenu rulesMenu = new RulesMenu();
+    private Scoreboard scoreboard = new Scoreboard();
     Font yFont = Engine.LoadFont("Retro Gaming.ttf", 11);
     private bool showRulesScreen;
     private bool showCreditScreen;
-     private bool showStartMenu;
-
+    private bool showStartMenu;
+    private bool showScoreboardScreen;
     private Button startButton = new Button("Start Game", new Vector2(200, 200), new Vector2(50, 50));
-
+    private Button scoreboardButton = new Button("Scoreboard", new Vector2(200, 250), new Vector2(50, 50));
+    private Button rulesButton = new Button("Rules", new Vector2(200, 300), new Vector2(50, 50));
+    private Button creditsButton = new Button("Credits", new Vector2(200, 350), new Vector2(50, 50));
     public StartMenu()
     {
         // Create buttons
         
-        Button scoreboardButton = new Button("Scoreboard", new Vector2(200, 250), new Vector2(50, 50));
-        Button rulesButton = new Button("Rules", new Vector2(200, 300), new Vector2(50, 50));
-        Button creditsButton = new Button("Credits", new Vector2(200, 350), new Vector2(50, 50));
+        
 
         // Add buttons to the list
         buttons.Add(startButton);
@@ -43,7 +44,10 @@ internal class StartMenu
         return startButton.IsClicked();
     }
 
-
+    public bool IsScoreBoardClicked()
+    {
+        return scoreboardButton.IsClicked();
+    }
 
     public void Update()
     {
@@ -65,6 +69,12 @@ internal class StartMenu
             // Handle back button click logic (e.g., go back to the main menu)
             showRulesScreen = false;
             showCreditScreen = false;
+            showScoreboardScreen = false;
+        } else if (showScoreboardScreen && scoreboard.IsBackButtonClicked())
+        {
+            showRulesScreen = false;
+            showCreditScreen = false;
+            showScoreboardScreen = false;
         }
         else if (showRulesScreen)
         {
@@ -73,6 +83,7 @@ internal class StartMenu
             {
                 showRulesScreen = false;
                 showCreditScreen = false;
+                showScoreboardScreen = false;
             }
         }
         else if (showCreditScreen)
@@ -82,6 +93,7 @@ internal class StartMenu
             {
                 showRulesScreen = false;
                 showCreditScreen = false;
+                showScoreboardScreen = false;
             }
         }
     }
@@ -124,7 +136,10 @@ internal class StartMenu
         {
             creditScreen.Draw(yFont);
         }
-
+        else if (showScoreboardScreen)
+        {
+            scoreboard.Draw(yFont);
+        }
         // Present renderer
         SDL.SDL_RenderPresent(Renderer);
     }
@@ -143,18 +158,23 @@ internal class StartMenu
         {
             // Open scoreboard view (placeholder logic)
             Console.WriteLine("Opening Scoreboard");
+            showRulesScreen = false;
+            showCreditScreen = false;
+            showScoreboardScreen = true;
         }
         else if (button.Text == "Rules")
         {
             // Show rules menu
             showRulesScreen = true;
             showCreditScreen = false;
+            showScoreboardScreen = false;
         }
         else if (button.Text == "Credits")
         {
             // Show credit screen
             showCreditScreen = true;
             showRulesScreen = false;
+            showScoreboardScreen = false;
         }
     }
 }
