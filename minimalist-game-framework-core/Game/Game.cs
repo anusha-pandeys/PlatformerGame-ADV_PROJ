@@ -387,12 +387,12 @@ class Game
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
                     numGreyNPC++;
                     string tag = "greynpc" + numGreyNPC.ToString();
-                    greyNPCs.Add(new NPC(position, player, Color.Gray, 200f, 1.0f, "Assets\\greyGhost.png", tag));
+                    greyNPCs.Add(new NPC(level, position, player, Color.Gray, 200f, 1.0f, "Assets\\greyGhost.png", tag));
                 }
                 else if (lines[y][x] == 'r')
                 {
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
-                    redNPCs.Add(new NPC(position, player, Color.Red, 200f, 0.5f, "Assets\\redGhost.png", "npc1"));
+                    redNPCs.Add(new NPC(level, position, player, Color.Red, 200f, 0.5f, "Assets\\redGhost.png", "npc1"));
                 } else if (lines[y][x] == 'b')
                 {
                     Vector2 position = new Vector2 (x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));

@@ -45,9 +45,18 @@ internal class Blocks : Entity
         sidesInContact = "";
         this.velocity = velocity;
         Game.entities.Add(this);
-        string relativePath = "Assets\\blocks.png";
-        string absolutePath = System.IO.Path.GetFullPath(relativePath);
-        texture = Engine.LoadTexture(absolutePath);
+        if (slide)
+        {
+            string relativePat = "Assets\\slide.png";
+            string absolutePat = System.IO.Path.GetFullPath(relativePat);
+            texture = Engine.LoadTexture(absolutePat);
+        }
+        else
+        {
+            string relativePath = "Assets\\blocks.png";
+            string absolutePath = System.IO.Path.GetFullPath(relativePath);
+            texture = Engine.LoadTexture(absolutePath);
+        }
     }
 
     public List<Vector2> getCoordinates()

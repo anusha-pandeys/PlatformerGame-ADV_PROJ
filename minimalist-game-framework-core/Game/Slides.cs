@@ -22,7 +22,7 @@ internal class Slides : Entity
         this.color = color;
         sidesInContact = "";
         Game.entities.Add(this);
-        string relativePath = "Assets\\blocks.png";
+        string relativePath = "Assets\\slide.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         playerTexture = Engine.LoadTexture(absolutePath);
     }
