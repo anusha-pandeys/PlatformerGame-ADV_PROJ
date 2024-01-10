@@ -45,7 +45,7 @@ internal class Blocks : Entity
         sidesInContact = "";
         this.velocity = velocity;
         Game.entities.Add(this);
-        string relativePath = "Assets\\blocks.png";
+        string relativePath = "Assets\\block4.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         texture = Engine.LoadTexture(absolutePath);
     }
