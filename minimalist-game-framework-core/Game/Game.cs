@@ -64,7 +64,7 @@ class Game
         player = new Player(playerPosition, playerVelocity, textRenderer, font);
         spear = new Spear();
         Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
-        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 0.5f, "Assets\\redGhost.png", "npc1");
+        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 0.5f, "Assets\\redNPC.png", "npc1");
 
         Vector2 greyNPCPosition = new Vector2(500, 300); // Set the grey NPC's initial position
         greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 500f, 1.0f, "Assets\\greyNPC.png", "npc2");
