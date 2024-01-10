@@ -18,10 +18,10 @@ internal class Enemy : Entity
     private float bulletSpeed = 20.0f;
 
 
-    public Enemy(Vector2 spawnPosition, Vector2 size)
+    public Enemy(Vector2 pos)
     {
-        this.position = spawnPosition;
-        this.size = size;
+        this.position = pos;
+        size = new Vector2((float) (Blocks.size.X * 1.5), (float) (Blocks.size.Y * 1.5));
         this.enemyColor = Color.Blue;
         Game.entities.Add(this);
 

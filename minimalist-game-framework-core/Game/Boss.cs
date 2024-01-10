@@ -25,10 +25,10 @@ internal class Boss : Entity
     private Texture bossTexture;
     private Collidable bossCollidable;  // New collidable for the boss
 
-    public Boss(Vector2 position, Vector2 size, Player player, float followRadius, float speed)
+    public Boss(Vector2 position, Player player, float followRadius, float speed)
     {
         this.position = position;
-        this.size = size;
+        size = new Vector2((float)(Blocks.size.X * 1.5), (float)(Blocks.size.Y * 1.5));
         this.player = player;
         this.followRadius = followRadius;
         this.speed = speed;

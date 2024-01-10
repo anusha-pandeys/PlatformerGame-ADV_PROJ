@@ -18,8 +18,7 @@ internal class Player : Entity
     private float NORMALF = -0.25f;
     private const float JUMP_STRENGTH = -6f;
     //public Vector2 position;
-    public Vector2 playerVelocity;
-    //public Vector2 size;
+    public Vector2 playerVelocity = new Vector2 (0, 0);
     private TextRenderer text;
     private Font font;
     private Color originalColor = new Color(255, 0, 0, 255); // Original color (red)
@@ -41,10 +40,13 @@ internal class Player : Entity
     private float timeOrig = 0.0f;
     private float animationTime = 0.2f;
     private Boolean onGround = true;
-    public Player(Vector2 position, Vector2 playerVelocity, TextRenderer text, Font font)
+    
+    private Boolean jumped = false;
+    public float floorY;
+    public Player(TextRenderer text, Font font);
     {
-        this.position = position;
-        this.playerVelocity = playerVelocity;
+
+        size = new Vector2(30, 30);
         this.text = text;
         this.font = font;
         this.playerColor = originalColor;
@@ -137,11 +139,14 @@ internal class Player : Entity
         }
         position += playerVelocity;
         // Collision detection for the floor
-        if (position.Y > 400) // Assuming 500 is ground level
+        
+        
+        if (position.Y > floorY - size.Y)
         {
-            position.Y = 400;
+            position.Y = floorY - size.Y;
             playerVelocity.Y = 0; // Stop downward movement
         }
+        
         chargeBar.Render();
     }
 
@@ -165,6 +170,7 @@ internal class Player : Entity
         {
             playerVelocity.Y += (GRAVITY);
         }
+        
     }
     private void HandleCollisionX(double secondsElapsed)
     {
@@ -295,6 +301,7 @@ internal class Player : Entity
                 timeOrig = 0;
                 playerTexture = originalTexture;
             }
+            jumped = true;
         }
     }
     private void Jump()
@@ -330,6 +337,7 @@ internal class Player : Entity
         {
             Engine.DrawTexture(playerTexture, position, null, size, scaleMode: TextureScaleMode.Nearest);
         }
+
     }
 
 }

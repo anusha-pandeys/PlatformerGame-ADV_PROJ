@@ -8,14 +8,13 @@ internal class Ladder : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;
     private Vector2 position;
-    private Vector2 size;
+    public static Vector2 size = Blocks.size;
     private Collidable ladders;
     private bool translate = false;
 
-    public Ladder(Vector2 position, Vector2 size)
+    public Ladder(Vector2 position)
     {
         this.position = position;
-        this.size = size;
         this.ladders = new Collidable(this, "ladder");
     }
 
