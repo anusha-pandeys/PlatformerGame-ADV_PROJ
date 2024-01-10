@@ -20,12 +20,18 @@ internal class Fire : Entity
     private float chargeDecreaseTimer = 0.0f;
     private bool playerInContact = false;
 
+    private Texture playerTexture;
+
     public Fire(Vector2 position, Vector2 size)
     {
         this.position = position;
         this.size = size;
         this.fireCollidable = new Collidable(this, "fire");
         Game.entities.Add(this);
+
+        string relativePath = "Assets\\fireSprite.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
     }
 
     public void FireLoop()
@@ -102,15 +108,6 @@ internal class Fire : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        // Implement drawing logic for the fire entity (e.g., fill rectangle with a fire color)
-        SDL.SDL_SetRenderDrawColor(Engine.Renderer2, 255, 0, 0, 255);
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-        SDL.SDL_RenderFillRect(Engine.Renderer2, ref rect);
+        Engine.DrawTexture(playerTexture, position, null, size);
     }
 }
