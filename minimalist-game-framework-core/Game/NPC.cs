@@ -69,7 +69,7 @@ internal class NPC : Entity
             }
 
             // Check for collisions with the spear only if it's not the red ghost
-            if (tag != "npc1")
+            if (tag.Contains("greynpc"))
             {
                 CollisionObject obj = checkCollision("spear");
                 if (obj.getCollided())
@@ -86,7 +86,7 @@ internal class NPC : Entity
             CollisionObject playerCollision = checkCollision("player");
             //1-2 hit death
             if (playerCollision.getCollided())
-            { 
+            {
                 if (Game.player.chargeBar.charge <= 25)
                 {
                     Game.player.chargeBar.setCharge(0);
@@ -94,7 +94,6 @@ internal class NPC : Entity
                 {
                     Game.player.chargeBar.setCharge(Game.player.chargeBar.charge / 2);
                 }
-                
             }
 
             // Update NPC's position based on collision detection
@@ -123,7 +122,7 @@ internal class NPC : Entity
         {
             
             Game.entities.Remove(this);
-            if (!dead)
+            if (dead)
             {
                 Game.enemiesKilled++;
             }

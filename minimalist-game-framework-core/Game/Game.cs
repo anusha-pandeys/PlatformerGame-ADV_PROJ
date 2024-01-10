@@ -51,7 +51,7 @@ class Game
     public static int enemiesKilled = 0;
     public Boolean playerDeath = false;
     Texture background;
-    
+    private int numGreyNPC;
 
     public Game()
     {
@@ -77,20 +77,24 @@ class Game
 
         CollisionManager.AddObj("player", player);
         CollisionManager.AddObj("boss", boss);
+        int i = 0;
         foreach (var r in redNPCs)
         {
             CollisionManager.AddObj("npc1", r);
         }
+        i = 0;
         foreach (var g in greyNPCs)
         {
-            CollisionManager.AddObj("npc2", g);
+            i++;
+            string tags = "greynpc" + i.ToString();
+            CollisionManager.AddObj(tags, g);
         }
         foreach (var f in fires)
         {
             CollisionManager.AddObj("fire", f);
         }
-        
-        
+
+        CollisionManager.AddObj("spear", spear);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
         background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
@@ -128,117 +132,120 @@ class Game
                 //map.setBackgroundColor();
                 Engine.DrawTexture(background, new Vector2(0, 0), null, new Vector2(640, 480));
 
-            foreach (var block in levelBlocks)
-            {
-                block.blockLoop();
-                //CollisionManager.addBlock(block);
-            }
-            foreach (var levelSep in levelSeperators)
-            {
-                levelSep.Update();
-            }
-            foreach (var pit in pits)
-            {
-                pit.pitsLoop();
-                if (pit.checkCollision())
-                {
-                    //implement death/game over
-
-                    Game.player.chargeBar.setCharge(0);
-                }
-                    //CollisionManager.addBlock(block);
-            }
-
-                           
-            foreach (var flower in flowers)
-            {
-                flower.FlowerLoop(player);
-            
-            }
-
-
-
-            player.playerLoop();
-            localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
-            localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
-            DisplayPlayerCoordinates();
-            spear.spearLoop();
-
-            foreach (var entity in Game.entities.ToArray())
-            {
-                /*
-                if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                {
-                    enemyEntity.EnemyLoop();
-                }
-                */
-                if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                {
-                    bossEntity.Update();
-                }
-            }
-            //moving.updateCoordinates();
-
-            /* 
-            //Render checkpoints - DELETE
-
-            foreach (var checkpoint in checkpoints)
-            {
-                checkpoint.Update(localCamera);
-            }
-            */
-
-            foreach (Entity i in entities)
-            {
-                /*
-                if (i.Position.Y + i.size.Y > Camera.globalCy - Camera.height/2 && i.Position.Y - i.size.Y < Camera.globalCy - Camera.height / 2)
-                {
-                    i.Render(localCamera);
-                }
-                */
-                i.Render(localCamera);
-
-
-            }
-
-            foreach (var sep in levelSeperators)
-            {
-                if (player.position.Y < sep.position.Y - player.size.Y && player.floorY > sep.position.Y)
-                {
-                    player.floorY = sep.position.Y;
-                    player.level++;
-                    break;
-                }
-            }
-
-            foreach (var r in redNPCs)
-            {
-                r.Update();
-            } 
-            foreach (var g in greyNPCs)
-            {
-                g.Update();
-            }
-            foreach (var f in fires)
-            {
-                f.FireLoop();
-            }
-            
                 
 
-            if (Game.player.chargeBar.getCharge() <= 0)
-            {
-                FileIO file = new FileIO();
-                file.writeToFile();
-                playerDeath = true;
-                loseScreen.show();
 
-            }
-            // Check if back button is clicked in RulesMenu or CreditScreen
-            if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
-            {
-                showStartMenu = true;
-            }
+
+                player.playerLoop();
+                localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
+                localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
+                DisplayPlayerCoordinates();
+                spear.spearLoop();
+                foreach (var block in levelBlocks)
+                {
+                    block.blockLoop();
+                    //CollisionManager.addBlock(block);
+                }
+                foreach (var levelSep in levelSeperators)
+                {
+                    levelSep.Update();
+                }
+                foreach (var pit in pits)
+                {
+                    pit.pitsLoop();
+                    if (pit.checkCollision())
+                    {
+                        //implement death/game over
+
+                        Game.player.chargeBar.setCharge(0);
+                    }
+                    //CollisionManager.addBlock(block);
+                }
+
+
+                foreach (var flower in flowers)
+                {
+                    flower.FlowerLoop(player);
+
+                }
+                foreach (var entity in Game.entities.ToArray())
+                {
+                    /*
+                    if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
+                    {
+                        enemyEntity.EnemyLoop();
+                    }
+                    */
+                    if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
+                    {
+                        bossEntity.Update();
+                    }
+                }
+                //moving.updateCoordinates();
+
+                /* 
+                //Render checkpoints - DELETE
+
+                foreach (var checkpoint in checkpoints)
+                {
+                    checkpoint.Update(localCamera);
+                }
+                */
+
+                foreach (Entity i in entities)
+                {
+                    /*
+                    if (i.Position.Y + i.size.Y > Camera.globalCy - Camera.height/2 && i.Position.Y - i.size.Y < Camera.globalCy - Camera.height / 2)
+                    {
+                        i.Render(localCamera);
+                    }
+                    */
+                    i.Render(localCamera);
+
+
+                }
+
+                foreach (var sep in levelSeperators)
+                {
+                    if (player.position.Y < sep.position.Y - player.size.Y && player.floorY > sep.position.Y)
+                    {
+                        player.floorY = sep.position.Y;
+                        player.level++;
+                        break;
+                    }
+                }
+
+                foreach (var r in redNPCs)
+                {
+                    r.Update();
+                } 
+                foreach (var g in greyNPCs)
+                {
+                    g.Update();
+                }
+                foreach (var f in fires)
+                {
+                    f.FireLoop();
+                }
+            
+                if(Game.player.chargeBar.getCharge() > 100)
+                {
+                    Game.player.setCharge(100);
+                }
+
+                if (Game.player.chargeBar.getCharge() <= 0)
+                {
+                    FileIO file = new FileIO();
+                    file.writeToFile();
+                    playerDeath = true;
+                    loseScreen.show();
+
+                }
+                // Check if back button is clicked in RulesMenu or CreditScreen
+                if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
+                {
+                    showStartMenu = true;
+                }
 
             // Checkpoint collision detection
             /*foreach (var checkpoint in checkpoints)
@@ -378,13 +385,14 @@ class Game
                 else if (lines[y][x] == 'g')
                 {
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
-                    greyNPCs.Add(new NPC(level, position, player, Color.Gray, 500f, 1.0f, "Assets\\greyGhost.png", "npc2"));
-
+                    numGreyNPC++;
+                    string tag = "greynpc" + numGreyNPC.ToString();
+                    greyNPCs.Add(new NPC(position, player, Color.Gray, 200f, 1.0f, "Assets\\greyGhost.png", tag));
                 }
                 else if (lines[y][x] == 'r')
                 {
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
-                    redNPCs.Add(new NPC(level, position, player, Color.Red, 500f, 0.5f, "Assets\\redGhost.png", "npc1"));
+                    redNPCs.Add(new NPC(position, player, Color.Red, 200f, 0.5f, "Assets\\redGhost.png", "npc1"));
                 } else if (lines[y][x] == 'b')
                 {
                     Vector2 position = new Vector2 (x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));

@@ -55,8 +55,12 @@ internal class CollisionManager
                 else if (((objA == obj1.Tag) && (objB == obj2.Tag)) || ((objA == obj2.Tag) && (objB == obj1.Tag)))
                 {
                     CollisionObject obj = isCollided(obj1, obj2, velocity);
-                    obj.setBlock(blocks[j]);
-                    return obj;
+                    //obj.setBlock(blocks[j]);
+                    if(obj.getCollided())
+                    {
+                        return obj;
+                    }
+                    
                 }
             }
         }
