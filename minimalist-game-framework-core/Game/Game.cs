@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Diagnostics;
+using System.IO;
+
 
 
 class Game
@@ -26,29 +28,31 @@ class Game
     private bool showStartMenu = true;
     public  static Player player;
     private Map map;
-    private NPC redNPC;
-    private NPC greyNPC;
+    private List<NPC> redNPCs;
+    private List<NPC> greyNPCs;
+    private List<Fire> fires;
     //private Blocks floor;
     //private Blocks floor2;
     private List<Blocks> levelBlocks;
-    private List<Blocks> levelBlocks2;
-    public static Camera localCamera;//
-    private List<Checkpoint> checkpoints;
+    public static Camera localCamera;
+    //private List<Checkpoint> checkpoints;
+    //private List<Ladder> ladders;
     private List<Pits> pits;
     private List<LevelSeperator> levelSeperators;
-    private List<Ladder> ladders;
     private static int currLevel = 1;
-    private Enemy enemy;
+    //private Enemy enemy;
     private Boss boss;
     private Spear spear;
-    private Fire fire;
     //private Ladder ladder;
     private Music bgMusic;
-    private List<Flower> flowers = new List<Flower>();
+    private List<Flower> flowers;
     List<Flower> flowersToRemove = new List<Flower>();
-    List<Slides> slides = new List<Slides>();
+    List<Slides> slides;
     public static int enemiesKilled = 0;
     public Boolean playerDeath = false;
+    Texture background;
+    
+
     public Game()
     {
         map = new Map();
@@ -58,50 +62,38 @@ class Game
         creditScreen = new CreditScreen();
         //slide = new Slides(new Vector2(300,100), new Vector2(100,100));
         //entities.Add(moving);
+
         player = new Player(textRenderer, font);
         spear = new Spear();
-        Vector2 redNPCPosition = new Vector2(400, 300); // Set the red NPC's initial position
-        redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 0.5f, "Assets\\redGhost.png", "npc1");
 
-        Vector2 greyNPCPosition = new Vector2(500, 300); // Set the grey NPC's initial position
-        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 500f, 1.0f, "Assets\\greyGhost.png", "npc2");
-
-        fire = new Fire(new Vector2(100, 100), new Vector2(50, 50));                                                
-
-
-
-        Vector2 enemySpawnPosition = new Vector2(400, 100); // Set the desired spawn position
-        Enemy enemy = new Enemy(enemySpawnPosition, new Vector2(50, 50)); // Adjust size as needed
-
-        Vector2 bossPosition = new Vector2(500, 300); // Set the boss's initial position
-        Boss boss = new Boss(bossPosition, new Vector2(50, 50), player, 150f, 1.0f);
-
-        levelBlocks = LevelLoader.LoadLevel("Game\\levelPractice.txt", 50); // Replace with the correct path\
-                                                                            // levelBlocks2 = LevelLoader.LoadLevel("Game\\levelPractice2.txt", 50); // Replace with the correct path
-                                                                            //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
-                                                                            //startMenu = new StartMenu();
+        loadLevel("Game\\levelPractice.txt");
+        
+        //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
+        //startMenu = new StartMenu();
 
         bgMusic = Engine.LoadMusic("bg music.mp3");
-
-        pits = LevelLoader.loadPits("Game\\levelPractice.txt", new Vector2(50, 20));
-        levelSeperators = LevelLoader.loadLevelSeperator("Game\\levelPractice.txt", 50);
-        slides = LevelLoader.LoadSlides("Game\\levelPractice.txt", new Vector2(50, 50));
-        //ladders = LevelLoader.loadLadder("Game\\levelPractice.txt", 50);
-        //loading checkpoints
-        //checkpoints = LevelLoader.LoadCheckpoints("Game\\levelPractice.txt", 50); // Use the correct path and size
-        //ladder = new Ladder(new Vector2(100, 200), new Vector2(50, 100));
+        
         //CollisionManager.AddObj("pit", pit);
-        loadEntities();
+
         CollisionManager.AddObj("player", player);
         CollisionManager.AddObj("boss", boss);
-        CollisionManager.AddObj("npc1", redNPC);
-        CollisionManager.AddObj("npc2", greyNPC);
-        CollisionManager.AddObj("spear", spear);
-        CollisionManager.AddObj("fire", fire);
-        //CollisionManager.AddObj("player", player);
+        foreach (var r in redNPCs)
+        {
+            CollisionManager.AddObj("npc1", r);
+        }
+        foreach (var g in greyNPCs)
+        {
+            CollisionManager.AddObj("npc2", g);
+        }
+        foreach (var f in fires)
+        {
+            CollisionManager.AddObj("fire", f);
+        }
+        
+        
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
-        flowers = LevelLoader.LoadFlowers("Game\\levelPractice.txt", 50);
+        background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
     }
     //
 
@@ -134,7 +126,6 @@ class Game
             if (!playerDeath)
             {
                 //map.setBackgroundColor();
-                Texture background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
                 Engine.DrawTexture(background, new Vector2(0, 0), null, new Vector2(640, 480));
 
             foreach (var block in levelBlocks)
@@ -153,76 +144,62 @@ class Game
                 {
                     //implement death/game over
 
-                        Game.player.chargeBar.setCharge(0);
-
-
-
-                    }
+                    Game.player.chargeBar.setCharge(0);
+                }
                     //CollisionManager.addBlock(block);
-                }
+            }
 
-                //foreach (var ladder in ladders)
-                //{
-                /*ladder.ladderLoop();
-                if (ladder.getTranslate())
-                {
-                    player.translateUpLadder();
-                }*/
-                //CollisionManager.addBlock(block);
-                // }
-
+                           
+            foreach (var flower in flowers)
+            {
+                flower.FlowerLoop(player);
             
-                foreach (var flower in flowers)
-                {
-                    flower.FlowerLoop(player);
-                
-                }
+            }
 
 
 
-                player.playerLoop();
-                localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
-                localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
-                DisplayPlayerCoordinates();
-                redNPC.Update();
-                greyNPC.Update();
-                fire.FireLoop();
-                spear.spearLoop();
+            player.playerLoop();
+            localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
+            localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
+            DisplayPlayerCoordinates();
+            spear.spearLoop();
 
-                foreach (var entity in Game.entities.ToArray())
-                {
-                    if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                    {
-                        enemyEntity.EnemyLoop();
-                    }
-                    if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                    {
-                        bossEntity.Update();
-                    }
-                }
-                //moving.updateCoordinates();
-
-                // Render checkpoints
-
+            foreach (var entity in Game.entities.ToArray())
+            {
                 /*
-                foreach (var checkpoint in checkpoints)
+                if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
                 {
-                    checkpoint.Update(localCamera);
+                    enemyEntity.EnemyLoop();
                 }
                 */
-
-                foreach (Entity i in entities)
+                if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
                 {
-                    /*
-                    if (i.Position.Y + i.size.Y > Camera.globalCy - Camera.height/2 && i.Position.Y - i.size.Y < Camera.globalCy - Camera.height / 2)
-                    {
-                        i.Render(localCamera);
-                    }
-                    */
-                    i.Render(localCamera);
-
-
+                    bossEntity.Update();
                 }
+            }
+            //moving.updateCoordinates();
+
+            /* 
+            //Render checkpoints - DELETE
+
+            foreach (var checkpoint in checkpoints)
+            {
+                checkpoint.Update(localCamera);
+            }
+            */
+
+            foreach (Entity i in entities)
+            {
+                /*
+                if (i.Position.Y + i.size.Y > Camera.globalCy - Camera.height/2 && i.Position.Y - i.size.Y < Camera.globalCy - Camera.height / 2)
+                {
+                    i.Render(localCamera);
+                }
+                */
+                i.Render(localCamera);
+
+
+            }
 
             foreach (var sep in levelSeperators)
             {
@@ -233,37 +210,51 @@ class Game
                 }
             }
 
-                if (Game.player.chargeBar.getCharge() <= 0)
+            foreach (var r in redNPCs)
+            {
+                r.Update();
+            } 
+            foreach (var g in greyNPCs)
+            {
+                g.Update();
+            }
+            foreach (var f in fires)
+            {
+                f.FireLoop();
+            }
+            
+                
 
-                {
-                    FileIO file = new FileIO();
-                    file.writeToFile();
-                    playerDeath = true;
-                    loseScreen.show();
+            if (Game.player.chargeBar.getCharge() <= 0)
+            {
+                FileIO file = new FileIO();
+                file.writeToFile();
+                playerDeath = true;
+                loseScreen.show();
 
-                }
-                // Check if back button is clicked in RulesMenu or CreditScreen
-                if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
-                {
-                    showStartMenu = true;
-                }
+            }
+            // Check if back button is clicked in RulesMenu or CreditScreen
+            if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
+            {
+                showStartMenu = true;
+            }
 
-                // Checkpoint collision detection
-                /*foreach (var checkpoint in checkpoints)
+            // Checkpoint collision detection
+            /*foreach (var checkpoint in checkpoints)
+            {
+                if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
                 {
-                    if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
-                    {
-                        currLevel++;
-                        checkpoints.Clear();
-                        CollisionManager.blocks.Clear();
-                        CollisionManager.collidables.Clear();
-                        winScreen.show(); 
-                        string path = "Game\\level" + currLevel.ToString() + ".txt";
-                        LoadNewLevel(path);
-                        player.position = new Vector2(100, 300); // Reset position
+                    currLevel++;
+                    checkpoints.Clear();
+                    CollisionManager.blocks.Clear();
+                    CollisionManager.collidables.Clear();
+                    winScreen.show(); 
+                    string path = "Game\\level" + currLevel.ToString() + ".txt";
+                    LoadNewLevel(path);
+                    player.position = new Vector2(100, 300); // Reset position
                     
-                        break;
-                    }
+                    break;
+                
             
                 }
                 */
@@ -292,14 +283,109 @@ class Game
 
     }
 
-    private void LoadNewLevel(string levelPath)
+    private void loadLevel(string filePath)
     {
-        // Clear existing checkpoints
-        levelBlocks = LevelLoader.LoadLevel(levelPath, 50);
-        pits = LevelLoader.loadPits(levelPath, new Vector2(50, 20));
-        ladders = LevelLoader.loadLadder(levelPath, 50);
-        checkpoints = LevelLoader.LoadCheckpoints(levelPath, 50);
+
+        /*
+         * KEY
+         * # = block
+         * m = moving block
+         * p = pit
+         * S = levelSeperator
+         * s = slide
+         * * = flower
+         * f = fire
+         * r = red npc
+         * g = gray npc
+         * b = boss
+         */
+        
+        levelBlocks = new List<Blocks>();
+        //checkpoints = new List<Checkpoint>();
+        //flowers = new List<Flower>();
+        pits = new List<Pits>();
+        slides = new List<Slides>();
+        levelSeperators = new List<LevelSeperator>();
+        redNPCs = new List<NPC>();
+        greyNPCs = new List<NPC>();
+        fires = new List<Fire>();
+        flowers = new List<Flower>();
+        string[] lines = File.ReadAllLines(filePath);
+
+        for (int y = lines.Length-1; y >= 0; y--)
+        {
+            for (int x = 0; x < lines[y].Length; x++)
+            {
+
+                float newY = lines.Length - y;
+                if (lines[y][x] == '#') // block
+                {
+                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    levelBlocks.Add(new Blocks(position, GameColor.Block1, new Vector2(0, 0)));
+                    if (y == lines.Length - 1) // floor
+                    {
+                        Game.player.floorY = Resolution.Y - (newY * Blocks.size.Y);
+                    }
+                }
+                else if (lines[y][x] == 'p') //pits
+                {
+                    Vector2 position = new Vector2(x * Pits.size.X, Resolution.Y - (newY * Pits.size.Y));
+                    pits.Add(new Pits(position));
+                }
+                else if (lines[y][x] == 'm') // moving block
+                {
+                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    levelBlocks.Add(new Blocks(position, GameColor.Block1, new Vector2(2f, 0)));
+                }
+                else if (lines[y][x] == 's') //slide
+                {
+                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    Blocks slideBlock = new Blocks(position, GameColor.White, new Vector2(0, 0));
+                    slideBlock.slide = true;
+                    levelBlocks.Add(slideBlock);
+                    slides.Add(new Slides(position, GameColor.White, new Vector2(0, 0)));
+                }
+                else if (lines[y][x] == 'Q') //player
+                {
+                    Game.player.position = new Vector2(x * Game.player.size.X, Resolution.Y - (newY * Game.player.size.Y));
+
+                }
+                else if (lines[y][x] == '*') // flower
+                {
+                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    flowers.Add(new Flower(position));
+                }
+                else if (lines[y][x] == 'S')
+                {
+                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    levelSeperators.Add(new LevelSeperator(position, Blocks.size));
+                }
+                else if (lines[y][x] == 'f')
+                {
+                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    fires.Add(new Fire(position));
+                }
+                else if (lines[y][x] == 'g')
+                {
+                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    greyNPCs.Add(new NPC(position, player, Color.Gray, 500f, 1.0f, "Assets\\greyGhost.png", "npc2"));
+
+                }
+                else if (lines[y][x] == 'r')
+                {
+                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    redNPCs.Add(new NPC(position, player, Color.Red, 500f, 0.5f, "Assets\\redGhost.png", "npc1"));
+                } else if (lines[y][x] == 'b')
+                {
+                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    boss = new Boss(position, player, 150f, 1.0f);
+                }
+                else continue;
+            }
+        }
         loadEntities();
+        //DIFF SIXES OF SLIDE LADDER??
+
     }
 
     public void loadEntities()
@@ -315,11 +401,7 @@ class Game
             //pit.pitsLoop();
             CollisionManager.AddObj("pit", pit);
         }
-        //foreach (var ladder in ladders)
-        //{
-        //pit.pitsLoop();
-        //    CollisionManager.AddObj("ladder", ladder);
-        // }
+        
         
         foreach (var flower in flowers)
         {

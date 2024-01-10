@@ -8,7 +8,7 @@ internal class Slides : Entity
 {
     private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
     public Vector2 position;
-    public Vector2 size;
+    public static Vector2 size = Blocks.size;
     private GameColor color;
     private Collidable blocks;
     private string sidesInContact;
@@ -16,10 +16,9 @@ internal class Slides : Entity
 
 
     private Texture playerTexture;
-    public Slides(Vector2 position, Vector2 size, GameColor color, Vector2 velocity)
+    public Slides(Vector2 position, GameColor color, Vector2 velocity)
     {
         this.position = position;
-        this.size = size;
         this.color = color;
         sidesInContact = "";
         Game.entities.Add(this);
