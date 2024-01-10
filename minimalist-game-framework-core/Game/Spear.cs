@@ -18,11 +18,17 @@ internal class Spear : Entity
     private float shootCooldown = 1.25f; // Set the desired cooldown time in seconds
     private float timeSinceLastShot = 0.0f;
     private bool ableToDamage = true;
+    private Texture spearTexture;
+    private int degree = 0;
     public Spear()
     {
+        string relativePath = "Assets\\spear.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        spearTexture = Engine.LoadTexture(absolutePath);
 
         this.position = Game.player.Position + new Vector2(0, Game.player.size.Y/2);
-        this.size = new Vector2(50, 5);
+        this.size = new Vector2(80, 10);
+
         this.spear = new Collidable(this, "spear");
         Game.entities.Add(this);
         spearMusic = Engine.LoadSound("Spear 1.mp3");
@@ -31,8 +37,13 @@ internal class Spear : Entity
     public void spearLoop()
     {
         timeSinceLastShot += Engine.TimeDelta;
+        if(IsClickedRight() && timeSinceLastShot < shootCooldown)
+        {
+            degree -= 10;   
+        } 
         if (IsClickedRight() && (timeSinceLastShot >= shootCooldown))
         {
+            degree = 0;
             timeSinceLastShot = 0;
             for (int i = 0; i < Game.entities.Count; i++)
             {
@@ -49,7 +60,7 @@ internal class Spear : Entity
                 }
             }
         }
-        while (IsClickedLeft() && (timeSinceLastShot >= shootCooldown))
+        if (IsClickedLeft() && (timeSinceLastShot >= shootCooldown))
         {
             timeSinceLastShot = 0;
 
@@ -79,6 +90,10 @@ internal class Spear : Entity
         {
             this.position.X = Game.player.position.X;
         }
+        if (currentState == 0)
+        {
+            ableToDamage = true;
+        }
 
         if(currentState == 1 && ableToDamage)
         {
@@ -93,7 +108,6 @@ internal class Spear : Entity
                         ableToDamage = false;
                     }
                 }
-                else continue;
             }
         } 
         this.position.X += dx;
@@ -110,27 +124,20 @@ internal class Spear : Entity
         return false;
     }
     
-    public override void Render(Camera camera)
-    {
-        Draw(Game.localCamera.globalToLocal(this.position), this.size);
-    }
-
     protected override Rectangle CalculateBound()
     {
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
     }
 
+    public override void Render(Camera camera)
+    {
+        Vector2 localPosition = camera.globalToLocal(position);
+        Draw(localPosition, size);
+    }
+
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        SDL.SDL_SetRenderDrawColor(Renderer, 116, 86, 75, 100); // green
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
+        Engine.DrawTexture(spearTexture, position, null, size, scaleMode: TextureScaleMode.Nearest, rotation: degree);
     }
 
     public bool IsClickedLeft()

@@ -24,11 +24,15 @@ internal class Boss : Entity
     private float bulletSpeed = 30.0f;
     private Texture bossTexture;
     private Collidable bossCollidable;  // New collidable for the boss
+    private int level;
+    private double floor;
 
-    public Boss(Vector2 position, Vector2 size, Player player, float followRadius, float speed)
+    public Boss(int level, double highestFloor, Vector2 position, Player player, float followRadius, float speed)
     {
         this.position = position;
-        this.size = size;
+        this.level = level;
+        floor = highestFloor;
+        size = new Vector2((float)(Blocks.size.X * 1.5), (float)(Blocks.size.Y * 1.5));
         this.player = player;
         this.followRadius = followRadius;
         this.speed = speed;
@@ -49,7 +53,7 @@ internal class Boss : Entity
     {
         foreach (var entity in Game.entities.ToArray())
         {
-            if (entity is Bullet bullet && bullet.Source == this)
+            if (entity is Bullet bullet && bullet.Source == this && Game.player.level == level)
             {
                 bullet.BulletLoop(Game.localCamera);
             }
@@ -58,7 +62,7 @@ internal class Boss : Entity
         long startTime = DateTime.Now.Ticks;
         double secondsElapsed = 0;
 
-        if (IsPlayerInRadius())
+        if (IsPlayerInRadius() && Game.player.level == level)
         {
             secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
             MoveTowardsPlayer(secondsElapsed);
@@ -90,15 +94,15 @@ internal class Boss : Entity
         }
 
         // Check if hitting the left or right boundary
-        if (position.X < 0 || position.X + size.X > 800)
+        if (position.X < 0 || position.X + size.X > 640)
         {
             velocity.X = 0;
         }
 
         // Check if hitting the ground
-        if (position.Y > 400)
+        if (position.Y + size.Y >= floor)
         {
-            position.Y = 400;
+            position.Y = (float) floor - size.Y;
             velocity.Y = 0;
         }
 
@@ -160,7 +164,7 @@ internal class Boss : Entity
 
     private void ApplyGravity()
     {
-        if (position.Y >= 400)  // Adjust the value if the ground level is different
+        if (position.Y - size.Y >= floor)  // Adjust the value if the ground level is different
         {
             accumulatedGravity = 0.0f;
             velocity.Y = 0;
@@ -180,7 +184,7 @@ internal class Boss : Entity
 
         if (!collisionDetected.getCollided())
         {
-            velocity = direction * speed;
+            velocity.X = direction.X * speed;
         }
     }
 
@@ -193,7 +197,7 @@ internal class Boss : Entity
 
         SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 
-        if (position.Y <= 400)
+        if (position.Y <= floor)
         {
             if (collisionDetected.getLeft())
             {

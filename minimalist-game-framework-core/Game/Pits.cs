@@ -8,7 +8,7 @@ internal class Pits : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;
     public Vector2 position;
-    public Vector2 size;
+    public static Vector2 size = new Vector2(50, 50);
     private Collidable pits;
     private Color originalColor;
     private Color pitColor;
@@ -17,10 +17,9 @@ internal class Pits : Entity
     private Texture playerTexture;
     public bool playerDeath = false;
 
-    public Pits(Vector2 position, Vector2 size)
+    public Pits(Vector2 position)
     {
         this.position = position;
-        this.size = size;
         this.pits = new Collidable(this, "pit");
         this.originalColor = new Color(0, 255, 0, 255); // Original color (green)
         this.pitColor = originalColor;

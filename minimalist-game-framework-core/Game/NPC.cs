@@ -10,7 +10,6 @@ internal class NPC : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;
     public Vector2 position;
-    public Vector2 size;
     private float followRadius;
     private float speed;
     private Player player;
@@ -24,10 +23,12 @@ internal class NPC : Entity
     private Texture npcTexture;
     public string tag;
     private Boolean dead = false;
-    public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed, string filePath, string tag)
+    public int level;
+    public NPC(int level, Vector2 position, Player player, Color npcColor, float followRadius, float speed, string filePath, string tag)
     {
         this.position = position;
-        this.size = size;
+        size = Blocks.size;
+        this.level = level;
         this.player = player;
         this.originalColor = npcColor; // Set the original color
         this.npcColor = originalColor;
@@ -62,13 +63,13 @@ internal class NPC : Entity
         {
             healthBar.setPosition(new Vector2(this.position.X, this.position.Y - 40f));
 
-            if (IsPlayerInRadius())
+            if (IsPlayerInRadius() && Game.player.level == level)
             {
                 FollowPlayer();
             }
 
             // Check for collisions with the spear only if it's not the red ghost
-            if (tag != "npc1")
+            if (tag.Contains("greynpc"))
             {
                 CollisionObject obj = checkCollision("spear");
                 if (obj.getCollided())
@@ -83,9 +84,16 @@ internal class NPC : Entity
 
             // Check for collisions with the player
             CollisionObject playerCollision = checkCollision("player");
+            //1-2 hit death
             if (playerCollision.getCollided())
             {
-                Game.player.chargeBar.setCharge(0);
+                if (Game.player.chargeBar.charge <= 25)
+                {
+                    Game.player.chargeBar.setCharge(0);
+                } else
+                {
+                    Game.player.chargeBar.setCharge(Game.player.chargeBar.charge / 2);
+                }
             }
 
             // Update NPC's position based on collision detection
@@ -114,7 +122,7 @@ internal class NPC : Entity
         {
             
             Game.entities.Remove(this);
-            if (!dead)
+            if (dead)
             {
                 Game.enemiesKilled++;
             }
@@ -148,7 +156,7 @@ internal class NPC : Entity
         //string collisionDetected = CollisionManager.checkBlockCollision(this, direction * speed);
         if (!CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1).getCollided())
         {
-            position += direction * speed;
+            position.X += direction.X * speed;
         }
     }
 

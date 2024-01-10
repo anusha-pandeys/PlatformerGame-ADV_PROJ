@@ -10,7 +10,6 @@ using System.Drawing;
 internal class Fire : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;
-    private Vector2 size;
     private Collidable fireCollidable;
     private Texture fireTexture;
     private float damageCooldown = 1.0f; // Time in seconds before applying damage again
@@ -19,13 +18,12 @@ internal class Fire : Entity
     private float chargeDecreaseInterval = 1.0f; // Interval to decrease charge (adjust as needed)
     private float chargeDecreaseTimer = 0.0f;
     private bool playerInContact = false;
-
     private Texture playerTexture;
 
     public Fire(Vector2 position, Vector2 size)
     {
         this.position = position;
-        this.size = size;
+        size = Blocks.size;
         this.fireCollidable = new Collidable(this, "fire");
         Game.entities.Add(this);
 

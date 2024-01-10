@@ -46,7 +46,8 @@ internal class HealthBar : UIElements
 
     public override void Render()
     {
-        Draw(position, getSize());
+        Vector2 localPosition = Game.localCamera.globalToLocal(position);
+        Draw(localPosition, size);
     }
     public override void setSize(Vector2 size)
     {

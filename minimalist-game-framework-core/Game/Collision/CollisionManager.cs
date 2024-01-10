@@ -55,8 +55,12 @@ internal class CollisionManager
                 else if (((objA == obj1.Tag) && (objB == obj2.Tag)) || ((objA == obj2.Tag) && (objB == obj1.Tag)))
                 {
                     CollisionObject obj = isCollided(obj1, obj2, velocity);
-                    obj.setBlock(blocks[j]);
-                    return obj;
+                    //obj.setBlock(blocks[j]);
+                    if(obj.getCollided())
+                    {
+                        return obj;
+                    }
+                    
                 }
             }
         }
@@ -112,6 +116,18 @@ internal class CollisionManager
         Rectangle entityBound = entity.Bound;
         // Check if entityBound intersects with checkpointBound
         if (entityBound.IntersectsWith(checkpointBound))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static bool checkOneWayCollision(Entity entity, Entity oneWay)
+    {
+        Rectangle entityBound = entity.Bound;
+        Rectangle oneWayBound = oneWay.Bound;
+        // Check if entityBound intersects with checkpointBound
+        if (entityBound.Bottom <= oneWayBound.Top && entityBound.IntersectsWith(oneWay.Bound))
         {
             return true;
         }

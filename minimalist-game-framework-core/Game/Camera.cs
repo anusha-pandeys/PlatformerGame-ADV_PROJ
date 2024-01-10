@@ -11,13 +11,14 @@ internal class Camera
     private float offset = Game.player.size.Y/4;
 
     private Vector2 layer1Pos;
-    private Texture parallaxBricks = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\parallaxBricks.png"));
+    private Texture parallaxBricks;
 
     public Camera()
     {
         screen = new Vector2(width / 2, height / 2);
-        globalCy = Game.player.Position.Y;
+        globalCy = Game.player.Position.Y + 50;
         layer1Pos = new Vector2(0, 0);
+        parallaxBricks = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\parallaxBricks.png"));
     }
 
     public Vector2 globalToLocal(Vector2 global)
