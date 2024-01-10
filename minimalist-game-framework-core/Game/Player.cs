@@ -29,10 +29,21 @@ internal class Player : Entity
     private Collidable player;
     public ChargeBar chargeBar;
     private Texture playerTexture;
+    private Texture walkingTexture1;
+    private Texture walkingTexture2;
+    private Texture originalTexture;
+    private Texture originalTexture2;
+    private Texture originalTexture3;
+    private Texture jumping;
     private Boolean run = false;
+    private Boolean direction = false;
+    private float timeOrig = 0.0f;
+    private float animationTime = 0.2f;
+    private Boolean onGround = true;
+    
     private Boolean jumped = false;
     public float floorY;
-    public Player(TextRenderer text, Font font)
+    public Player(TextRenderer text, Font font);
     {
 
         size = new Vector2(30, 30);
@@ -44,12 +55,34 @@ internal class Player : Entity
         Game.entities.Add(this);
         blockBelow = false;
         chargeBar.setCharge(50);
-        size = new Vector2(50f, 70f);
+        size = new Vector2(64f, 64f);
         ///var path =
-        string relativePath = "Assets\\player.png";
-        string absolutePath = System.IO.Path.GetFullPath(relativePath);
-        playerTexture = Engine.LoadTexture(absolutePath);
         
+        string relativePath = "Assets\\persephoneStanding.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        originalTexture = Engine.LoadTexture(absolutePath);
+
+        relativePath = "Assets\\persephoneStanding2.png";
+        absolutePath = System.IO.Path.GetFullPath(relativePath);
+        originalTexture2 = Engine.LoadTexture(absolutePath);
+
+        relativePath = "Assets\\persephoneStanding3.png";
+        absolutePath = System.IO.Path.GetFullPath(relativePath);
+        originalTexture3 = Engine.LoadTexture(absolutePath);
+
+        relativePath = "Assets\\persephoneWalking1.png";
+        absolutePath = System.IO.Path.GetFullPath(relativePath);
+        walkingTexture1 = Engine.LoadTexture(absolutePath);
+
+        relativePath = "Assets\\persephoneWalking2.png";
+        absolutePath = System.IO.Path.GetFullPath(relativePath);
+        walkingTexture2 = Engine.LoadTexture(absolutePath);
+
+        relativePath = "Assets\\jumping.png";
+        absolutePath = System.IO.Path.GetFullPath(relativePath);
+        jumping = Engine.LoadTexture(absolutePath);
+
+        playerTexture = originalTexture;
     }
 
     public void setCharge(int charge)
@@ -169,6 +202,20 @@ internal class Player : Entity
         // Check LEFT arrow key.
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
         {
+            timeOrig += Engine.TimeDelta;
+            if (timeOrig < animationTime)
+            {
+                playerTexture = walkingTexture1;
+                direction = false;
+            }
+            else if ((timeOrig >= animationTime) && (timeOrig <= animationTime*2))
+            {
+                playerTexture = walkingTexture2;
+                direction = false;
+            } else
+            {
+                timeOrig = 0.0f;
+            }
             text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             playerVelocity.X = -2.0f;
             if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
@@ -180,10 +227,26 @@ internal class Player : Entity
                 }
                 
             }
-        }    
+        }
+        //timeOrig = 0;
         // Check RIGHT arrow key.
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
+            timeOrig += Engine.TimeDelta;
+            if (timeOrig < animationTime)
+            {
+                playerTexture = walkingTexture1;
+                direction = true;
+            }
+            else if ((timeOrig >= animationTime) && (timeOrig <= animationTime * 2))
+            {
+                playerTexture = walkingTexture2;
+                direction = true;
+            }
+            else
+            {
+                timeOrig = 0.0f;
+            }
             text.displayText("right", new Vector2(10, 30), Color.Black, font);
             playerVelocity.X = 2.0f;
 
@@ -196,7 +259,24 @@ internal class Player : Entity
                 }
             }
         } 
-        
+        else
+        {
+            timeOrig += Engine.TimeDelta;
+            if (timeOrig < animationTime)
+            {
+                playerTexture = originalTexture;
+            } else if (timeOrig >= animationTime && timeOrig < animationTime * 2)
+            {
+                playerTexture = originalTexture2;
+            } else if (timeOrig >= animationTime*2 && (timeOrig < animationTime * 3))
+            {
+                playerTexture = originalTexture3;
+            } else if (timeOrig >= animationTime*3)
+            {
+                playerTexture = originalTexture;
+                timeOrig = 0.0f; 
+            }
+        }
     }
 
     private void HandleJump()
@@ -211,16 +291,27 @@ internal class Player : Entity
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_W] == 1)
         {
             Jump();
+            timeOrig += Engine.TimeDelta;
+            if (timeOrig < 1)
+            {
+                playerTexture = jumping;
+            }
+            else
+            {
+                timeOrig = 0;
+                playerTexture = originalTexture;
+            }
             jumped = true;
         }
-
     }
     private void Jump()
     {
+        
         if (playerVelocity.Y == 0)
         {
             playerVelocity.Y = JUMP_STRENGTH;
         }
+        
     }
 
 
@@ -238,9 +329,15 @@ internal class Player : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
+        if (!direction)
+        {
+            Engine.DrawTexture(playerTexture, position, null, size, 0, null, TextureMirror.Horizontal, scaleMode: TextureScaleMode.Nearest);
+        }
+        else
+        {
+            Engine.DrawTexture(playerTexture, position, null, size, scaleMode: TextureScaleMode.Nearest);
+        }
 
-        Engine.DrawTexture(playerTexture, position, null, size);
-        
     }
 
 }
