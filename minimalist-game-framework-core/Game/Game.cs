@@ -50,7 +50,6 @@ class Game
     List<Slides> slides;
     public static int enemiesKilled = 0;
     public Boolean playerDeath = false;
-    private bool debugMode = false;
     Texture background;
     private int numGreyNPC;
 
@@ -63,6 +62,7 @@ class Game
         creditScreen = new CreditScreen();
         //slide = new Slides(new Vector2(300,100), new Vector2(100,100));
         //entities.Add(moving);
+
         player = new Player(textRenderer, font);
         spear = new Spear();
 
@@ -270,15 +270,6 @@ class Game
 
 
         }
-        int numKeys;
-        IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
-        byte[] keys = new byte[numKeys];
-        Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
-
-        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_M] == 1)
-        {
-            debugMode = !debugMode;
-        }
         SDL.SDL_RenderPresent(Engine.Renderer2);
 
         RenderGrid(Engine.Renderer2);
@@ -289,11 +280,15 @@ class Game
         string playerCoordinates = string.Format("{0}, {1}", player.getCoordinates()[0].X, player.getCoordinates()[0].Y);
         textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
 
-        string redNPCCoordinates = string.Format("Red NPC: {0}, {1}", redNPC.Position.X, redNPC.Position.Y);
-        textRenderer.displayText(redNPCCoordinates, new Vector2(0, 20), Color.Black, font);
+        //string redNPCCoordinates = string.Format("Red NPC: {0}, {1}", redNPC.Position.X, redNPC.Position.Y);
+        //textRenderer.displayText(redNPCCoordinates, new Vector2(0, 20), Color.Black, font);
 
-        string greyNPCCoordinates = string.Format("Grey NPC: {0}, {1}", greyNPC.Position.X, greyNPC.Position.Y);
-        textRenderer.displayText(greyNPCCoordinates, new Vector2(0, 40), Color.Black, font);
+        //string greyNPCCoordinates = string.Format("Grey NPC: {0}, {1}", greyNPC.Position.X, greyNPC.Position.Y);
+        //textRenderer.displayText(greyNPCCoordinates, new Vector2(0, 40), Color.Black, font);
+
+        string floorCoordinates = string.Format("Floor: {0}, {1}", levelBlocks[0].Position.X, levelBlocks[0].Position.Y);
+        textRenderer.displayText(floorCoordinates, new Vector2(0, 20), Color.Black, font);
+
     }
 
     private void loadLevel(string filePath)
