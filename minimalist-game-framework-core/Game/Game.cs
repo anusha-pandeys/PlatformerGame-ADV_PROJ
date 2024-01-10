@@ -67,7 +67,7 @@ class Game
         redNPC = new NPC(redNPCPosition, new Vector2(50, 50), player, Color.Red, 500f, 0.5f, "Assets\\redGhost.png", "npc1");
 
         Vector2 greyNPCPosition = new Vector2(500, 300); // Set the grey NPC's initial position
-        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 500f, 1.0f, "Assets\\greyGhost.png", "npc2");
+        greyNPC = new NPC(greyNPCPosition, new Vector2(50, 50), player, Color.Gray, 500f, 1.0f, "Assets\\greyNPC.png", "npc2");
 
         fire = new Fire(new Vector2(100, 100), new Vector2(50, 50));                                                
 
