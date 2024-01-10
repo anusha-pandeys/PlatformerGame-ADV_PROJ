@@ -65,7 +65,7 @@ internal class Player : Entity
 
     protected override Rectangle CalculateBound()
     {
-        return new Rectangle((int)position.X, (int)position.Y, (int)(size.X), (int)(size.Y));
+        return new Rectangle((int)position.X, (int)position.Y, (int)(size.X-10), (int)(size.Y));
     }
 
     public List<Vector2> getCoordinates()
@@ -107,7 +107,6 @@ internal class Player : Entity
         }
         position += playerVelocity;
         // Collision detection for the floor
-        
         
         if (position.Y > floorY - size.Y)
         {

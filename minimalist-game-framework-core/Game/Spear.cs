@@ -49,7 +49,7 @@ internal class Spear : Entity
                 }
             }
         }
-        while (IsClickedLeft() && (timeSinceLastShot >= shootCooldown))
+        if (IsClickedLeft() && (timeSinceLastShot >= shootCooldown))
         {
             timeSinceLastShot = 0;
 
@@ -79,6 +79,10 @@ internal class Spear : Entity
         {
             this.position.X = Game.player.position.X;
         }
+        if (currentState == 0)
+        {
+            ableToDamage = true;
+        }
 
         if(currentState == 1 && ableToDamage)
         {
@@ -93,7 +97,6 @@ internal class Spear : Entity
                         ableToDamage = false;
                     }
                 }
-                else continue;
             }
         } 
         this.position.X += dx;
