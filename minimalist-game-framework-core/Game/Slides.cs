@@ -43,7 +43,7 @@ internal class Slides : Entity
     protected override Rectangle CalculateBound()
     {
         return new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
-    }
+    }//
 
     public override void Render(Camera camera)
     {
