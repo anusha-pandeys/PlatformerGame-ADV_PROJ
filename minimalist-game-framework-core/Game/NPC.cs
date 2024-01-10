@@ -10,7 +10,6 @@ internal class NPC : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;
     public Vector2 position;
-    public Vector2 size;
     private float followRadius;
     private float speed;
     private Player player;
@@ -24,10 +23,10 @@ internal class NPC : Entity
     private Texture npcTexture;
     public string tag;
     private Boolean dead = false;
-    public NPC(Vector2 position, Vector2 size, Player player, Color npcColor, float followRadius, float speed, string filePath, string tag)
+    public NPC(Vector2 position, Player player, Color npcColor, float followRadius, float speed, string filePath, string tag)
     {
         this.position = position;
-        this.size = size;
+        size = Blocks.size;
         this.player = player;
         this.originalColor = npcColor; // Set the original color
         this.npcColor = originalColor;

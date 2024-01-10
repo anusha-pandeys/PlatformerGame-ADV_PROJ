@@ -36,7 +36,6 @@ internal class Player : Entity
     {
 
         size = new Vector2(30, 30);
-        this.position = new Vector2(100, 300); //LevelLoader.loadPlayerPosition("Game\\levelPractice.txt", size);
         this.text = text;
         this.font = font;
         this.playerColor = originalColor;

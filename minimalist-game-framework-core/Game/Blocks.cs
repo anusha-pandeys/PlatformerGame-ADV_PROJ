@@ -8,7 +8,7 @@ internal class Blocks : Entity
 {
     private IntPtr Renderer => Engine.Renderer2; // Gets the SDL Renderer from the Engine class
     public Vector2 position;
-    public Vector2 size;
+    public static Vector2 size = new Vector2 (50,50);
     private GameColor color;
     private Collidable blocks;
     private string sidesInContact;
@@ -38,10 +38,9 @@ internal class Blocks : Entity
     }
 
     private Texture texture;
-    public Blocks(Vector2 position, Vector2 size, GameColor color, Vector2 velocity)
+    public Blocks(Vector2 position, GameColor color, Vector2 velocity)
     {
         this.position = position;
-        this.size = size;
         this.color = color;
         sidesInContact = "";
         this.velocity = velocity;
