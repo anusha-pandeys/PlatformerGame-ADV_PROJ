@@ -43,7 +43,8 @@ internal class Player : Entity
     
     private Boolean jumped = false;
     public float floorY;
-    public Player(TextRenderer text, Font font);
+    public int level = 1;
+    public Player(TextRenderer text, Font font)
     {
 
         size = new Vector2(30, 30);

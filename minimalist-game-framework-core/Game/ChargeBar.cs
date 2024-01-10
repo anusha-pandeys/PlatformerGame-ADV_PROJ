@@ -8,7 +8,7 @@ internal class ChargeBar : UIElements
     private string name;
     private Vector2 position;
     private Vector2 size;
-    private int charge;
+    public int charge;
     private IntPtr Renderer => Engine.Renderer2;
     public ChargeBar(string name, Vector2 position, int charge, Vector2 size)
     {
