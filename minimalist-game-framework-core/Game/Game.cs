@@ -320,6 +320,8 @@ class Game
         fires = new List<Fire>();
         flowers = new List<Flower>();
         string[] lines = File.ReadAllLines(filePath);
+        int level = 1;
+        double highestFloor = 0;
 
         for (int y = lines.Length-1; y >= 0; y--)
         {
@@ -334,6 +336,7 @@ class Game
                     if (y == lines.Length - 1) // floor
                     {
                         Game.player.floorY = Resolution.Y - (newY * Blocks.size.Y);
+                        highestFloor = Resolution.Y - (newY * Blocks.size.Y);
                     }
                 }
                 else if (lines[y][x] == 'p') //pits
@@ -368,6 +371,11 @@ class Game
                 {
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
                     levelSeperators.Add(new LevelSeperator(position, Blocks.size));
+                    if (x+1 >= lines[y].Length || lines[y][x+1] !='S')
+                    {
+                        level++;
+                    }
+                    highestFloor = Resolution.Y - (newY * Blocks.size.Y);
                 }
                 else if (lines[y][x] == 'f')
                 {
@@ -380,7 +388,6 @@ class Game
                     numGreyNPC++;
                     string tag = "greynpc" + numGreyNPC.ToString();
                     greyNPCs.Add(new NPC(position, player, Color.Gray, 200f, 1.0f, "Assets\\greyGhost.png", tag));
-
                 }
                 else if (lines[y][x] == 'r')
                 {
@@ -388,8 +395,8 @@ class Game
                     redNPCs.Add(new NPC(position, player, Color.Red, 200f, 0.5f, "Assets\\redGhost.png", "npc1"));
                 } else if (lines[y][x] == 'b')
                 {
-                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
-                    boss = new Boss(position, player, 150f, 1.0f);
+                    Vector2 position = new Vector2 (x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    boss = new Boss(level, highestFloor, position, player, 150f, 1.0f);
                 }
                 else continue;
             }
