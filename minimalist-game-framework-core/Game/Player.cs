@@ -32,6 +32,7 @@ internal class Player : Entity
     private Boolean run = false;
     private Boolean jumped = false;
     public float floorY;
+    public int level = 1;
     public Player(TextRenderer text, Font font)
     {
 

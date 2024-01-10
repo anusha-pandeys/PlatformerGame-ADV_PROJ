@@ -206,6 +206,7 @@ class Game
                 if (player.position.Y < sep.position.Y - player.size.Y && player.floorY > sep.position.Y)
                 {
                     player.floorY = sep.position.Y;
+                    player.level++;
                     break;
                 }
             }
@@ -287,22 +288,23 @@ class Game
     {
 
         /*
-         * KEY
-         * # = block
-         * m = moving block
-         * p = pit
-         * S = levelSeperator
-         * s = slide
-         * * = flower
-         * f = fire
-         * r = red npc
-         * g = gray npc
-         * b = boss
+        KEY
+        # = block
+        m = moving block
+        s = slide
+        * = flower
+        f = fire
+        r = red npc
+        g = gray npc
+        p = pit
+
+        S = levelSeperator
+        b = boss
+        Q = player
          */
-        
+
         levelBlocks = new List<Blocks>();
         //checkpoints = new List<Checkpoint>();
-        //flowers = new List<Flower>();
         pits = new List<Pits>();
         slides = new List<Slides>();
         levelSeperators = new List<LevelSeperator>();
