@@ -71,7 +71,7 @@ class Game
         //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
         //startMenu = new StartMenu();
 
-        bgMusic = Engine.LoadMusic("bg music.mp3");
+        bgMusic = Engine.LoadMusic("bgm.mp3");
         
         //CollisionManager.AddObj("pit", pit);
 
