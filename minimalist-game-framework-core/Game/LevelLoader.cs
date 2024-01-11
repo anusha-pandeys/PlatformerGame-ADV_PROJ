@@ -84,7 +84,7 @@ internal class LevelLoader
                     Vector2 position = new Vector2(x * Blocks.size.X, y * Blocks.size.Y);
                     flowers.Add(new Flower(position));
                 }
-                else if (lines[y][x] == 'S')
+                else if (lines[y][x] == 'S') //slide
                 {
                     Vector2 position = new Vector2(x * Blocks.size.X, y * Blocks.size.Y);
                     levelSep.Add(new LevelSeperator(position, Blocks.size));

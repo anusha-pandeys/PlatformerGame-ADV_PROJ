@@ -19,12 +19,18 @@ internal class Fire : Entity
     private float chargeDecreaseTimer = 0.0f;
     private bool playerInContact = false;
 
+    //private Texture fireTexture;
+
     public Fire(Vector2 position)
     {
         this.position = position;
         size = Blocks.size;
         this.fireCollidable = new Collidable(this, "fire");
         Game.entities.Add(this);
+
+        string relativePath = "Assets\\FIRE.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        fireTexture = Engine.LoadTexture(absolutePath);
     }
 
     public void FireLoop()
