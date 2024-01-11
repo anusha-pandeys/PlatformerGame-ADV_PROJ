@@ -14,6 +14,7 @@ internal class Animation
     private Vector2 position;
     private Vector2 size;
     private Texture texture;
+    private float i = 0;
     
     public void setTetxture(string relPath, Vector2 position, Vector2 size)
     {
@@ -24,16 +25,16 @@ internal class Animation
     }
     public void drawTexture(int numCols, int row, int offsetX, int offsetY, float time)
     {
+        int currrow = (row * offsetY) - offsetY;
         if (time < 1f)
         {
             Engine.DrawTexture(texture, position, size: size, source: new Bounds2(new Vector2(i, currrow),
                 new Vector2(offsetX, offsetY)));
-        }
-        int currrow = (row * offsetY)-offsetY;
-        for(int i = 0; i < numCols*offsetX; i += offsetX)
+            i += (offsetX);
+        } else
         {
-            Engine.DrawTexture(texture, position, size: size, source: new Bounds2(new Vector2(i, currrow),
-                new Vector2(offsetX, offsetY)));
+            time = 0;
+            i = 0;
         }
     }
 }
