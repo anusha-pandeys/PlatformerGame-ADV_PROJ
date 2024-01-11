@@ -52,7 +52,7 @@ internal class Spear : Entity
                     NPC npc = (NPC)Game.entities[i];
 
                     double distance = Math.Sqrt(Math.Pow((Game.player.position.X - npc.position.X), 2) + Math.Pow((Game.player.position.Y - npc.position.Y), 2));
-                    if (distance < 100)
+                    if (distance < 100)//
                     {
                         npc.healthBar.setHealth(npc.healthBar.getHealth() - 50);
                         break;
