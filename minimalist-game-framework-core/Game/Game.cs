@@ -53,6 +53,8 @@ class Game
     Texture background;
     private int numGreyNPC;
     private Texture loseScreenTexture;
+    private bool debugMode = false;
+
     public Game()
     {
         map = new Map();
@@ -79,7 +81,7 @@ class Game
         CollisionManager.AddObj("spear", spear);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
-        background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
+        background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.jpeg"));
     }
     //
 
@@ -121,7 +123,6 @@ class Game
                 player.playerLoop();
                 localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
                 localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
-                DisplayPlayerCoordinates();
                 spear.spearLoop();
                 foreach (var block in levelBlocks)
                 {
@@ -275,6 +276,20 @@ class Game
 
 
         }
+
+        //the toggle is 'm' for now
+        int numKeys;
+        IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
+        byte[] keys = new byte[numKeys];
+        Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
+
+        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_M] == 1)
+        {
+            debugMode = !debugMode;
+        }
+        DisplayPlayerCoordinates();
+
+
         SDL.SDL_RenderPresent(Engine.Renderer2);
 
         RenderGrid(Engine.Renderer2);
@@ -282,17 +297,20 @@ class Game
 
     private void DisplayPlayerCoordinates()
     {
-        string playerCoordinates = string.Format("{0}, {1}", player.getCoordinates()[0].X, player.getCoordinates()[0].Y);
-        textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
+        if (debugMode)
+        {
+            string playerCoordinates = string.Format("{0}, {1}", player.getCoordinates()[0].X, player.getCoordinates()[0].Y);
+            textRenderer.displayText(playerCoordinates, new Vector2(0, 0), Color.Black, font);
 
-        //string redNPCCoordinates = string.Format("Red NPC: {0}, {1}", redNPC.Position.X, redNPC.Position.Y);
-        //textRenderer.displayText(redNPCCoordinates, new Vector2(0, 20), Color.Black, font);
+            string redNPCCoordinates = string.Format("Red NPC: {0}, {1}", redNPCs[0].Position.X, redNPCs[0].Position.Y);
+            textRenderer.displayText(redNPCCoordinates, new Vector2(0, 20), Color.Black, font);
 
-        //string greyNPCCoordinates = string.Format("Grey NPC: {0}, {1}", greyNPC.Position.X, greyNPC.Position.Y);
-        //textRenderer.displayText(greyNPCCoordinates, new Vector2(0, 40), Color.Black, font);
+            string greyNPCCoordinates = string.Format("Grey NPC: {0}, {1}", greyNPCs[0].Position.X, greyNPCs[0].Position.Y);
+            textRenderer.displayText(greyNPCCoordinates, new Vector2(0, 40), Color.Black, font);
 
-        string floorCoordinates = string.Format("Floor: {0}, {1}", levelBlocks[0].Position.X, levelBlocks[0].Position.Y);
-        textRenderer.displayText(floorCoordinates, new Vector2(0, 20), Color.Black, font);
+            string floorCoordinates = string.Format("Floor: {0}, {1}", levelBlocks[0].Position.X, levelBlocks[0].Position.Y);
+            textRenderer.displayText(floorCoordinates, new Vector2(0, 20), Color.Black, font);
+        }
 
     }
 
