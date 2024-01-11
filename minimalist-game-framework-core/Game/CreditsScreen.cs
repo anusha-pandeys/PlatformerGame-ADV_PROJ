@@ -47,7 +47,8 @@ internal class CreditScreen
             "Tejas Pakalapati",
             "Anusha P",
             "Abhigna",
-            "Vaibhav Attre"
+            "Vaibhav Attre",
+            "Background: klyaksun on Adobe Stock. A liscence was obtained."
         };
 
         // Set color for text
