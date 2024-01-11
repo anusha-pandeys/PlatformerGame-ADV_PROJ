@@ -44,7 +44,7 @@ internal class Boss : Entity
 
         Game.entities.Add(this);
 
-        string relativePath = "Assets\\Boss.png";
+        string relativePath = "Assets\\HADES.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         bossTexture = Engine.LoadTexture(absolutePath);
     }
