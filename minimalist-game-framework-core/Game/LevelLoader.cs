@@ -29,6 +29,8 @@ internal class LevelLoader
         List<Ladder> ladders = new List<Ladder>();
         List<Flower> flowers = new List<Flower>();
         List<LevelSeperator> levelSep = new List<LevelSeperator>();
+        List<Fire> fire = new List<Fire>();
+
         string[] lines = File.ReadAllLines(filePath);
 
         for (int y = 0; y < lines.Length; y++)
@@ -89,6 +91,13 @@ internal class LevelLoader
                     Vector2 position = new Vector2(x * Blocks.size.X, y * Blocks.size.Y);
                     levelSep.Add(new LevelSeperator(position, Blocks.size));
                 }
+                /*
+                else if (lines[y][x] == 'f') // fire
+                {
+                    Vector2 position = new Vector2(x * Blocks.size.X, y * Blocks.size.Y);
+                    fire.Add(new Fire(position));
+                }
+                */
                 else continue;
             }
         }
