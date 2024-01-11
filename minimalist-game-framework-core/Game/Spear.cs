@@ -10,7 +10,7 @@ internal class Spear : Entity
     private IntPtr Renderer => Engine.Renderer2;
     private Vector2 position;
     private Vector2 size;
-    private Collidable spear;
+    private Collidable spear;//
     private int[,] stateTransitions = { { 1, 1, 0 }, { 0, 1, 1 }, { 1, 0, 1 } };
     public static int currentState = 0; // 0 = notDrawn; 1 = drawing; 2 = pullign back
     private float dx = 0;

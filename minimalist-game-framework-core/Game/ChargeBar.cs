@@ -10,12 +10,16 @@ internal class ChargeBar : UIElements
     private Vector2 size;
     public int charge;
     private IntPtr Renderer => Engine.Renderer2;
+    private Texture chargeTexture;
     public ChargeBar(string name, Vector2 position, int charge, Vector2 size)
     {
         setName(name);
         setPosition(position);
         this.charge = charge;
         this.size = size;
+        string relativePath = "Assets\\chargebar.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        chargeTexture = Engine.LoadTexture(absolutePath);
     }
 
     public void setCharge(int charge)
@@ -61,8 +65,16 @@ internal class ChargeBar : UIElements
     protected override void Draw(Vector2 position, Vector2 size)
     {
         SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 51, 100);
+        if (charge <= 50)
+        {
+            Engine.DrawTexture(chargeTexture, position, source: new Bounds2(new Vector2(10, 10), new Vector2(300, 110)), scaleMode: TextureScaleMode.Nearest);
+        }
+        else
+        {
 
-        SDL.SDL_Rect rect = new SDL.SDL_Rect()
+            Engine.DrawTexture(chargeTexture, position, source: new Bounds2(new Vector2(335, 10), new Vector2(300, 110)), scaleMode: TextureScaleMode.Nearest);
+        }
+        /*SDL.SDL_Rect rect = new SDL.SDL_Rect()
         {
             x = (int)position.X,
             y = (int)position.Y,
@@ -84,7 +96,7 @@ internal class ChargeBar : UIElements
             h = (int)(healthSize.Y)
         };
 
-        SDL.SDL_RenderFillRect(Renderer, ref rect2);
+        SDL.SDL_RenderFillRect(Renderer, ref rect2);*/
     }
 
 

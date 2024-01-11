@@ -73,13 +73,8 @@ internal class NPC : Entity
             //1-2 hit death
             if (playerCollision.getCollided())
             {
-                if (Game.player.chargeBar.charge <= 25)
-                {
-                    Game.player.chargeBar.setCharge(0);
-                } else
-                {
-                    Game.player.chargeBar.setCharge(Game.player.chargeBar.charge / 2);
-                }
+                Game.player.chargeBar.setCharge(Game.player.chargeBar.getCharge() - 50);
+                healthBar.setHealth(0);
             }
 
             // Update NPC's position based on collision detection

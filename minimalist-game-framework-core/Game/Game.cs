@@ -214,7 +214,7 @@ class Game
                 {
                     Game.player.setCharge(100);
                 }
-
+                Game.player.chargeBar.Render();
                 if (Game.player.chargeBar.getCharge() <= 0)
                 {
                     FileIO file = new FileIO();
