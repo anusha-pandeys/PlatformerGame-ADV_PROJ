@@ -52,7 +52,7 @@ class Game
     public Boolean playerDeath = false;
     Texture background;
     private int numGreyNPC;
-
+    private Texture loseScreenTexture;
     public Game()
     {
         map = new Map();
@@ -67,10 +67,10 @@ class Game
         spear = new Spear();
 
         loadLevel("Game\\levelPractice.txt");
-        
+
         //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
         //startMenu = new StartMenu();
-
+        loseScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\LoseScreen.png"));
         bgMusic = Engine.LoadMusic("bgm.mp3");
         
         //CollisionManager.AddObj("pit", pit);
@@ -104,7 +104,7 @@ class Game
             {
                 showStartMenu = false;
                 // Start the background music when the game starts and loop it
-                //Engine.PlayMusic(bgMusic, true, 0);
+                Engine.PlayMusic(bgMusic, true, 0);
             }
         }
         else
@@ -220,8 +220,31 @@ class Game
                     FileIO file = new FileIO();
                     file.writeToFile();
                     playerDeath = true;
-                    loseScreen.show();
+                    //loseScreen.show();
 
+                }
+                
+                if (playerDeath)
+                {
+                    float time = 0f;
+                    while (time < 100f)
+                    {
+                        time += Engine.TimeDelta;
+                        Engine.DrawTexture(loseScreenTexture, new Vector2(0, 0));
+                    }
+                    entities.Clear();
+                    CollisionManager.blocks.Clear();
+                    CollisionManager.collidables.Clear();
+                    loadLevel("Game\\reload.txt");
+                    loadLevel("Game\\levelPractice.txt");
+                    playerDeath = false;
+                    showStartMenu = true;
+                    Game.player.setCharge(50);
+                    CollisionManager.AddObj("player", player);
+                    CollisionManager.AddObj("spear", spear);
+                    entities.Add(player);
+                    entities.Add(spear);
+                    
                 }
                 // Check if back button is clicked in RulesMenu or CreditScreen
                 if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
