@@ -85,7 +85,7 @@ internal class Fire : Entity
         int newCharge = currentCharge - 1; // Decrease charge by 1 (adjust as needed)
 
         // Gradually decrease charge over 3 seconds
-        double duration = 3.0; // in seconds
+        double duration = 0.5; // in seconds
         double progress = timeSinceDamage / duration;
         newCharge = Math.Max(newCharge, (int)(currentCharge - progress));
 
