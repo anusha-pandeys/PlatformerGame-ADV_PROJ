@@ -68,20 +68,6 @@ internal class NPC : Entity
                 FollowPlayer();
             }
 
-            // Check for collisions with the spear only if it's not the red ghost
-            if (tag.Contains("greynpc"))
-            {
-                CollisionObject obj = checkCollision("spear");
-                if (obj.getCollided())
-                {
-                    System.Console.WriteLine("hit");
-                    if (healthBar.getHealth() > 0)
-                    {
-                        healthBar.setHealth(healthBar.getHealth() - 25);
-                    }
-                }
-            }
-
             // Check for collisions with the player
             CollisionObject playerCollision = checkCollision("player");
             //1-2 hit death

@@ -104,8 +104,11 @@ internal class Spear : Entity
                     NPC npc = (NPC)Game.entities[i];
                     if (CollisionManager.checkCollisions("spear", npc.tag, new Vector2(0, 0)).getCollided())
                     {
-                        npc.healthBar.setHealth(npc.healthBar.getHealth() - 30);
-                        ableToDamage = false;
+                        if (npc.tag.Contains("greynpc"))
+                        {
+                            npc.healthBar.setHealth(npc.healthBar.getHealth() - 30);
+                            ableToDamage = false;
+                        }
                     }
                 }
             }
