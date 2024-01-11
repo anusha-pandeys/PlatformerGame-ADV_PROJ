@@ -13,28 +13,27 @@ internal class LoseScreen
     private IntPtr Renderer => Engine.Renderer2;
     private TextRenderer textRenderer;
     private Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
-
-
+    
     public LoseScreen()
     {
         textRenderer = new TextRenderer();
+        
     }
 
     public void show()
     {
+        
+        // Draw background
+        SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255); // Set background to white
+        SDL.SDL_RenderClear(Renderer);
         Stopwatch s = new Stopwatch();
         s.Start();
-        while (s.Elapsed < TimeSpan.FromSeconds(5))
+        while (s.Elapsed < TimeSpan.FromSeconds(3))
         {
-            // Draw background
-            SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255); // Set background to white
-            SDL.SDL_RenderClear(Renderer);
-
-            Vector2 textPosition = new Vector2(50, 240);
-            textRenderer.displayText("You lose :(", textPosition, Color.Red, font);
-
-            SDL.SDL_RenderPresent(Renderer);
+            //Engine.DrawTexture(loseScreen, new Vector2(0, 0), size: new Vector2(640, 480));
         }
+        SDL.SDL_RenderPresent(Renderer);
+        
     }
 
 }

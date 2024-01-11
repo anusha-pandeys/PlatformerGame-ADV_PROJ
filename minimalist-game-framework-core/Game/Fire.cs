@@ -61,7 +61,7 @@ internal class Fire : Entity
         CollisionObject collisionDetected = CollisionManager.checkCollisions("player", "fire", new Vector2(0, 0));
         if (collisionDetected.getCollided())
         {
-            Console.WriteLine("Player collided with fire");
+            //Console.WriteLine("Player collided with fire");
             // Apply damage to the player only if enough time has passed since the last damage
             if (timeSinceDamage >= damageCooldown)
             {
@@ -80,7 +80,7 @@ internal class Fire : Entity
 
     private void HandleChargeDecrease()
     {
-        Console.WriteLine("Handling charge decrease");
+        //Console.WriteLine("Handling charge decrease");
         int currentCharge = Game.player.chargeBar.getCharge();
         int newCharge = currentCharge - 1; // Decrease charge by 1 (adjust as needed)
 

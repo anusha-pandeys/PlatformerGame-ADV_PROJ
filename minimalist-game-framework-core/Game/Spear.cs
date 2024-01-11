@@ -28,7 +28,7 @@ internal class Spear : Entity
 
         this.position = Game.player.Position + new Vector2(0, Game.player.size.Y/2);
         this.size = new Vector2(80, 10);
-
+        ableToDamage = true;
         this.spear = new Collidable(this, "spear");
         Game.entities.Add(this);
         spearMusic = Engine.LoadSound("Spear 1.mp3");
@@ -54,7 +54,7 @@ internal class Spear : Entity
                     double distance = Math.Sqrt(Math.Pow((Game.player.position.X - npc.position.X), 2) + Math.Pow((Game.player.position.Y - npc.position.Y), 2));
                     if (distance < 100)//
                     {
-                        npc.healthBar.setHealth(npc.healthBar.getHealth() - 50);
+                        npc.healthBar.setHealth(npc.healthBar.getHealth() - 75);
                         break;
                     }
                 }
