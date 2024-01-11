@@ -21,15 +21,23 @@ internal class StartMenu
     private bool showCreditScreen;
     private bool showStartMenu;
     private bool showScoreboardScreen;
-    private Button startButton = new Button("Start Game", new Vector2(200, 200), new Vector2(50, 50));
-    private Button scoreboardButton = new Button("Scoreboard", new Vector2(200, 250), new Vector2(50, 50));
-    private Button rulesButton = new Button("Rules", new Vector2(200, 300), new Vector2(50, 50));
-    private Button creditsButton = new Button("Credits", new Vector2(200, 350), new Vector2(50, 50));
+    private Button startButton = new Button("Start", new Vector2(270, 180), new Vector2(64, 64));
+    private Button scoreboardButton = new Button("Score", new Vector2(270, 240), new Vector2(64, 64));
+    private Button rulesButton = new Button("Rules", new Vector2(270, 300), new Vector2(64, 64));
+    private Button creditsButton = new Button("Credit", new Vector2(270, 360), new Vector2(64, 64));
+    private Texture bg;
+    private Texture buttonTexture;
     public StartMenu()
     {
         // Create buttons
-        
-        
+
+        string relativePath = "Assets\\startscreen.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        bg = Engine.LoadTexture(absolutePath);
+
+        relativePath = "Assets\\button.png";
+        absolutePath = System.IO.Path.GetFullPath(relativePath);
+        buttonTexture = Engine.LoadTexture(absolutePath);
 
         // Add buttons to the list
         buttons.Add(startButton);
@@ -103,15 +111,16 @@ internal class StartMenu
 
     public void Draw(Font font)
     {
+        
         // Draw background
         SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255); // Set background color to white
         SDL.SDL_RenderClear(Renderer);
-
+        Engine.DrawTexture(bg, new Vector2(0, 0));
         // Draw buttons
         foreach (Button button in buttons)
         {
             // Draw button rectangle
-            SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 255, 255); // Set button color to blue
+            /*SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 255, 255); // Set button color to blue
             SDL.SDL_Rect rect = new SDL.SDL_Rect()
             {
                 x = (int)button.getPosition().X,
@@ -120,10 +129,11 @@ internal class StartMenu
                 h = (int)button.getSize().Y
             };
 
-            SDL.SDL_RenderFillRect(Renderer, ref rect);
-
+            SDL.SDL_RenderFillRect(Renderer, ref rect);*/
+            Engine.DrawTexture(buttonTexture, new Vector2((int)button.getPosition().X, (int)button.getPosition().Y),
+                size: new Vector2((int)button.getSize().X, (int)button.getSize().Y), scaleMode: TextureScaleMode.Nearest);
             // Draw button text
-            Vector2 textPosition = new Vector2(button.getPosition().X + 10, button.getPosition().Y + 10); // Adjust text position for padding
+            Vector2 textPosition = new Vector2(button.getPosition().X + 10, button.getPosition().Y + 25); // Adjust text position for padding
             textRenderer.displayText(button.Text, textPosition, Color.Black, font);
         }
 
@@ -148,16 +158,16 @@ internal class StartMenu
     {
         //Console.WriteLine($"Button Clicked: {button.Text}");
 
-        if (button.Text == "Start Game")
+        if (button.Text == "Start")
         {
             // Start the game (placeholder logic)
             showRulesScreen = false;
             showCreditScreen = false;
         }
-        else if (button.Text == "Scoreboard")
+        else if (button.Text == "Score")
         {
             // Open scoreboard view (placeholder logic)
-            Console.WriteLine("Opening Scoreboard");
+            //Console.WriteLine("Opening Scoreboard");
             showRulesScreen = false;
             showCreditScreen = false;
             showScoreboardScreen = true;
@@ -169,7 +179,7 @@ internal class StartMenu
             showCreditScreen = false;
             showScoreboardScreen = false;
         }
-        else if (button.Text == "Credits")
+        else if (button.Text == "Credit")
         {
             // Show credit screen
             showCreditScreen = true;
