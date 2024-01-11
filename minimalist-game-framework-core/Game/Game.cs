@@ -71,7 +71,7 @@ class Game
         //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
         //startMenu = new StartMenu();
 
-        bgMusic = Engine.LoadMusic("bg music.mp3");
+        bgMusic = Engine.LoadMusic("bgm.mp3");
         
         //CollisionManager.AddObj("pit", pit);
 
@@ -434,7 +434,7 @@ class Game
     }
     public void RenderGrid(IntPtr renderer)
     {
-        
+        /*
         for (int row = 0; row < 32; row++)
         {
             for (int col = 0; col < 32; col++)
@@ -453,7 +453,7 @@ class Game
                 
                 SDL.SDL_RenderDrawRect(renderer, ref tileRect);
             }
-        }
+        }*/
     }
 
     public Player getPlayer()
