@@ -13,3 +13,4 @@
 13)           4248 Enemies Killed      |     
 14)           0 Enemies Killed      |     
 15)           0 Enemies Killed      |     
+16)           300 Enemies Killed      |     

@@ -110,4 +110,4 @@ internal class Fire : Entity
         Engine.DrawTexture(fireTexture, position, null, size);
     }
 }
-}
+
