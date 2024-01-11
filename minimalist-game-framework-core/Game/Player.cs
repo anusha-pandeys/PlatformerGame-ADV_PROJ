@@ -124,20 +124,12 @@ internal class Player : Entity
 
     public void playerLoop()
     {
-        long startTime = DateTime.Now.Ticks;
+        double secondsElapsed = Engine.TimeDelta;
         HandleInput();
         HandleJump();
-        double secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
+        //double secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
         HandleCollisionY(secondsElapsed);
         HandleCollisionX(secondsElapsed);
-        CollisionObject obj = CollisionManager.checkCollisions("player", "slide", new Vector2(0, 30));
-        if (obj.getCollided())
-        {
-            Console.WriteLine("hi");
-            position.Y += obj.getDistanceY();
-            playerVelocity.Y = 0;
-            playerVelocity.X = 2f;
-        }
         position += playerVelocity;
         // Collision detection for the floor
         
@@ -159,7 +151,7 @@ internal class Player : Entity
             position.Y += collisionDetected.getDistanceY();
             if (collisionDetected.getBlock().slide)
             {
-                playerVelocity.X = 10f;
+                playerVelocity.X += 10f;
             }
             else
             {

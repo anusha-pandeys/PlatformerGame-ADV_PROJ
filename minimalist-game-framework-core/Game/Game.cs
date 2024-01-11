@@ -354,8 +354,9 @@ class Game
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
                     Blocks slideBlock = new Blocks(position, GameColor.White, new Vector2(0, 0));
                     slideBlock.slide = true;
+                    slideBlock.setSlideTexture();
                     levelBlocks.Add(slideBlock);
-                    slides.Add(new Slides(position, GameColor.White, new Vector2(0, 0)));
+                    //slides.Add(new Slides(position, GameColor.White, new Vector2(0, 0)));
                 }
                 else if (lines[y][x] == 'Q') //player
                 {
