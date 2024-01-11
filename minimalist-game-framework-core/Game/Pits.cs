@@ -24,7 +24,7 @@ internal class Pits : Entity
         this.originalColor = new Color(0, 255, 0, 255); // Original color (green)
         this.pitColor = originalColor;
         Game.entities.Add(this);
-        string relativePath = "Assets\\blocks.png";
+        string relativePath = "Assets\\pits.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         playerTexture = Engine.LoadTexture(absolutePath);
     }
