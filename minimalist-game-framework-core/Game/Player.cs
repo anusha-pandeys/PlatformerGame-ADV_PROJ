@@ -110,18 +110,6 @@ internal class Player : Entity
         return result;
     }
 
-    /*public void translateUpLadder()
-    {
-        while(CollisionManager.checkCollisions("player", "ladder"))
-        {
-            playerVelocity.X = 0;
-            playerVelocity.Y = 0.1f;
-            position.Y -= playerVelocity.Y;
-           
-            Render(Game.localCamera);
-        }
-    }*/
-
     public void playerLoop()
     {
         double secondsElapsed = Engine.TimeDelta;
