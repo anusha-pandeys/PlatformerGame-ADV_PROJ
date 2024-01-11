@@ -81,7 +81,7 @@ class Game
         CollisionManager.AddObj("spear", spear);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
-        background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.png"));
+        background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.jpeg"));
     }
     //
 
