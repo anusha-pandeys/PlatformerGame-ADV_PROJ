@@ -25,7 +25,7 @@ internal class LevelSeperator : Entity
         this.oneWay = new Collidable(this, "oneWay");
         Game.entities.Add(this);
 
-        string relativePath = "Assets\\blocks.png";
+        string relativePath = "Assets\\seperator.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         levelSepTexture = Engine.LoadTexture(absolutePath);
     }
