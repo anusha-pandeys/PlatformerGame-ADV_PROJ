@@ -52,7 +52,7 @@ internal class Player : Entity
         this.font = font;
         this.playerColor = originalColor;
         this.player = new Collidable(this, "player");
-        chargeBar = new ChargeBar("playerChargeBar", new Vector2(220,50), 10, new Vector2(100, 50));
+        chargeBar = new ChargeBar("playerChargeBar", new Vector2(30,30), 10, new Vector2(100, 50));
         Game.entities.Add(this);
         blockBelow = false;
         chargeBar.setCharge(50);
@@ -126,8 +126,6 @@ internal class Player : Entity
             position.Y = floorY - size.Y;
             playerVelocity.Y = 0; // Stop downward movement
         }
-        
-        chargeBar.Render();
     }
 
     private void HandleCollisionY(double secondsElapsed)
