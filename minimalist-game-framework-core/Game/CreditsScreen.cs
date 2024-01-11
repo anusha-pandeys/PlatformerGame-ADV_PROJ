@@ -13,18 +13,33 @@ internal class CreditScreen
     private TextRenderer textRenderer = new TextRenderer();
     private Button backButton;
 
+    private Texture bg; // Add a background texture
+
     public CreditScreen()
     {
         backButton = new Button("Back", new Vector2(10, 430), new Vector2(80, 40));
+
+        // Load the background texture for the credit screen
+        string relativePath = "Assets\\startscreen.png";
+        string absolutePath = System.IO.Path.GetFullPath(relativePath);
+        bg = Engine.LoadTexture(absolutePath);
     }
 
     public void Draw(Font font)
     {
         // Draw background
-        SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255); // Set background color to white
-        SDL.SDL_RenderClear(Renderer);
+        Engine.DrawTexture(bg, new Vector2(0, 0));
 
-        // Draw other elements (if any) for the credit screen
+        // Draw white rectangle in the middle of the screen
+        SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255); // Set color to white
+        SDL.SDL_Rect rect = new SDL.SDL_Rect()
+        {
+            x = 100, // Center horizontally
+            y = 200, // Center vertically
+            w = 417,
+            h = 200
+        };
+        SDL.SDL_RenderFillRect(Renderer, ref rect);
 
         // Display credits information
         string[] creditsLines = {
@@ -39,8 +54,8 @@ internal class CreditScreen
         SDL.SDL_Color textColor = new SDL.SDL_Color() { r = 0, g = 0, b = 0, a = 255 }; // Black color
 
         // Display credits text on separate lines
-        Vector2 basePosition = new Vector2(50, 50); // Adjust the starting position
-        int lineHeight = 30; // Adjust the line height as needed
+        Vector2 basePosition = new Vector2(100, 200); 
+        int lineHeight = 15; // Adjust the line height as needed
 
         for (int i = 0; i < creditsLines.Length; i++)
         {

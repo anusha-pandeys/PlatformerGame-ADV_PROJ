@@ -10,8 +10,10 @@ internal class Flower : Entity
     private Vector2 position;
     private Vector2 size;
     private bool isCollected = false;
-    private Texture playerTexture;
-
+    private Texture flowerTexture;
+    private Texture flowerTexture2;
+    private Texture finalTexture;
+    private float origTime = 0;
     public Flower(Vector2 position)
     {
         this.position = position;
@@ -20,9 +22,15 @@ internal class Flower : Entity
         Game.entities.Add(this);
         CollisionManager.AddObj("flower", this);
 
-        string relativePath = "Assets\\blocks.png";
+        string relativePath = "Assets\\flower.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
-        playerTexture = Engine.LoadTexture(absolutePath);
+        flowerTexture = Engine.LoadTexture(absolutePath);
+
+        relativePath = "Assets\\flowerMove.png";
+        absolutePath = System.IO.Path.GetFullPath(relativePath);
+        flowerTexture2 = Engine.LoadTexture(absolutePath);
+
+        finalTexture = flowerTexture;
     }
 
     public bool IsCollected => isCollected;
@@ -31,6 +39,20 @@ internal class Flower : Entity
     {
         if (!isCollected)
         {
+            origTime += Engine.TimeDelta;
+            if (origTime < .5f)
+            {
+                finalTexture = flowerTexture;
+            }
+            else if (origTime >= .5f && origTime <= 1f)
+            {
+                finalTexture = flowerTexture2;
+            }
+            else
+            {
+                finalTexture = flowerTexture;
+                origTime = 0;
+            }
             CollisionObject obj = CollisionManager.checkCollisions("flower", "player", new Vector2(0, 0));
             if (obj.getCollided())
             {
@@ -62,7 +84,7 @@ internal class Flower : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        Engine.DrawTexture(playerTexture, position, null, size);
+        Engine.DrawTexture(finalTexture, position, null, size);
     }
 
     /*
