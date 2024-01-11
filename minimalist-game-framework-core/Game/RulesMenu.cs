@@ -28,18 +28,27 @@ internal class RulesMenu
 
         // Draw instructions text
         string[] instructionLines = {
-            "You are Persephone,",
-            "you want to escape hell,",
-            "jump up with W key,",
-            "move left with A key,",
-            "move right with D key"
+            "Persephone has been tricked by Hades! She is stuck in hell, and decides to",
+            "escape. Help her navigate the multiple levels of hell and confront Hades!",
+            "",
+            "Avoid the traps Hades laid out: pits, fires, slippery slides, neutral grey",
+            "ghosts (can be killed), angry red ghosts (can't be killed - avoid them!).",
+            "",
+            "Persephone's mother, Demeter, has sent down flowers to aid her journey. Collect",
+            "them to build up your health bar. A full health bar lets you survive more hits.",
+            "",
+            "Use W to move up, A to move left and D to move right. Click to use your spear. It",
+            "attacks enemies, and can be rotated by right clicking. Use A/D to stick to the wall.",
+            "Jump up through the seperator at the level's end to move to the next level of hell.",
+            "",
+            "It's up to you to prevent an eternity in hell for Persephone..."
         };
 
         // Set color for text
         SDL.SDL_Color textColor = new SDL.SDL_Color() { r = 0, g = 0, b = 0, a = 255 }; // Black color
 
         // Display instructions text on separate lines
-        Vector2 basePosition = new Vector2(50, 150); // Adjust the starting position
+        Vector2 basePosition = new Vector2(25, 25); // Adjust the starting position
         int lineHeight = 30; // Adjust the line height as needed
 
         for (int i = 0; i < instructionLines.Length; i++)
