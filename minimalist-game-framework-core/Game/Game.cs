@@ -75,25 +75,7 @@ class Game
         
         //CollisionManager.AddObj("pit", pit);
 
-        CollisionManager.AddObj("player", player);
-        CollisionManager.AddObj("boss", boss);
-        int i = 0;
-        foreach (var r in redNPCs)
-        {
-            CollisionManager.AddObj("npc1", r);
-        }
-        i = 0;
-        foreach (var g in greyNPCs)
-        {
-            i++;
-            string tags = "greynpc" + i.ToString();
-            CollisionManager.AddObj(tags, g);
-        }
-        foreach (var f in fires)
-        {
-            CollisionManager.AddObj("fire", f);
-        }
-
+        CollisionManager.AddObj("player", player); 
         CollisionManager.AddObj("spear", spear);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
@@ -402,6 +384,22 @@ class Game
                 else continue;
             }
         }
+        foreach (var r in redNPCs)
+        {
+            CollisionManager.AddObj("npc1", r);
+        }
+        int i = 0;
+        foreach (var g in greyNPCs)
+        {
+            i++;
+            string tags = "greynpc" + i.ToString();
+            CollisionManager.AddObj(tags, g);
+        }
+        foreach (var f in fires)
+        {
+            CollisionManager.AddObj("fire", f);
+        }
+        CollisionManager.AddObj("boss", boss);
         loadEntities();
         //DIFF SIXES OF SLIDE LADDER??
 

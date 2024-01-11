@@ -84,8 +84,8 @@ internal class Fire : Entity
         int currentCharge = Game.player.chargeBar.getCharge();
         int newCharge = currentCharge - 1; // Decrease charge by 1 (adjust as needed)
 
-        // Gradually decrease charge over 5 seconds
-        double duration = 5.0; // in seconds
+        // Gradually decrease charge over 3 seconds
+        double duration = 3.0; // in seconds
         double progress = timeSinceDamage / duration;
         newCharge = Math.Max(newCharge, (int)(currentCharge - progress));
 

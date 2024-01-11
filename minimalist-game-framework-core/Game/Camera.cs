@@ -16,7 +16,7 @@ internal class Camera
     public Camera()
     {
         screen = new Vector2(width / 2, height / 2);
-        globalCy = Game.player.Position.Y + 50;
+        globalCy = Game.player.Position.Y + 60;
         layer1Pos = new Vector2(0, 0);
         parallaxBricks = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\parallaxBricks.png"));
     }
