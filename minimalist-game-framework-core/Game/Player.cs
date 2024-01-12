@@ -35,18 +35,19 @@ internal class Player : Entity
     private Texture originalTexture2;
     private Texture originalTexture3;
     private Texture jumping;
+    private Bounds2 animBounds;
     private Boolean run = false;
     private Boolean direction = false;
     private float timeOrig = 0.0f;
     private float animationTime = 0.2f;
     private Boolean onGround = true;
-    
+    private Animation animation = new Animation();
     private Boolean jumped = false;
     public float floorY;
     public int level = 1;
     public Player(TextRenderer text, Font font)
     {
-
+        animation.setTetxture("Assets\\persephoneAnimation.png", position, size);
         size = new Vector2(30, 30);
         this.text = text;
         this.font = font;
@@ -83,7 +84,9 @@ internal class Player : Entity
         absolutePath = System.IO.Path.GetFullPath(relativePath);
         jumping = Engine.LoadTexture(absolutePath);
 
-        playerTexture = originalTexture;
+        relativePath = "Assets\\persephoneAnimation.png";
+        absolutePath = System.IO.Path.GetFullPath(relativePath);
+        playerTexture = Engine.LoadTexture(absolutePath);
     }
 
     public void setCharge(int charge)
@@ -240,7 +243,8 @@ internal class Player : Entity
         else
         {
             timeOrig += Engine.TimeDelta;
-            if (timeOrig < animationTime)
+            animBounds = animation.draw(9, 1, 32, 32);
+            /*if (timeOrig < animationTime)
             {
                 playerTexture = originalTexture;
             } else if (timeOrig >= animationTime && timeOrig < animationTime * 2)
@@ -253,7 +257,8 @@ internal class Player : Entity
             {
                 playerTexture = originalTexture;
                 timeOrig = 0.0f; 
-            }
+            }*/
+
         }
     }
 
@@ -309,11 +314,13 @@ internal class Player : Entity
     {
         if (!direction)
         {
-            Engine.DrawTexture(playerTexture, position, null, size, 0, null, TextureMirror.Horizontal, scaleMode: TextureScaleMode.Nearest);
+            Engine.DrawTexture(playerTexture, position, null, size, 0, null, TextureMirror.Horizontal, scaleMode: TextureScaleMode.Nearest, 
+                source: animBounds);
         }
         else
         {
-            Engine.DrawTexture(playerTexture, position, null, size, scaleMode: TextureScaleMode.Nearest);
+            Engine.DrawTexture(playerTexture, position, null, size, scaleMode: TextureScaleMode.Nearest,
+                source: animBounds);
         }
 
     }
