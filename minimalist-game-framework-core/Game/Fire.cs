@@ -35,7 +35,7 @@ internal class Fire : Entity
 
     public void FireLoop()
     {
-        Console.WriteLine("FireLoop() called");
+      //  Console.WriteLine("FireLoop() called");
         HandleCollision();
 
         // Update the cooldown timer
