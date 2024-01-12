@@ -244,21 +244,7 @@ internal class Player : Entity
         {
             timeOrig += Engine.TimeDelta;
             animBounds = animation.draw(9, 1, 32, 32);
-            /*if (timeOrig < animationTime)
-            {
-                playerTexture = originalTexture;
-            } else if (timeOrig >= animationTime && timeOrig < animationTime * 2)
-            {
-                playerTexture = originalTexture2;
-            } else if (timeOrig >= animationTime*2 && (timeOrig < animationTime * 3))
-            {
-                playerTexture = originalTexture3;
-            } else if (timeOrig >= animationTime*3)
-            {
-                playerTexture = originalTexture;
-                timeOrig = 0.0f; 
-            }*/
-
+           //     Console.Write(animBounds);
         }
     }
 
