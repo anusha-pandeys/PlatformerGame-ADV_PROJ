@@ -29,12 +29,6 @@ internal class Player : Entity
     private Collidable player;
     public ChargeBar chargeBar;
     private Texture playerTexture;
-    private Texture walkingTexture1;
-    private Texture walkingTexture2;
-    private Texture originalTexture;
-    private Texture originalTexture2;
-    private Texture originalTexture3;
-    private Texture jumping;
     private Bounds2 animBounds;
     private Boolean run = false;
     private Boolean direction = false;
@@ -45,6 +39,7 @@ internal class Player : Entity
     private Boolean jumped = false;
     public float floorY;
     public int level = 1;
+    private int jumps;
     public Player(TextRenderer text, Font font)
     {
         animation.setTetxture("Assets\\persephoneAnimation.png", position, size);
@@ -58,7 +53,7 @@ internal class Player : Entity
         blockBelow = false;
         chargeBar.setCharge(50);
         size = new Vector2(64f, 64f);
-       
+        jumps = 1;
         string relativePath = "Assets\\persephoneAnimation.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         playerTexture = Engine.LoadTexture(absolutePath);
@@ -91,10 +86,14 @@ internal class Player : Entity
     public void playerLoop()
     {
         double secondsElapsed = Engine.TimeDelta;
-        HandleInput();
-        HandleJump();
+         
         //double secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
         HandleCollisionY(secondsElapsed);
+        HandleInput();
+        if (jumps <= 1)
+        {
+            HandleJump();
+        }
         HandleCollisionX(secondsElapsed);
         position += playerVelocity;
         // Collision detection for the floor
@@ -112,6 +111,7 @@ internal class Player : Entity
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, playerVelocity.Y+2f), secondsElapsed);
         if (collisionDetected.getCollided())
         {
+            jumps = 0;
             position.Y += collisionDetected.getDistanceY();
             if (collisionDetected.getBlock().slide)
             {
@@ -223,6 +223,7 @@ internal class Player : Entity
         
         if (playerVelocity.Y == 0)
         {
+            jumps++;
             playerVelocity.Y = JUMP_STRENGTH;
         }
         
