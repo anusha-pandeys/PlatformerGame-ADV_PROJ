@@ -42,7 +42,7 @@ class Game
     private static int currLevel = 1;
     //private Enemy enemy;
     private Boss boss;
-    private Spear spear;
+    public static Spear spear;
     //private Ladder ladder;
     private Music bgMusic;
     private List<Flower> flowers;

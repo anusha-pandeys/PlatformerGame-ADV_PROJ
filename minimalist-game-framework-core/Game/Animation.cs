@@ -18,7 +18,7 @@ internal class Animation
     private float time = 0;
     private int globalrow = 0;
     private int globalcol = 0;
-    private float currRow = 0;
+    //private float currRow = 0;
     public void setTetxture(string relPath, Vector2 position, Vector2 size)
     {
         string absolutePat = System.IO.Path.GetFullPath(relPath);
@@ -28,19 +28,10 @@ internal class Animation
     }
     public Bounds2 draw(int numCols, int row, int offsetX, int offsetY)
     {
-        if(row != globalrow)
-        {
-            currRow = (row * offsetY) - offsetY;
-            globalrow = row;
-        }
+        float currRow = (row * offsetY) - offsetY; 
         time += Engine.TimeDelta;
-        i += (offsetX);
-        Console.WriteLine(time);
-        if (i >= (numCols * offsetX))
-        {
-            i = 0;
-        }
-        if (time < 5)
+        
+        if (time < 0.1)
         {
             return new Bounds2(new Vector2(i, currRow),
                 new Vector2(offsetX, offsetY));
@@ -48,7 +39,11 @@ internal class Animation
         } else
         {
             time = 0;
-            
+            i += (offsetX);
+            if (i >= (numCols * offsetX))
+            {
+                i = 0;
+            }
             return new Bounds2(new Vector2(i, currRow),
                 new Vector2(offsetX, offsetY));
         }

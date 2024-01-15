@@ -19,7 +19,7 @@ internal class Spear : Entity
     private float timeSinceLastShot = 0.0f;
     private bool ableToDamage = true;
     private Texture spearTexture;
-    private int degree = 0;
+    public int degree = 0;
     public Spear()
     {
         string relativePath = "Assets\\spear.png";
@@ -41,6 +41,10 @@ internal class Spear : Entity
         {
             degree -= 10;   
         } 
+        if(timeSinceLastShot > shootCooldown)
+        {
+            degree = 0;
+        }
         if (IsClickedRight() && (timeSinceLastShot >= shootCooldown))
         {
             degree = 0;

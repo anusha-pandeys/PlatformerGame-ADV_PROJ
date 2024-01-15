@@ -58,34 +58,9 @@ internal class Player : Entity
         blockBelow = false;
         chargeBar.setCharge(50);
         size = new Vector2(64f, 64f);
-        ///var path =
-        
-        string relativePath = "Assets\\persephoneStanding.png";
+       
+        string relativePath = "Assets\\persephoneAnimation.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
-        originalTexture = Engine.LoadTexture(absolutePath);
-
-        relativePath = "Assets\\persephoneStanding2.png";
-        absolutePath = System.IO.Path.GetFullPath(relativePath);
-        originalTexture2 = Engine.LoadTexture(absolutePath);
-
-        relativePath = "Assets\\persephoneStanding3.png";
-        absolutePath = System.IO.Path.GetFullPath(relativePath);
-        originalTexture3 = Engine.LoadTexture(absolutePath);
-
-        relativePath = "Assets\\persephoneWalking1.png";
-        absolutePath = System.IO.Path.GetFullPath(relativePath);
-        walkingTexture1 = Engine.LoadTexture(absolutePath);
-
-        relativePath = "Assets\\persephoneWalking2.png";
-        absolutePath = System.IO.Path.GetFullPath(relativePath);
-        walkingTexture2 = Engine.LoadTexture(absolutePath);
-
-        relativePath = "Assets\\jumping.png";
-        absolutePath = System.IO.Path.GetFullPath(relativePath);
-        jumping = Engine.LoadTexture(absolutePath);
-
-        relativePath = "Assets\\persephoneAnimation.png";
-        absolutePath = System.IO.Path.GetFullPath(relativePath);
         playerTexture = Engine.LoadTexture(absolutePath);
     }
 
@@ -184,19 +159,8 @@ internal class Player : Entity
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
         {
             timeOrig += Engine.TimeDelta;
-            if (timeOrig < animationTime)
-            {
-                playerTexture = walkingTexture1;
-                direction = false;
-            }
-            else if ((timeOrig >= animationTime) && (timeOrig <= animationTime*2))
-            {
-                playerTexture = walkingTexture2;
-                direction = false;
-            } else
-            {
-                timeOrig = 0.0f;
-            }
+            animBounds = animation.draw(7, 2, 32, 32);
+            direction = false;
             text.displayText("left", new Vector2(10, 30), Color.Black, font);     
             playerVelocity.X = -2.0f;
             if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
@@ -208,26 +172,15 @@ internal class Player : Entity
                 }
                 
             }
+            //Game.spear.degree = 0;
         }
         //timeOrig = 0;
         // Check RIGHT arrow key.
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
             timeOrig += Engine.TimeDelta;
-            if (timeOrig < animationTime)
-            {
-                playerTexture = walkingTexture1;
-                direction = true;
-            }
-            else if ((timeOrig >= animationTime) && (timeOrig <= animationTime * 2))
-            {
-                playerTexture = walkingTexture2;
-                direction = true;
-            }
-            else
-            {
-                timeOrig = 0.0f;
-            }
+            animBounds = animation.draw(7, 2, 32, 32);
+            direction = true;
             text.displayText("right", new Vector2(10, 30), Color.Black, font);
             playerVelocity.X = 2.0f;
 
@@ -239,6 +192,7 @@ internal class Player : Entity
                     chargeBar.setCharge(chargeBar.getCharge() - 1);
                 }
             }
+            //Game.spear.degree = 0;
         } 
         else
         {
@@ -261,15 +215,6 @@ internal class Player : Entity
         {
             Jump();
             timeOrig += Engine.TimeDelta;
-            if (timeOrig < 1)
-            {
-                playerTexture = jumping;
-            }
-            else
-            {
-                timeOrig = 0;
-                playerTexture = originalTexture;
-            }
             jumped = true;
         }
     }
