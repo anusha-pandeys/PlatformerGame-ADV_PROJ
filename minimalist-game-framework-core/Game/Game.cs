@@ -439,7 +439,9 @@ class Game
         foreach (var f in fires)
         {
             CollisionManager.AddObj("fire", f);
+            entities.Add(f);
         }
+
         CollisionManager.AddObj("boss", boss);
         loadEntities();
         //DIFF SIXES OF SLIDE LADDER??
@@ -459,8 +461,8 @@ class Game
             //pit.pitsLoop();
             CollisionManager.AddObj("pit", pit);
         }
-        
-        
+
+
         foreach (var flower in flowers)
         {
             CollisionManager.AddObj("flower", flower);
