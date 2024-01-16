@@ -99,6 +99,8 @@ internal class Player : Entity
         }
         HandleCollisionX(secondsElapsed);
         position += playerVelocity;
+        position.X = Math.Max(0, position.X);
+        position.X = Math.Min(position.X, 640 - size.X);
         // Collision detection for the floor
         
         if (position.Y > floorY - size.Y)
