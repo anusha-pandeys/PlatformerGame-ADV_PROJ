@@ -54,9 +54,9 @@ internal class Pits : Entity
         CollisionObject collisionDetected = CollisionManager.checkCollisions("player", "pit", new Vector2(0, 0));
         if (collisionDetected.getCollided())
         {
-            deathCounter += Engine.TimeDelta;
+            deathCounter += Engine.TimeDelta;//
             Game.player.playerVelocity.Y = 1;
-            if(deathCounter > 2)
+            if(deathCounter > 4)
             {
                 return true;
             }
