@@ -1,53 +1,53 @@
-#           #    
-#         b #    
+               
+          b     
 ###   #######    
-#  #        #    
-#SSSSSSSSSSS#
-#      ######
-# g         #  
-####        #
-#     #     #
-#  s        #
-#    p      #
-# gg  *     #
-#######     #
-#        *  #
-#    ssssp  #
-#         g #
-#           #
-#           #
-#        m  #
-# g  *      #
-#   ps      #
-#           #
-#           #
-#        m  #
-#           #
-#   *  g g g#
-#SSSSSSSSSSS#
-#           #
-# g         #  
-#       #   #
-#  *  p   r #
-#  #        #
-#        #  #
-# g         #
-####ssp     #
-#           #
-#       f   #
-#  g    * g #
+   #            
+SSSSSSSSSSSSS
+       ######
+  g           
+####        
+      #     
+   s        
+     p      
+  gg  *     
+#######     
+         *  
+     ssssp  
+          g 
+            
+            
+         m  
+  g  *      
+    ps      
+            
+            
+         m  
+            
+    *  g g g
+SSSSSSSSSSSSS
+           
+  g           
+        #   
+   *  p   r 
+   #        
+         #  
+  g         
+####ssp     
+            
+#       f   
+#  g    * g 
 #      ##p###
-#   #       #
-#SSSSSSSSSSS#
-#        ####
-#  m        #
-#  *        #
-# pss       #
-#           #
-#         g #
-#    # m #  #
-#           #
-#Q  *    g ##
+#   #       
+SSSSSSSSSSSSS
+         ####
+   m        
+   *        
+##pss       
+           
+          g 
+     # m ##  
+           
+ Q  *    g 
 ##########f##
 #############
 #############

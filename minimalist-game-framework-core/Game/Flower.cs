@@ -17,7 +17,7 @@ internal class Flower : Entity
     public Flower(Vector2 position)
     {
         this.position = position;
-        this.size = new Vector2(20, 20);
+        this.size = new Vector2(30, 30);
         // Register the flower with the CollisionManager
         Game.entities.Add(this);
         CollisionManager.AddObj("flower", this);
