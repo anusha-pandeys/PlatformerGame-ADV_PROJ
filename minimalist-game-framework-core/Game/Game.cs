@@ -69,7 +69,7 @@ class Game
         player = new Player(textRenderer, font);
         spear = new Spear();
 
-        loadLevel("Game\\levelPractice.txt");
+        loadLevel("Game\\bossPractice.txt");
 
         //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
         //startMenu = new StartMenu();
@@ -80,6 +80,7 @@ class Game
 
         CollisionManager.AddObj("player", player);
         CollisionManager.AddObj("spear", spear);
+
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
         background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.jpeg"));
@@ -154,12 +155,6 @@ class Game
                 }
                 foreach (var entity in Game.entities.ToArray())
                 {
-                    /*
-                    if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                    {
-                        enemyEntity.EnemyLoop();
-                    }
-                    */
                     if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
                     {
                         bossEntity.Update();
@@ -440,8 +435,9 @@ class Game
         foreach (var f in fires)
         {
             CollisionManager.AddObj("fire", f);
+            entities.Add(f);
         }
-        CollisionManager.AddObj("boss", boss);
+
         loadEntities();
         //DIFF SIXES OF SLIDE LADDER??
 

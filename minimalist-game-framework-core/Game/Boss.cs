@@ -19,13 +19,14 @@ internal class Boss : Entity
     private Player player;
     private const float GRAVITY = 0.25f;
     private float accumulatedGravity = 0.0f;
-    private float shootCooldown = 4.0f;
+    private float shootCooldown = 10.0f;
     private float timeSinceLastShot = 0.0f;
     private float bulletSpeed = 30.0f;
     private Texture bossTexture;
     private Collidable bossCollidable;  // New collidable for the boss
     private int level;
     private double floor;
+    public HealthBar healthBar;
 
     public Boss(int level, double highestFloor, Vector2 position, Player player, float followRadius, float speed)
     {
@@ -47,68 +48,118 @@ internal class Boss : Entity
         string relativePath = "Assets\\HADES.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         bossTexture = Engine.LoadTexture(absolutePath);
+
+       healthBar = new HealthBar("bossHealthBar", new Vector2(this.position.X, this.position.Y), 100,
+           new Vector2(70f, 30f));
+
+
     }
 
     public void Update()
     {
-        foreach (var entity in Game.entities.ToArray())
+
+
+        if (healthBar.getHealth() > 0)
         {
-            if (entity is Bullet bullet && bullet.Source == this && Game.player.level == level)
+
+            healthBar.setPosition(new Vector2(this.position.X, this.position.Y - 40f));
+
+            foreach (var entity in Game.entities.ToArray())
             {
-                bullet.BulletLoop(Game.localCamera);
+                if (entity is Bullet bullet && bullet.Source == this && Game.player.level == level)
+                {
+                    bullet.BulletLoop(Game.localCamera);
+                }
             }
-        }
 
-        long startTime = DateTime.Now.Ticks;
-        double secondsElapsed = 0;
+            long startTime = DateTime.Now.Ticks;
+            double secondsElapsed = 0;
 
-        if (IsPlayerInRadius() && Game.player.level == level)
-        {
+            if (IsPlayerInRadius() && Game.player.level == level)
+            {
+                secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
+                MoveTowardsPlayer(secondsElapsed);
+            }
+            else
+            {
+                velocity = Vector2.Zero;
+            }
+
+            ApplyGravity();
+
+            CollisionObject playerCollision = checkCollision("player");
+            if (playerCollision.getCollided())
+            {
+                // Handle collision logic with the player
+                Game.player.chargeBar.setCharge(0);
+            }
+
+            // Check for collisions with spears
+            CollisionObject spearCollision = checkCollision("spear");
+            if (spearCollision.getCollided())
+            {
+                // Handle collision logic with spears
+                healthBar.setHealth(healthBar.getHealth() - 1); // Adjust damage as needed
+            }
+
+
+            // Check collisions along the Y-axis before updating the position
+            HandleCollisionY(secondsElapsed);
+
+            // Update the position here
+            position += velocity;
+
+            // Handle collisions along the X-axis
+            HandleCollisionX(secondsElapsed);
+
+            // Collision detection
             secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
-            MoveTowardsPlayer(secondsElapsed);
+            CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, velocity, secondsElapsed);
+
+            if (collisionDetected.getCollided())
+            {
+                AdjustPositionOnCollision(collisionDetected);
+                accumulatedGravity = 0.0f;
+            }
+
+            // Check if hitting the left or right boundary
+            if (position.X < 0 || position.X + size.X > 640)
+            {
+                velocity.X = 0;
+            }
+
+            // Check if hitting the ground
+            if (position.Y + size.Y >= floor)
+            {
+                position.Y = (float)floor - size.Y;
+                velocity.Y = 0;
+            }
+
+            UpdateShooting();
+            healthBar.Render();
         }
         else
         {
-            velocity = Vector2.Zero;
+
+            Game.entities.Remove(this);
+            if (dead)
+            {
+                Game.enemiesKilled++;
+            }
+            dead = true;
+            //
         }
-
-        ApplyGravity();
-
-        // Check collisions along the Y-axis before updating the position
-        HandleCollisionY(secondsElapsed);
-
-        // Update the position here
-        position += velocity;
-
-        // Handle collisions along the X-axis
-        HandleCollisionX(secondsElapsed);
-
-        // Collision detection
-        secondsElapsed = new TimeSpan(DateTime.Now.Ticks - startTime).TotalSeconds;
-        CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, velocity, secondsElapsed);
-
-        if (collisionDetected.getCollided())
-        {
-            AdjustPositionOnCollision(collisionDetected);
-            accumulatedGravity = 0.0f;
-        }
-
-        // Check if hitting the left or right boundary
-        if (position.X < 0 || position.X + size.X > 640)
-        {
-            velocity.X = 0;
-        }
-
-        // Check if hitting the ground
-        if (position.Y + size.Y >= floor)
-        {
-            position.Y = (float) floor - size.Y;
-            velocity.Y = 0;
-        }
-
-        UpdateShooting();
     }
 
+    private CollisionObject checkCollision(string target)
+    {
+        CollisionObject obj = CollisionManager.checkCollisions("boss", target, new Vector2(1, 0));
+        if (obj.getCollided())
+        {
+            return obj;
+        }
+        return new CollisionObject();
+    }
 
     private void HandleCollisionY(double secondsElapsed)
     {
