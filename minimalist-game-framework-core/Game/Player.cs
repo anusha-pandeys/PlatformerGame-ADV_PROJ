@@ -25,7 +25,7 @@ internal class Player : Entity
     private Color playerColor;
     private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
     private float timeSinceCollision = 0.0f;
-    private bool blockBelow;
+    private bool blockBelow = false;
     private Collidable player;
     public ChargeBar chargeBar;
     private Texture playerTexture;
@@ -116,6 +116,7 @@ internal class Player : Entity
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, playerVelocity.Y+2f), secondsElapsed);
         if (collisionDetected.getCollided())
         {
+            blockBelow = true;
             jumps = 0;
             position.Y += collisionDetected.getDistanceY();
             if (collisionDetected.getBlock().slide)
@@ -129,6 +130,7 @@ internal class Player : Entity
             playerVelocity.Y = 0;
         } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
         {
+            blockBelow = false;
             playerVelocity.Y += (GRAVITY);
         }
         
@@ -162,7 +164,7 @@ internal class Player : Entity
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
         {
             //run sound plays when player clicks the left or right arrow key 
-            if (!run)
+            if (!run && blockBelow)
             {
                 Engine.PlayMusic(runSound, true, 0);
                 run = true;
@@ -188,7 +190,7 @@ internal class Player : Entity
         // Check RIGHT arrow key.
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
-            if (!run)
+            if (!run && blockBelow)
             {
                 Engine.PlayMusic(runSound, true, 0);
                 run = true;

@@ -16,6 +16,7 @@ internal class NPC : Entity
     private float distance;
     private Color originalColor;
     private Color npcColor;
+    private float timeSinceDeath = 0;
     private float collisionCooldown = 0.1f;
     private float timeSinceCollision = 0.0f;
     private Collidable npc;
@@ -106,13 +107,20 @@ internal class NPC : Entity
         }
         else
         {
-            
-            Game.entities.Remove(this);
-            if (dead)
+            timeSinceDeath += Engine.TimeDelta;
+            if (timeSinceDeath < 0.5)
             {
-                Game.enemiesKilled++;
+                animBounds = animation.draw(5, 3, 32, 32);
             }
-            dead = true;
+            else
+            {
+                Game.entities.Remove(this);
+                if (dead)
+                {
+                    Game.enemiesKilled++;
+                }
+                dead = true;
+            }
             //
         }
     }
