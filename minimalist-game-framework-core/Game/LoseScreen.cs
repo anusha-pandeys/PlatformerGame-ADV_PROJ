@@ -13,17 +13,20 @@ internal class LoseScreen
     private IntPtr Renderer => Engine.Renderer2;
     private TextRenderer textRenderer;
     private Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
+    private Music loseMusic;
     
     public LoseScreen()
     {
         textRenderer = new TextRenderer();
-        
+        loseMusic = Engine.LoadMusic("loseMusic.mp3");
+
     }
 
     public void show()
     {
-        
+
         // Draw background
+        Engine.PlayMusic(loseMusic, true, 0);
         SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255); // Set background to white
         SDL.SDL_RenderClear(Renderer);
         Stopwatch s = new Stopwatch();
