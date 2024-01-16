@@ -345,7 +345,6 @@ class Game
                 {
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
                     NPC npc = new NPC(level, position, player, Color.Red, 200f, 0.5f, "Assets\\redGhost.png", "npc1");
-                    npc.red = true;
                     redNPCs.Add(npc);
                 }
                 else if (lines[y][x] == 'b')

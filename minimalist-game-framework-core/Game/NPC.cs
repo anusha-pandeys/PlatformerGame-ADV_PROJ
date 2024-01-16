@@ -161,7 +161,7 @@ internal class NPC : Entity
         Rectangle playerBounds = player.GetPlayerBounds();
         return npcBounds.IntersectsWith(playerBounds);
     }
-
+    
 
     private void HandleCollision()
     {
