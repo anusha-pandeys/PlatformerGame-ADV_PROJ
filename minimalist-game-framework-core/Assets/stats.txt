@@ -10,3 +10,8 @@
 10)           0 Enemies Killed      |     
 11)           0 Enemies Killed      |     
 12)           166 Enemies Killed      |     
+13)           330 Enemies Killed      |     
+14)           948 Enemies Killed      |     
+15)           91 Enemies Killed      |     
+16)           96 Enemies Killed      |     
+17)           64 Enemies Killed      |     
