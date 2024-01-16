@@ -13,15 +13,18 @@ internal class WinScreen
     private IntPtr Renderer => Engine.Renderer2;
     private TextRenderer textRenderer;
     private Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
+    private Music winMusic;
 
 
     public WinScreen()
     {
         textRenderer = new TextRenderer();
+        winMusic = Engine.LoadMusic("winMusic.mp3");
     }
 
     public void show()
     {
+        Engine.PlayMusic(winMusic, true, 0);
         Stopwatch s = new Stopwatch();
         s.Start();
         while (s.Elapsed < TimeSpan.FromSeconds(5))

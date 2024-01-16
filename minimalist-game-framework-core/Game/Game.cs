@@ -26,7 +26,7 @@ class Game
     private LoseScreen loseScreen = new LoseScreen();
     private CreditScreen creditScreen;
     private bool showStartMenu = true;
-    public  static Player player;
+    public static Player player;
     private Map map;
     private List<NPC> redNPCs;
     private List<NPC> greyNPCs;
@@ -54,7 +54,7 @@ class Game
     private int numGreyNPC;
     private Texture loseScreenTexture;
     private bool debugMode = false;
-    private float deathTime=0;
+    private float deathTime = 0;
 
     public Game()
     {
@@ -69,17 +69,18 @@ class Game
         player = new Player(textRenderer, font);
         spear = new Spear();
 
-        loadLevel("Game\\levelPractice.txt");
+        loadLevel("Game\\bossPractice.txt");
 
         //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
         //startMenu = new StartMenu();
         loseScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\LoseScreen.png"));
         bgMusic = Engine.LoadMusic("bgm.mp3");
-        
+
         //CollisionManager.AddObj("pit", pit);
 
-        CollisionManager.AddObj("player", player); 
+        CollisionManager.AddObj("player", player);
         CollisionManager.AddObj("spear", spear);
+
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
         background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.jpeg"));
@@ -117,7 +118,7 @@ class Game
                 //map.setBackgroundColor();
                 Engine.DrawTexture(background, new Vector2(0, 0), null, new Vector2(640, 480));
 
-                
+
 
 
 
@@ -154,12 +155,6 @@ class Game
                 }
                 foreach (var entity in Game.entities.ToArray())
                 {
-                    /*
-                    if (entity is Enemy enemyEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
-                    {
-                        enemyEntity.EnemyLoop();
-                    }
-                    */
                     if (entity is Boss bossEntity)  // Rename the variable to 'enemyEntity' or any other suitable name
                     {
                         bossEntity.Update();
@@ -202,7 +197,7 @@ class Game
                 foreach (var r in redNPCs)
                 {
                     r.Update();
-                } 
+                }
                 foreach (var g in greyNPCs)
                 {
                     g.Update();
@@ -211,8 +206,8 @@ class Game
                 {
                     f.FireLoop();
                 }
-            
-                if(Game.player.chargeBar.getCharge() > 100)
+
+                if (Game.player.chargeBar.getCharge() > 100)
                 {
                     Game.player.setCharge(100);
                 }
@@ -225,33 +220,33 @@ class Game
                     //loseScreen.show();
 
                 }
-                
-                
+
+
                 // Check if back button is clicked in RulesMenu or CreditScreen
                 if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
                 {
                     showStartMenu = true;
                 }
 
-            // Checkpoint collision detection
-            /*foreach (var checkpoint in checkpoints)
-            {
-                if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
+                // Checkpoint collision detection
+                /*foreach (var checkpoint in checkpoints)
                 {
-                    currLevel++;
-                    checkpoints.Clear();
-                    CollisionManager.blocks.Clear();
-                    CollisionManager.collidables.Clear();
-                    winScreen.show(); 
-                    string path = "Game\\level" + currLevel.ToString() + ".txt";
-                    LoadNewLevel(path);
-                    player.position = new Vector2(100, 300); // Reset position
-                    
-                    break;
-                
-            
-                }
-                */
+                    if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
+                    {
+                        currLevel++;
+                        checkpoints.Clear();
+                        CollisionManager.blocks.Clear();
+                        CollisionManager.collidables.Clear();
+                        winScreen.show(); 
+                        string path = "Game\\level" + currLevel.ToString() + ".txt";
+                        LoadNewLevel(path);
+                        player.position = new Vector2(100, 300); // Reset position
+
+                        break;
+
+
+                    }
+                    */
             }
             if (playerDeath)
             {
@@ -346,7 +341,7 @@ class Game
         int level = 1;
         double highestFloor = 0;
 
-        for (int y = lines.Length-1; y >= 0; y--)
+        for (int y = lines.Length - 1; y >= 0; y--)
         {
             for (int x = 0; x < lines[y].Length; x++)
             {
@@ -395,7 +390,7 @@ class Game
                 {
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
                     levelSeperators.Add(new LevelSeperator(position, Blocks.size));
-                    if (x+1 >= lines[y].Length || lines[y][x+1] !='S')
+                    if (x + 1 >= lines[y].Length || lines[y][x + 1] != 'S')
                     {
                         level++;
                     }
@@ -417,9 +412,10 @@ class Game
                 {
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
                     redNPCs.Add(new NPC(level, position, player, Color.Red, 200f, 0.5f, "Assets\\redGhost.png", "npc1"));
-                } else if (lines[y][x] == 'b')
+                }
+                else if (lines[y][x] == 'b')
                 {
-                    Vector2 position = new Vector2 (x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
+                    Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
                     boss = new Boss(level, highestFloor, position, player, 150f, 1.0f);
                 }
                 else continue;
@@ -439,8 +435,9 @@ class Game
         foreach (var f in fires)
         {
             CollisionManager.AddObj("fire", f);
+            entities.Add(f);
         }
-        CollisionManager.AddObj("boss", boss);
+
         loadEntities();
         //DIFF SIXES OF SLIDE LADDER??
 
@@ -453,14 +450,14 @@ class Game
             //block.blockLoop();
             CollisionManager.addBlock(block);
         }
-        
+
         foreach (var pit in pits)
         {
             //pit.pitsLoop();
             CollisionManager.AddObj("pit", pit);
         }
-        
-        
+
+
         foreach (var flower in flowers)
         {
             CollisionManager.AddObj("flower", flower);
@@ -505,4 +502,3 @@ class Game
         enemiesKilled++;
     }
 }
-

@@ -12,15 +12,15 @@ internal class Fire : Entity
     private IntPtr Renderer => Engine.Renderer2;
     private Collidable fireCollidable;
     private Texture fireTexture;
-    private float damageCooldown = 1.0f; // Time in seconds before applying damage again
+    private float damageCooldown = 5.0f; // Time in seconds before applying damage again
     private float damageDuration = 5.0f; // Total duration for the damage effect
-    private float timeSinceDamage = 0.0f;
-    private float chargeDecreaseInterval = 1.0f; // Interval to decrease charge (adjust as needed)
     private float chargeDecreaseTimer = 0.0f;
+    private float chargeDecreaseInterval = 0.0f;
+    private float timeSinceDamage;
     private bool playerInContact = false;
 
     //private Texture fireTexture;
-
+    //
     public Fire(Vector2 position)
     {
         this.position = position;
@@ -35,7 +35,7 @@ internal class Fire : Entity
 
     public void FireLoop()
     {
-      //  Console.WriteLine("FireLoop() called");
+        Console.WriteLine("FireLoop() called");
         HandleCollision();
 
         // Update the cooldown timer
@@ -61,7 +61,7 @@ internal class Fire : Entity
         CollisionObject collisionDetected = CollisionManager.checkCollisions("player", "fire", new Vector2(0, 0));
         if (collisionDetected.getCollided())
         {
-            //Console.WriteLine("Player collided with fire");
+            Console.WriteLine("Player collided with fire");
             // Apply damage to the player only if enough time has passed since the last damage
             if (timeSinceDamage >= damageCooldown)
             {
@@ -80,12 +80,11 @@ internal class Fire : Entity
 
     private void HandleChargeDecrease()
     {
-        //Console.WriteLine("Handling charge decrease");
+        Console.WriteLine("Handling charge decrease");
         int currentCharge = Game.player.chargeBar.getCharge();
         int newCharge = currentCharge - 5; // Decrease charge by 1 (adjust as needed)
         Game.player.chargeBar.setCharge(newCharge); // Update player's charge
     }
-
 
 
     public override void Render(Camera camera)
@@ -104,4 +103,3 @@ internal class Fire : Entity
         Engine.DrawTexture(fireTexture, position, null, size);
     }
 }
-
