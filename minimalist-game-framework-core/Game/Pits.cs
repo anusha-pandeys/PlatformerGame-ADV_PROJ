@@ -16,6 +16,7 @@ internal class Pits : Entity
     private float timeSinceCollision = 0.0f;
     private Texture playerTexture;
     public bool playerDeath = false;
+    public float deathCounter = 0;
 
     public Pits(Vector2 position)
     {
@@ -53,7 +54,17 @@ internal class Pits : Entity
         CollisionObject collisionDetected = CollisionManager.checkCollisions("player", "pit", new Vector2(0, 0));
         if (collisionDetected.getCollided())
         {
-            return true;
+            deathCounter += Engine.TimeDelta;
+            Game.player.playerVelocity.Y = 1;
+            if(deathCounter > 2)
+            {
+                return true;
+            }
+        }
+        if (!collisionDetected.getCollided())
+        {
+            
+            deathCounter = 0;
         }
 
         return false;
