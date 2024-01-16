@@ -21,6 +21,8 @@ internal class NPC : Entity
     private Collidable npc;
     public HealthBar healthBar;
     private Texture npcTexture;
+    private Animation animation = new Animation();
+    private Bounds2 animBounds;
     public string tag;
     private Boolean dead = false;
     public int level;
@@ -61,10 +63,12 @@ internal class NPC : Entity
     {
         if (healthBar.getHealth() > 0)
         {
+            animBounds = animation.draw(2, 1, 32, 32);
             healthBar.setPosition(new Vector2(this.position.X, this.position.Y - 40f));
 
             if (IsPlayerInRadius() && Game.player.level == level)
             {
+                animBounds = animation.draw(6, 2, 32, 32);
                 FollowPlayer();
             }
 
@@ -73,6 +77,7 @@ internal class NPC : Entity
             //1-2 hit death
             if (playerCollision.getCollided())
             {
+
                 Game.player.chargeBar.setCharge(Game.player.chargeBar.getCharge() - 50);
                 healthBar.setHealth(0);
             }
@@ -200,7 +205,14 @@ internal class NPC : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        Engine.DrawTexture(npcTexture, position, null, size);
+        if(Game.player.position.X < position.X)
+        {
+            Engine.DrawTexture(npcTexture, position, null, size, source: animBounds, scaleMode: TextureScaleMode.Nearest, mirror: TextureMirror.Horizontal);
+        } else
+        {
+            Engine.DrawTexture(npcTexture, position, null, size, source: animBounds, scaleMode: TextureScaleMode.Nearest);
+        }
+        
     }
 
 }
