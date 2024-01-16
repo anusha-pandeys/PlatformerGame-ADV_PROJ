@@ -109,6 +109,7 @@ internal class NPC : Entity
         else
         {
             timeSinceDeath += Engine.TimeDelta;
+
             if (timeSinceDeath < 0.45)
             {
                 animBounds = animation.draw(5, 3, 32, 32);
