@@ -115,7 +115,7 @@ internal class Player : Entity
             position.Y += collisionDetected.getDistanceY();
             if (collisionDetected.getBlock().slide)
             {
-                playerVelocity.X += 10f;
+                position.X += 10f;
             }
             else
             {

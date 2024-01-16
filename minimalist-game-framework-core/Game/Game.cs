@@ -54,6 +54,7 @@ class Game
     private int numGreyNPC;
     private Texture loseScreenTexture;
     private bool debugMode = false;
+    private float deathTime=0;
 
     public Game()
     {
@@ -225,28 +226,7 @@ class Game
 
                 }
                 
-                if (playerDeath)
-                {
-                    float time = 0f;
-                    while (time < 100f)
-                    {
-                        time += Engine.TimeDelta;
-                        Engine.DrawTexture(loseScreenTexture, new Vector2(0, 0));
-                    }
-                    entities.Clear();
-                    CollisionManager.blocks.Clear();
-                    CollisionManager.collidables.Clear();
-                    loadLevel("Game\\reload.txt");
-                    loadLevel("Game\\levelPractice.txt");
-                    playerDeath = false;
-                    showStartMenu = true;
-                    Game.player.setCharge(50);
-                    CollisionManager.AddObj("player", player);
-                    CollisionManager.AddObj("spear", spear);
-                    entities.Add(player);
-                    entities.Add(spear);
-                    
-                }
+                
                 // Check if back button is clicked in RulesMenu or CreditScreen
                 if (rulesMenu.IsBackButtonClicked() || creditScreen.IsBackButtonClicked())
                 {
@@ -273,7 +253,27 @@ class Game
                 }
                 */
             }
-
+            if (playerDeath)
+            {
+                deathTime += Engine.TimeDelta;
+                Engine.DrawTexture(loseScreenTexture, new Vector2(0, 0), size: new Vector2(640, 480));
+            }
+            if (playerDeath && deathTime > 3)
+            {
+                deathTime = 0;
+                entities.Clear();
+                CollisionManager.blocks.Clear();
+                CollisionManager.collidables.Clear();
+                loadLevel("Game\\reload.txt");
+                loadLevel("Game\\levelPractice.txt");
+                playerDeath = false;
+                showStartMenu = true;
+                Game.player.setCharge(50);
+                CollisionManager.AddObj("player", player);
+                CollisionManager.AddObj("spear", spear);
+                entities.Add(player);
+                entities.Add(spear);
+            }
 
         }
 
