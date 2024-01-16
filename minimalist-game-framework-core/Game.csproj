@@ -47,6 +47,9 @@
     <None Update="Game\level3.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Game\bossPractice.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Game\levelPractice.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
