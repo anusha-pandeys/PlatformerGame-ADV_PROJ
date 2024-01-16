@@ -82,7 +82,7 @@ class Game
         CollisionManager.AddObj("spear", spear);
         //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
-        background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.jpeg"));
+        background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\backgroundCopy.jpeg"));
     }
     //
 
@@ -122,8 +122,7 @@ class Game
 
 
                 player.playerLoop();
-                localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
-                localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
+                localCamera.updateCamera(player.position);
                 spear.spearLoop();
                 foreach (var block in levelBlocks)
                 {
