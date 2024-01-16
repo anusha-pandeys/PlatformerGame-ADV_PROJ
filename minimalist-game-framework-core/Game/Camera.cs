@@ -8,51 +8,56 @@ internal class Camera
     private static readonly int width = 640;
     public static readonly int height = 480;
     public static float globalCy;
-    private float offset = Game.player.size.Y/4;
+    private float offset = Game.player.size.Y / 4;
 
-    float layer1Y;
-    private Texture columnLeft1;
-    private Texture columnRight1;
-
+    float layer1Pos;
+    private Texture columnLayer1Left;
+    private Texture columnLayer1Right;
 
     public Camera()
     {
         screen = new Vector2(width / 2, height / 2);
         globalCy = Game.player.Position.Y + 60;
-        layer1Y = 0;
-        columnLeft1 = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\greek-column-copy.png"));
-        columnRight1 = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\greek-column-copy.png"));
+        layer1Pos = 0;
+        columnLayer1Left = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\greek-column.png"));
+        columnLayer1Right = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\greek-column.png"));
     }
 
     public Vector2 globalToLocal(Vector2 global)
     {
-        return new Vector2(global.X, global.Y - offset);
-        
+        Vector2 local = new Vector2(global.X, global.Y - offset);
+        //Vector2 local = new Vector2(global.X, Math.Abs(global.Y - globalCy) - height);
+        //System.Console.WriteLine(local.X + "  " + local.Y);
+        return local;
+
     }
-    public void updateCamera(Vector2 playerPos)
+    public void updateGlobalCy(Vector2 globalPlayer, Vector2 playerSize, Vector2 playerVelocity)
     {
-        offset += playerPos.Y - globalCy;
-        globalCy = playerPos.Y;
+        offset += globalPlayer.Y - globalCy;
+        globalCy = globalPlayer.Y;
 
-        parallaxLayer1(playerPos);
     }
 
-    public void parallaxLayer1(Vector2 playerPos)
+    public float updateParallaxLayer1(Vector2 globalPlayer)
     {
-        float change = (playerPos.Y - globalCy) / 3;
+        return (globalPlayer.Y - globalCy) / 2;
+    }
 
-        layer1Y -= change;
-        Engine.DrawTexture(columnLeft1, new Vector2(10, layer1Y), null, new Vector2(130, 480));
-        Engine.DrawTexture(columnLeft1, new Vector2(500, layer1Y), null, new Vector2(130, 480));
+    public void parallaxLayer1(float change)
+    {
+        layer1Pos -= change;
+        Engine.DrawTexture(columnLayer1Left, new Vector2 (10, layer1Pos), null, new Vector2(130, 480));
+        Engine.DrawTexture(columnLayer1Right, new Vector2(500, layer1Pos), null, new Vector2(130, 480));
 
-        if (480 - layer1Y > 0)
+        if (480 - layer1Pos > 0)
         {
-            float aboveTile = - (480- layer1Y);
-            Engine.DrawTexture(columnLeft1, new Vector2(10, aboveTile), null, new Vector2(130, 480));
-            Engine.DrawTexture(columnLeft1, new Vector2(500, aboveTile), null, new Vector2(130, 480));
-        } else
+            float tile2 = -(480 - layer1Pos);
+            Engine.DrawTexture(columnLayer1Left, new Vector2(10, tile2), null, new Vector2(130, 480));
+            Engine.DrawTexture(columnLayer1Right, new Vector2(500, tile2), null, new Vector2(130, 480));
+        }
+        else
         {
-            layer1Y = 0;
+            layer1Pos = 0;
         }
 
 
