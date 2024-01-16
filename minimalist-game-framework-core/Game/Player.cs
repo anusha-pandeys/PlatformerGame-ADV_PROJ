@@ -40,6 +40,8 @@ internal class Player : Entity
     public float floorY;
     public int level = 1;
     private int jumps;
+    private Music runSound;
+
     public Player(TextRenderer text, Font font)
     {
         animation.setTetxture("Assets\\persephoneAnimation.png", position, size);
@@ -57,6 +59,7 @@ internal class Player : Entity
         string relativePath = "Assets\\persephoneAnimation.png";
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         playerTexture = Engine.LoadTexture(absolutePath);
+        runSound = Engine.LoadMusic("runSound.mp3");
     }
 
     public void setCharge(int charge)
@@ -145,7 +148,78 @@ internal class Player : Entity
         }
     }
 
+    private void HandleInput()
+    {
+        int numKeys;
+        IntPtr keyboardStatePtr = SDL.SDL_GetKeyboardState(out numKeys);
+        byte[] keys = new byte[numKeys];
+        Marshal.Copy(keyboardStatePtr, keys, 0, numKeys);
+        playerVelocity.X = 0.0f;
 
+        // Check LEFT arrow key.
+        if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
+        {
+            if (!run)
+            {
+                Engine.PlayMusic(runSound, true, 0);
+                run = true;
+            }
+            //Engine.PlayMusic(runSound, true, 0);
+            timeOrig += Engine.TimeDelta;
+            animBounds = animation.draw(7, 2, 32, 32);
+            direction = false;
+            text.displayText("left", new Vector2(10, 30), Color.Black, font);
+            playerVelocity.X = -2.0f;
+            if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
+            {
+                if (chargeBar.getCharge() > 10)
+                {
+                    playerVelocity.X -= 2.0f;
+                    chargeBar.setCharge(chargeBar.getCharge() - 1);
+                }
+
+            }
+            //Game.spear.degree = 0;
+        }
+        //timeOrig = 0;
+        // Check RIGHT arrow key.
+        else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
+        {
+            if (!run)
+            {
+                Engine.PlayMusic(runSound, true, 0);
+                run = true;
+            }
+            timeOrig += Engine.TimeDelta;
+            animBounds = animation.draw(7, 2, 32, 32);
+            direction = true;
+            text.displayText("right", new Vector2(10, 30), Color.Black, font);
+            playerVelocity.X = 2.0f;
+
+            if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_LSHIFT] == 1)
+            {
+                if (chargeBar.getCharge() > 10)
+                {
+                    playerVelocity.X += 2.0f;
+                    chargeBar.setCharge(chargeBar.getCharge() - 1);
+                }
+            }
+            //Game.spear.degree = 0;
+        }
+        else
+        {
+            if (run)
+            {
+                Engine.StopMusic();
+                run = false;
+            }
+            timeOrig += Engine.TimeDelta;
+            animBounds = animation.draw(9, 1, 32, 32);
+            //     Console.Write(animBounds);
+        }
+    }
+
+    /*
     private void HandleInput()
     {
         int numKeys;
@@ -158,6 +232,7 @@ internal class Player : Entity
         // Check LEFT arrow key.
         if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_A] == 1)
         {
+            Engine.PlayMusic(runSound, true, 0);
             timeOrig += Engine.TimeDelta;
             animBounds = animation.draw(7, 2, 32, 32);
             direction = false;
@@ -178,6 +253,7 @@ internal class Player : Entity
         // Check RIGHT arrow key.
         else if (keys[(int)SDL.SDL_Scancode.SDL_SCANCODE_D] == 1)
         {
+            Engine.PlayMusic(runSound, true, 0);
             timeOrig += Engine.TimeDelta;
             animBounds = animation.draw(7, 2, 32, 32);
             direction = true;
@@ -201,6 +277,7 @@ internal class Player : Entity
            //     Console.Write(animBounds);
         }
     }
+    */
 
     private void HandleJump()
     {
