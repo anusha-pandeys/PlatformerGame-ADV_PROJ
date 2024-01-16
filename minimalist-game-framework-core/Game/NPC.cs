@@ -20,6 +20,7 @@ internal class NPC : Entity
     private float collisionCooldown = 0.1f;
     private float timeSinceCollision = 0.0f;
     private Collidable npc;
+    public Boolean red;
     public HealthBar healthBar;
     private Texture npcTexture;
     private Animation animation = new Animation();
@@ -108,7 +109,8 @@ internal class NPC : Entity
         else
         {
             timeSinceDeath += Engine.TimeDelta;
-            if (timeSinceDeath < 0.5)
+
+            if (timeSinceDeath < 0.45)
             {
                 animBounds = animation.draw(5, 3, 32, 32);
             }
@@ -160,7 +162,7 @@ internal class NPC : Entity
         Rectangle playerBounds = player.GetPlayerBounds();
         return npcBounds.IntersectsWith(playerBounds);
     }
-
+    
 
     private void HandleCollision()
     {
@@ -213,14 +215,13 @@ internal class NPC : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        if(Game.player.position.X < position.X)
+        if (Game.player.position.X < position.X)
         {
             Engine.DrawTexture(npcTexture, position, null, size, source: animBounds, scaleMode: TextureScaleMode.Nearest, mirror: TextureMirror.Horizontal);
-        } else
+        }
+        else
         {
             Engine.DrawTexture(npcTexture, position, null, size, source: animBounds, scaleMode: TextureScaleMode.Nearest);
         }
-        
     }
-
 }

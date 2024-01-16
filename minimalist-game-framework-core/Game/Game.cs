@@ -31,19 +31,13 @@ class Game
     private List<NPC> redNPCs;
     private List<NPC> greyNPCs;
     private List<Fire> fires;
-    //private Blocks floor;
-    //private Blocks floor2;
     private List<Blocks> levelBlocks;
     public static Camera localCamera;
-    //private List<Checkpoint> checkpoints;
-    //private List<Ladder> ladders;
     private List<Pits> pits;
     private List<LevelSeperator> levelSeperators;
     private static int currLevel = 1;
-    //private Enemy enemy;
     private Boss boss;
     public static Spear spear;
-    //private Ladder ladder;
     private Music bgMusic;
     private List<Flower> flowers;
     List<Flower> flowersToRemove = new List<Flower>();
@@ -63,25 +57,18 @@ class Game
         StartMenu = new StartMenu();
         rulesMenu = new RulesMenu();
         creditScreen = new CreditScreen();
-        //slide = new Slides(new Vector2(300,100), new Vector2(100,100));
-        //entities.Add(moving);
 
         player = new Player(textRenderer, font);
         spear = new Spear();
 
-        loadLevel("Game\\bossPractice.txt");
+        loadLevel("Game\\levelPractice.txt");
 
-        //Font font = Engine.LoadFont("Retro Gaming.ttf", 11);        
-        //startMenu = new StartMenu();
         loseScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\LoseScreen.png"));
         bgMusic = Engine.LoadMusic("bgm.mp3");
-
-        //CollisionManager.AddObj("pit", pit);
 
         CollisionManager.AddObj("player", player);
         CollisionManager.AddObj("spear", spear);
 
-        //CollisionManager.AddObj("slide", slide);
         localCamera = new Camera();
         background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.jpeg"));
     }
@@ -89,21 +76,16 @@ class Game
 
     public void Update()
     {
-        // Poll for events
-        //Engine.PlayMusic(bgMusic, true, 0);
 
 
 
         SDL.SDL_PumpEvents();
-        // Measure the time elapsed between one frame and the next
 
-        // Update game logic based on the current state
         if (showStartMenu)
         {
             StartMenu.Update();
             StartMenu.Draw(font);
 
-            // If start button is clicked, hide the start menu and start the game
             if (StartMenu.IsStartButtonClicked())
             {
                 showStartMenu = false;
@@ -115,13 +97,7 @@ class Game
         {
             if (!playerDeath)
             {
-                //map.setBackgroundColor();
                 Engine.DrawTexture(background, new Vector2(0, 0), null, new Vector2(640, 480));
-
-
-
-
-
                 player.playerLoop();
                 localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
                 localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
@@ -140,11 +116,8 @@ class Game
                     pit.pitsLoop();
                     if (pit.checkCollision())
                     {
-                        //implement death/game over
-
                         Game.player.chargeBar.setCharge(0);
                     }
-                    //CollisionManager.addBlock(block);
                 }
 
 
@@ -160,28 +133,9 @@ class Game
                         bossEntity.Update();
                     }
                 }
-                //moving.updateCoordinates();
-
-                /* 
-                //Render checkpoints - DELETE
-
-                foreach (var checkpoint in checkpoints)
-                {
-                    checkpoint.Update(localCamera);
-                }
-                */
-
                 foreach (Entity i in entities)
                 {
-                    /*
-                    if (i.Position.Y + i.size.Y > Camera.globalCy - Camera.height/2 && i.Position.Y - i.size.Y < Camera.globalCy - Camera.height / 2)
-                    {
-                        i.Render(localCamera);
-                    }
-                    */
                     i.Render(localCamera);
-
-
                 }
 
                 foreach (var sep in levelSeperators)
@@ -217,8 +171,6 @@ class Game
                     FileIO file = new FileIO();
                     file.writeToFile();
                     playerDeath = true;
-                    //loseScreen.show();
-
                 }
 
 
@@ -228,25 +180,6 @@ class Game
                     showStartMenu = true;
                 }
 
-                // Checkpoint collision detection
-                /*foreach (var checkpoint in checkpoints)
-                {
-                    if (CollisionManager.checkCheckpointCollision(player, checkpoint.Bound))
-                    {
-                        currLevel++;
-                        checkpoints.Clear();
-                        CollisionManager.blocks.Clear();
-                        CollisionManager.collidables.Clear();
-                        winScreen.show(); 
-                        string path = "Game\\level" + currLevel.ToString() + ".txt";
-                        LoadNewLevel(path);
-                        player.position = new Vector2(100, 300); // Reset position
-
-                        break;
-
-
-                    }
-                    */
             }
             if (playerDeath)
             {
@@ -411,7 +344,8 @@ class Game
                 else if (lines[y][x] == 'r')
                 {
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
-                    redNPCs.Add(new NPC(level, position, player, Color.Red, 200f, 0.5f, "Assets\\redGhost.png", "npc1"));
+                    NPC npc = new NPC(level, position, player, Color.Red, 200f, 0.5f, "Assets\\redGhost.png", "npc1");
+                    redNPCs.Add(npc);
                 }
                 else if (lines[y][x] == 'b')
                 {
