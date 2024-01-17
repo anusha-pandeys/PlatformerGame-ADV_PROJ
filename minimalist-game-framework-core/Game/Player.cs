@@ -13,20 +13,15 @@ using System.IO;
 internal class Player : Entity
 {
     private IntPtr Renderer => Engine.Renderer2;  // Gets the SDL Renderer from the Engine class
-    private const int BLOCK_SIZE = 50;
-    private float GRAVITY = 0.25f;// 0.5f; //lowr the gravity.
-    private float NORMALF = -0.25f;
+    private float GRAVITY = 0.25f;
     private const float JUMP_STRENGTH = -6f;
-    //public Vector2 position;
     public Vector2 playerVelocity = new Vector2 (0, 0);
     private TextRenderer text;
     private Font font;
-    private Color originalColor = new Color(255, 0, 0, 255); // Original color (red)
-    private Color playerColor;
     private float collisionCooldown = 0.1f; // Time in seconds before reverting to the original color
     private float timeSinceCollision = 0.0f;
-    private bool blockBelow = false;
     private Collidable player;
+    private bool blockBelow = false;
     public ChargeBar chargeBar;
     private Texture playerTexture;
     private Bounds2 animBounds;
@@ -48,8 +43,6 @@ internal class Player : Entity
         size = new Vector2(30, 30);
         this.text = text;
         this.font = font;
-        this.playerColor = originalColor;
-        //this.player = new Collidable(this, "player");
         chargeBar = new ChargeBar("playerChargeBar", new Vector2(30,30), 10, new Vector2(100, 50));
         Game.entities.Add(this);
         blockBelow = false;

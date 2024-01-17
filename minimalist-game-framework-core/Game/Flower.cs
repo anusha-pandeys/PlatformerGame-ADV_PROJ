@@ -87,26 +87,6 @@ internal class Flower : Entity
         Engine.DrawTexture(finalTexture, position, null, size);
     }
 
-    /*
-    public void FlowerLoop(Player player)
-    {
-        if (!isCollected)
-        {
-            // Check for collisions with the player using the CollisionManager
-            CollisionObject obj = CollisionManager.checkCollisions("flower", "player", new Vector2(0, 0));
-            if (obj.getCollided())
-            {
-                // Collect the flower
-                this.Collect();
-
-                // Remove the flower from the game entities list
-                Game.entities.Remove(this);
-
-                // Increase the player's charge
-                player.IncreaseCharge(10);
-            }
-        }
-    }
-    */
+    
 }
 

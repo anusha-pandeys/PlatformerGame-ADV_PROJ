@@ -22,8 +22,6 @@ class Game
     Font font = Engine.LoadFont("Retro Gaming.ttf", 11);
     private StartMenu StartMenu;
     private RulesMenu rulesMenu;
-    private WinScreen winScreen = new WinScreen();
-    private LoseScreen loseScreen = new LoseScreen();
     private CreditScreen creditScreen;
     private bool showStartMenu = true;
     public static Player player;
@@ -34,9 +32,8 @@ class Game
     private List<Blocks> levelBlocks;
     public static Camera localCamera;
     private List<Pits> pits;
-    private List<LevelSeperator> levelSeperators;
-    private static int currLevel = 1;
     private Boss boss;
+    private List<LevelSeperator> levelSeperators;
     public static Spear spear;
     private Music bgMusic;
     private List<Flower> flowers;
@@ -55,7 +52,6 @@ class Game
     private static string playerName = "";
 
 
-    //private List<Texture> backgrounds;
     public Game()
     {
         map = new Map();
@@ -68,7 +64,7 @@ class Game
         player = new Player(textRenderer, font);
         spear = new Spear();
 
-        loadLevel("Game\\levelPractice.txt");
+        loadLevel("Game\\gameplay.txt");
 
         loseScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\LoseScreen.png"));
         winScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\WinScreen.png"));
@@ -80,22 +76,13 @@ class Game
 
         localCamera = new Camera();
         background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\middleLevel.jpeg"));
-        /*
-        backgrounds = new List<Texture> { Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\tartarus.jpeg")),
-                       Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\middleLevel.jpeg")),
-                       Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\hadesCastle.jpeg")),
-                       Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\WinScreen.png"))};
-        */
+        
     }
     
 
     public void Update()
     {
-
-
-
         SDL.SDL_PumpEvents();
-        //Engine.PlayMusic(bgMusic, true, 0);
         if (showStartMenu)
         {
             StartMenu.Update();
@@ -104,8 +91,6 @@ class Game
             if (StartMenu.IsStartButtonClicked())
             {
                 showStartMenu = false;
-                // Start the background music when the game starts and loop it
-                //Engine.PlayMusic(bgMusic, true, 0);
                 playerName = ""; // Reset player's name
 
             }
@@ -122,7 +107,7 @@ class Game
                 // Set the player's name for the scoreboard
                 Scoreboard.SetPlayerName(playerName);
                 nameScreen = null; // Set to null to indicate that name screen is no longer needed
-                //
+                
             }
 
             if (nameScreen != null)
@@ -138,13 +123,13 @@ class Game
                 Engine.DrawTexture(background, new Vector2(0, 0), null, new Vector2(640, 480));
                 
                 localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
-                localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
+                localCamera.updateGlobalCy(player.position);
                 spear.spearLoop();
                 player.playerLoop();
                 foreach (var block in levelBlocks)
                 {
                     block.blockLoop();
-                    //CollisionManager.addBlock(block);
+                    
                 }
                 foreach (var levelSep in levelSeperators)
                 {
@@ -237,7 +222,7 @@ class Game
                 entities.Add(player);
                 entities.Add(spear);
                 loadLevel("Game\\reload.txt");
-                loadLevel("Game\\levelPractice.txt");
+                loadLevel("Game\\gameplay.txt");
                 playerDeath = false;
                 bossDeath = false;
                 showStartMenu = true;
@@ -305,7 +290,6 @@ class Game
          */
 
         levelBlocks = new List<Blocks>();
-        //checkpoints = new List<Checkpoint>();
         pits = new List<Pits>();
         slides = new List<Slides>();
         levelSeperators = new List<LevelSeperator>();
@@ -417,13 +401,11 @@ class Game
     {
         foreach (var block in levelBlocks)
         {
-            //block.blockLoop();
             CollisionManager.addBlock(block);
         }
 
         foreach (var pit in pits)
         {
-            //pit.pitsLoop();
             CollisionManager.AddObj("pit", pit);
         }
 

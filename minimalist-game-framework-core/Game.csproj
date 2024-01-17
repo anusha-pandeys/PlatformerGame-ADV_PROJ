@@ -41,16 +41,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Game\level2.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Game\level3.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Game\bossPractice.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Game\levelPractice.txt">
+    <None Update="Game\gameplay.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

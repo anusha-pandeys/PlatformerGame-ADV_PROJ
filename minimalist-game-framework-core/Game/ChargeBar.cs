@@ -76,29 +76,6 @@ internal class ChargeBar : UIElements
         position.X += 97;
         position.Y += 33;
         Engine.DrawResizableTexture(chargeTexture, new Bounds2(position, new Vector2(sizeX+25, size.Y-20)), scaleMode: TextureScaleMode.Nearest);
-        /*SDL.SDL_Rect rect = new SDL.SDL_Rect()
-        {
-            x = (int)position.X,
-            y = (int)position.Y,
-            w = (int)size.X,
-            h = (int)size.Y
-        };
-
-        SDL.SDL_RenderFillRect(Renderer, ref rect);
-        Vector2 healthSize = getSize() - new Vector2(20, 20);
-        SDL.SDL_SetRenderDrawColor(Renderer, 187, 51, 255, 100);
-        int offset = 30;
-        
-        SDL.SDL_Rect rect2 = new SDL.SDL_Rect()
-        {
-
-            x = (int)(position.X + 10),
-            y = (int)(position.Y + 10),
-            w = (int)sizeX,
-            h = (int)(healthSize.Y)
-        };
-
-        SDL.SDL_RenderFillRect(Renderer, ref rect2);*/
     }
 
 
