@@ -31,7 +31,7 @@ internal class Player : Entity
     private Texture playerTexture;
     private Bounds2 animBounds;
     private Boolean run = false;
-    private Boolean direction = false;
+    public Boolean direction = false;
     private float timeOrig = 0.0f;
     private float animationTime = 0.2f;
     private Boolean onGround = true;
@@ -39,7 +39,7 @@ internal class Player : Entity
     private Boolean jumped = false;
     public float floorY;
     public int level = 1;
-    private int jumps;
+    public int jumps;
     private Music runSound;
 
     public Player(TextRenderer text, Font font)
@@ -49,7 +49,7 @@ internal class Player : Entity
         this.text = text;
         this.font = font;
         this.playerColor = originalColor;
-        this.player = new Collidable(this, "player");
+        //this.player = new Collidable(this, "player");
         chargeBar = new ChargeBar("playerChargeBar", new Vector2(30,30), 10, new Vector2(100, 50));
         Game.entities.Add(this);
         blockBelow = false;
@@ -103,11 +103,7 @@ internal class Player : Entity
         position.X = Math.Min(position.X, 640 - size.X);
         // Collision detection for the floor
         
-        if (position.Y > floorY - size.Y)
-        {
-            position.Y = floorY - size.Y;
-            playerVelocity.Y = 0; // Stop downward movement
-        }
+        
     }
 
     private void HandleCollisionY(double secondsElapsed)
@@ -118,6 +114,7 @@ internal class Player : Entity
         {
             blockBelow = true;
             jumps = 0;
+
             position.Y += collisionDetected.getDistanceY();
             if (collisionDetected.getBlock().slide)
             {
@@ -125,10 +122,14 @@ internal class Player : Entity
             }
             else
             {
-                playerVelocity.X += collisionDetected.getBlock().getVelcoity().X;
+                position.X += collisionDetected.getBlock().getVelcoity().X;
             }
+            
             playerVelocity.Y = 0;
-        } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
+        } else if (position.Y > floorY - size.Y) {
+            //position.Y = floorY - size.Y;
+            playerVelocity.Y = 0; // Stop downward movement
+        } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided() && position.Y + size.Y < floorY )
         {
             blockBelow = false;
             playerVelocity.Y += (GRAVITY);
