@@ -35,13 +35,13 @@ SSSSSSSSSSSSS
   g         
 ####ssp     
             
-#       f   
+#           
 #  g    * g 
 #      ##p###
 #   #       
 SSSSSSSSSSSSS
          ####
-#   m    #   
+#    m   #   
    *        
 ##pss       
            
