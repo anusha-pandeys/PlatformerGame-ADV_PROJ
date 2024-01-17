@@ -17,7 +17,7 @@ internal class Blocks : Entity
     public void SetVelocity(Vector2 velocity)
     {
         CollisionObject collision = CollisionManager.checkBlockCollision(this, velocity, 1);
-        if (collision.getCollided())
+        if (collision.getCollided() || position.X < 50 || position.X > 600)
         {
             this.velocity *= -1;
         }
