@@ -19,7 +19,7 @@ internal class Boss : Entity
     private Player player;
     private const float GRAVITY = 0.25f;
     private float accumulatedGravity = 0.0f;
-    private float shootCooldown = 10000.0f;
+    private float shootCooldown = 10.0f;
     private float timeSinceLastShot = 0.0f;
     private float bulletSpeed = 30.0f;
     private Texture bossTexture;
@@ -27,6 +27,11 @@ internal class Boss : Entity
     private int level;
     private double floor;
     public HealthBar healthBar;
+    private NPC a;
+    private NPC b;
+    private ICollidable aCollide;
+    private ICollidable bCollide;
+    private float npcDeathTimer = 0f;
 
     public Boss(int level, double highestFloor, Vector2 position, Player player, float followRadius, float speed)
     {
@@ -49,10 +54,16 @@ internal class Boss : Entity
         string absolutePath = System.IO.Path.GetFullPath(relativePath);
         bossTexture = Engine.LoadTexture(absolutePath);
 
-       healthBar = new HealthBar("bossHealthBar", new Vector2(this.position.X, this.position.Y), 100,
-           new Vector2(70f, 30f));
-
-
+        healthBar = new HealthBar("bossHealthBar", new Vector2(this.position.X, this.position.Y), 100,
+            new Vector2(70f, 30f));
+        a = new NPC(level, this.position, player, Color.Gray, 300f, 2f, "Assets\\greyGhost.png", "greynpcBossA");
+        b = new NPC(level, new Vector2(this.position.X + 100, this.position.Y), player, Color.Gray, 300f, 2f, "Assets\\greyGhost.png", "greynpcBossB");
+        a.followInY = true;
+        b.followInY = true;
+        aCollide = CollisionManager.AddObj("greynpcBossA", a);
+        bCollide = CollisionManager.AddObj("greynpcBossB", b);
+        Game.entities.Add(a);
+        Game.entities.Add(b);
     }
 
     public void Update()
@@ -61,6 +72,43 @@ internal class Boss : Entity
 
         if (healthBar.getHealth() > 0)
         {
+
+            if (!a.dead)
+            {
+                a.Update();
+            }
+            if (!b.dead)
+            {
+                b.Update();
+            }
+            if (a.dead)
+            {
+                CollisionManager.collidables.Remove(aCollide);
+                Game.entities.Remove(a);
+            }
+            if (b.dead)
+            {
+                CollisionManager.collidables.Remove(bCollide);
+                Game.entities.Remove(b);
+            }
+            if (a.dead && b.dead && npcDeathTimer < 10)
+            {
+                npcDeathTimer += Engine.TimeDelta;
+
+            }
+            if (a.dead && b.dead && npcDeathTimer >= 10)
+            {
+                npcDeathTimer = 0;
+                a = new NPC(level, this.position, player, Color.Gray, 200f, 1.0f, "Assets\\greyGhost.png", "greynpcBossA");
+                b = new NPC(level, new Vector2(this.position.X + 100, this.position.Y), player, Color.Gray, 200f, 1.0f, "Assets\\greyGhost.png", "greynpcBossB");
+                aCollide = CollisionManager.AddObj("greynpcBossA", a);
+                bCollide = CollisionManager.AddObj("greynpcBossB", b);
+                Game.entities.Add(a);
+                Game.entities.Add(b);
+                a.followInY = true;
+                b.followInY = true;
+            }
+
 
             healthBar.setPosition(new Vector2(this.position.X, this.position.Y - 40f));
 
@@ -145,9 +193,9 @@ internal class Boss : Entity
             Game.entities.Remove(this);
             if (Game.bossDeath)
             {
-                Game.increaseBossKilled();
+                Game.enemiesKilled++;
             }
-            
+
             //
         }
     }

@@ -68,7 +68,7 @@ class Game
         player = new Player(textRenderer, font);
         spear = new Spear();
 
-        loadLevel("Game\\bossPractice.txt");
+        loadLevel("Game\\levelPractice.txt");
 
         loseScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\LoseScreen.png"));
         winScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\WinScreen.png"));

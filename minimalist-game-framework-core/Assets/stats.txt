@@ -12,3 +12,6 @@
 12)           0 Enemies Killed      |     
 13)           0 Enemies Killed      |     
 14)           0 Enemies Killed      |     
+15)           71 points      |     
+16)           337 points      |     
+17)           490 points      |     

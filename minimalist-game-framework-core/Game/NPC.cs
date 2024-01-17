@@ -28,7 +28,7 @@ internal class NPC : Entity
     public string tag;
     private Boolean dead = false;
     public int level;
-
+    public bool followInY = false;
     public NPC(int level, Vector2 position, Player player, Color npcColor, float followRadius, float speed, string filePath, string tag)
     {
         this.position = position;
@@ -155,6 +155,10 @@ internal class NPC : Entity
         if (!CollisionManager.checkBlockCollision(player, new Vector2(speed, 0), 1).getCollided())
         {
             position.X += direction.X * speed;
+            if (followInY)
+            {
+                position.Y += direction.Y * speed;
+            }
         }
     }
 
