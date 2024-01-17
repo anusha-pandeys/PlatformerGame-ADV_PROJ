@@ -1,4 +1,5 @@
-               
+SSSSSSSSSSSSS
+            #
           b     
 ###   #######    
    #            
@@ -16,12 +17,12 @@ SSSSSSSSSSSSS
           g 
             
             
-         m  
+   #    m # 
   g  *      
     ps      
             
             
-         m  
+ #       m # 
             
     *  g g g
 SSSSSSSSSSSSS
@@ -40,14 +41,14 @@ SSSSSSSSSSSSS
 #   #       
 SSSSSSSSSSSSS
          ####
-   m        
+#   m    #   
    *        
 ##pss       
            
           g 
      # m ##  
            
- Q  *    r 
-##########f##
+ Q  f *    r 
+#############
 #############
 #############
