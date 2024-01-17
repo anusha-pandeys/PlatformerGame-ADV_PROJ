@@ -38,7 +38,9 @@ internal class CollisionObject
     }
     public float getDistanceY()
     {
-        return distanceY; 
+        float originalY = distanceY;
+        distanceY /= 2;
+        return originalY; 
     }
     public float getDistanceX()
     {

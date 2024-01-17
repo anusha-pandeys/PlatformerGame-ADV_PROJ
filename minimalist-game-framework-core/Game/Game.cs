@@ -51,6 +51,9 @@ class Game
     private Texture winScreenTexture;
     private bool debugMode = false;
     private float deathTime = 0;
+    private NameScreen nameScreen;
+    private static string playerName = "";
+
 
     //private List<Texture> backgrounds;
     public Game()
@@ -60,11 +63,12 @@ class Game
         StartMenu = new StartMenu();
         rulesMenu = new RulesMenu();
         creditScreen = new CreditScreen();
+        nameScreen = new NameScreen();
 
         player = new Player(textRenderer, font);
         spear = new Spear();
 
-        loadLevel("Game\\levelPractice.txt");
+        loadLevel("Game\\bossPractice.txt");
 
         loseScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\LoseScreen.png"));
         winScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\WinScreen.png"));
@@ -91,7 +95,7 @@ class Game
 
 
         SDL.SDL_PumpEvents();
-
+        Engine.PlayMusic(bgMusic, true, 0);
         if (showStartMenu)
         {
             StartMenu.Update();
@@ -102,6 +106,29 @@ class Game
                 showStartMenu = false;
                 // Start the background music when the game starts and loop it
                 Engine.PlayMusic(bgMusic, true, 0);
+                playerName = ""; // Reset player's name
+
+            }
+        }
+        else if (nameScreen != null)
+        {
+            // Update the name screen
+            nameScreen.Update();
+
+            // If enter button on the name screen is clicked
+            if (nameScreen.IsEnterButtonClicked())
+            {
+                playerName = nameScreen.GetPlayerName();
+                // Set the player's name for the scoreboard
+                Scoreboard.SetPlayerName(playerName);
+                nameScreen = null; // Set to null to indicate that name screen is no longer needed
+                //
+            }
+
+            if (nameScreen != null)
+            {
+                nameScreen.Render();
+
             }
         }
         else
@@ -109,10 +136,11 @@ class Game
             if (!playerDeath)
             {
                 Engine.DrawTexture(background, new Vector2(0, 0), null, new Vector2(640, 480));
-                player.playerLoop();
+                
                 localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
                 localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
                 spear.spearLoop();
+                player.playerLoop();
                 foreach (var block in levelBlocks)
                 {
                     block.blockLoop();
@@ -124,13 +152,10 @@ class Game
                 }
                 foreach (var pit in pits)
                 {
-                    pit.pitsLoop();
-                    if (pit.checkCollision())
-                    {
-                        Game.player.chargeBar.setCharge(0);
-                    }
-                }
 
+                    pit.pitsLoop();
+                }
+                
 
                 foreach (var flower in flowers)
                 {
@@ -239,6 +264,7 @@ class Game
 
         RenderGrid(Engine.Renderer2);
     }
+
 
     private void DisplayPlayerCoordinates()
     {
@@ -441,8 +467,17 @@ class Game
         return player;
     }
 
-    public void increaseEnemiesKilled()
+
+    public static void increaseGhostsKilled()
     {
         enemiesKilled++;
+        Scoreboard.UpdatePlayerScore(playerName, 10);
     }
+
+    public static void increaseBossKilled()
+    {
+        enemiesKilled++;
+        Scoreboard.UpdatePlayerScore(playerName, 100);
+    }
+
 }

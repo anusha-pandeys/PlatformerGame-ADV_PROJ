@@ -19,7 +19,7 @@ internal class Boss : Entity
     private Player player;
     private const float GRAVITY = 0.25f;
     private float accumulatedGravity = 0.0f;
-    private float shootCooldown = 10.0f;
+    private float shootCooldown = 10000.0f;
     private float timeSinceLastShot = 0.0f;
     private float bulletSpeed = 30.0f;
     private Texture bossTexture;
@@ -145,7 +145,7 @@ internal class Boss : Entity
             Game.entities.Remove(this);
             if (Game.bossDeath)
             {
-                Game.enemiesKilled++;
+                Game.increaseBossKilled();
             }
             
             //
