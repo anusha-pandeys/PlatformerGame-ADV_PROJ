@@ -55,7 +55,6 @@ internal class Scoreboard
         SDL.SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255); // Set background color to white
         SDL.SDL_RenderClear(Renderer);
 
-        // Draw other elements (if any) for the credit screen or rules menu
 
         // Draw instructions text
         string[] scores = fileIO.readFromFile();

@@ -27,7 +27,6 @@ class NameScreen
         if (Engine.GetKeyDown(Key.Backspace) && playerName != null && playerName.Length > 0)
             playerName = playerName.Remove(playerName.Length - 1, 1);
 
-        // Handle other input if needed
     }
 
     public void Render()
