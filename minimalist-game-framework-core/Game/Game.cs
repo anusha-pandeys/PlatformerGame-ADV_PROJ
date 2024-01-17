@@ -125,10 +125,11 @@ class Game
             if (!playerDeath)
             {
                 Engine.DrawTexture(background, new Vector2(0, 0), null, new Vector2(640, 480));
-                player.playerLoop();
+                
                 localCamera.parallaxLayer1(localCamera.updateParallaxLayer1(player.position));
                 localCamera.updateGlobalCy(player.position, player.size, player.playerVelocity);
                 spear.spearLoop();
+                player.playerLoop();
                 foreach (var block in levelBlocks)
                 {
                     block.blockLoop();
@@ -140,13 +141,10 @@ class Game
                 }
                 foreach (var pit in pits)
                 {
-                    pit.pitsLoop();
-                    if (pit.checkCollision())
-                    {
-                        Game.player.chargeBar.setCharge(0);
-                    }
-                }
 
+                    pit.pitsLoop();
+                }
+                
 
                 foreach (var flower in flowers)
                 {

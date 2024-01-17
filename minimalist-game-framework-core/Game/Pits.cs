@@ -40,24 +40,20 @@ internal class Pits : Entity
         //Render(new Camera());
         if (checkCollision())
         {
-
-            HandleCollision();
-            //playerDeath = true;
-
-            Game.player.setCharge(0);
-
+            Game.player.chargeBar.setCharge(0);
         }
     }
 
     public bool checkCollision()
     {
-        CollisionObject collisionDetected = CollisionManager.checkCollisions("player", "pit", new Vector2(0, 0));
+        CollisionObject collisionDetected = CollisionManager.checkCollisions("player", "pit", new Vector2(0, 2));
         if (collisionDetected.getCollided())
         {
             deathCounter += Engine.TimeDelta;//
-            Game.player.playerVelocity.Y = 1;
-            if(deathCounter > 4)
+            Game.player.position.Y += 0.2f;
+            if(deathCounter > 2)
             {
+                deathCounter = 0;
                 return true;
             }
         }
