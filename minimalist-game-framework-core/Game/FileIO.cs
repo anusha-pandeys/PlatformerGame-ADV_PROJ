@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
-class FileIO {
+class FileIO
+{
 
     private string filePath = @"..\..\..\Assets\stats.txt";
     public void writeToFile()
@@ -16,8 +17,8 @@ class FileIO {
         using (StreamWriter writer = new StreamWriter(filePath, true))
         {
             // Append the text to the file
-            
-            writer.WriteLine(i + ")           "+ Game.enemiesKilled + " Enemies Killed      |     ");
+
+            writer.WriteLine(i + ")           " + Game.enemiesKilled + " points      |     ");
         }
     }
 
@@ -26,3 +27,5 @@ class FileIO {
         return File.ReadAllLines(filePath);
     }
 }
+
+
