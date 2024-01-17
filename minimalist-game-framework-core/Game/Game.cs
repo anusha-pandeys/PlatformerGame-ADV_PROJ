@@ -44,12 +44,15 @@ class Game
     List<Slides> slides;
     public static int enemiesKilled = 0;
     public Boolean playerDeath = false;
-    Texture background;
+    public static Boolean bossDeath = false;
+    private Texture background;
     private int numGreyNPC;
     private Texture loseScreenTexture;
+    private Texture winScreenTexture;
     private bool debugMode = false;
     private float deathTime = 0;
 
+    //private List<Texture> backgrounds;
     public Game()
     {
         map = new Map();
@@ -64,15 +67,23 @@ class Game
         loadLevel("Game\\levelPractice.txt");
 
         loseScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\LoseScreen.png"));
+        winScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\WinScreen.png"));
+
         bgMusic = Engine.LoadMusic("bgm.mp3");
 
         CollisionManager.AddObj("player", player);
         CollisionManager.AddObj("spear", spear);
 
         localCamera = new Camera();
-        background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\background.jpeg"));
+        background = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\middleLevel.jpeg"));
+        /*
+        backgrounds = new List<Texture> { Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\tartarus.jpeg")),
+                       Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\middleLevel.jpeg")),
+                       Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\hadesCastle.jpeg")),
+                       Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\WinScreen.png"))};
+        */
     }
-    //
+    
 
     public void Update()
     {
@@ -185,8 +196,12 @@ class Game
             {
                 deathTime += Engine.TimeDelta;
                 Engine.DrawTexture(loseScreenTexture, new Vector2(0, 0), size: new Vector2(640, 480));
+            } else if (bossDeath)
+            {
+                deathTime += Engine.TimeDelta;
+                Engine.DrawTexture(winScreenTexture, new Vector2(0, 0), size: new Vector2(640, 480));
             }
-            if (playerDeath && deathTime > 3)
+            if ((playerDeath || bossDeath ) && deathTime > 2)
             {
                 deathTime = 0;
                 entities.Clear();
@@ -199,6 +214,7 @@ class Game
                 loadLevel("Game\\reload.txt");
                 loadLevel("Game\\levelPractice.txt");
                 playerDeath = false;
+                bossDeath = false;
                 showStartMenu = true;
                 Game.player.setCharge(50);
                 
