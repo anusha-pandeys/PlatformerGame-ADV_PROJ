@@ -114,11 +114,11 @@ internal class Player : Entity
     {
         
         CollisionObject collisionDetected = CollisionManager.checkBlockCollision(this, new Vector2(0, playerVelocity.Y+2f), secondsElapsed);
-        if (collisionDetected.getCollided())
+        if (collisionDetected.getCollided() || position.Y + size.Y >= floorY)
         {
             blockBelow = true;
             jumps = 0;
-            position.Y += collisionDetected.getDistanceY();
+            //position.Y -= collisionDetected.getDistanceY();
             if (collisionDetected.getBlock().slide)
             {
                 position.X += 10f;
@@ -128,7 +128,7 @@ internal class Player : Entity
                 playerVelocity.X += collisionDetected.getBlock().getVelcoity().X;
             }
             playerVelocity.Y = 0;
-        } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
+        } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided() && position.Y + size.Y < floorY )
         {
             blockBelow = false;
             playerVelocity.Y += (GRAVITY);
