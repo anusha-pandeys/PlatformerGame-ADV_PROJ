@@ -103,11 +103,7 @@ internal class Player : Entity
         position.X = Math.Min(position.X, 640 - size.X);
         // Collision detection for the floor
         
-        if (position.Y > floorY - size.Y)
-        {
-            position.Y = floorY - size.Y;
-            playerVelocity.Y = 0; // Stop downward movement
-        }
+        
     }
 
     private void HandleCollisionY(double secondsElapsed)
@@ -118,7 +114,6 @@ internal class Player : Entity
         {
             blockBelow = true;
             jumps = 0;
-            //position.Y += collisionDetected.getDistanceY();
             if (collisionDetected.getBlock().slide)
             {
                 position.X += 10f;
@@ -128,7 +123,10 @@ internal class Player : Entity
                 position.X += collisionDetected.getBlock().getVelcoity().X;
             }
             playerVelocity.Y = 0;
-        } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided())
+        } else if (position.Y > floorY - size.Y) {
+            //position.Y = floorY - size.Y;
+            playerVelocity.Y = 0; // Stop downward movement
+        } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided() && position.Y + size.Y < floorY )
         {
             blockBelow = false;
             playerVelocity.Y += (GRAVITY);
