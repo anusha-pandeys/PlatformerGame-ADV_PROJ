@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.Linq; // Add this using directive
 
 internal class Scoreboard
 {
@@ -13,9 +14,39 @@ internal class Scoreboard
     private TextRenderer textRenderer = new TextRenderer();
     private Button backButton;
     private FileIO fileIO = new FileIO();
+
+    // Define playerScores and playerNames as class members
+    private static List<string> playerNames = new List<string>();
+    private static Dictionary<string, int> playerScores = new Dictionary<string, int>();
+
     public Scoreboard()
     {
         backButton = new Button("Back", new Vector2(10, 430), new Vector2(80, 40));
+    }
+
+    public static void SetPlayerName(string name)
+    {
+        if (!playerNames.Contains(name))
+        {
+            playerNames.Add(name);
+            playerScores[name] = 0; // Initialize score for the new player
+        }
+    }
+
+    // Method to update player score (call this method whenever a player's score changes)
+    public static void UpdatePlayerScore(string name, int score)
+    {
+        if (playerNames.Contains(name))
+        {
+            playerScores[name] = score;
+        }
+    }
+
+    // Method to get the top 5 players
+    public static List<KeyValuePair<string, int>> GetTopPlayers()
+    {
+        var topPlayers = playerScores.ToList().OrderByDescending(pair => pair.Value).ToList();
+        return topPlayers;
     }
 
     public void Draw(Font font)
@@ -36,12 +67,15 @@ internal class Scoreboard
         Vector2 basePosition = new Vector2(50, 50); // Adjust the starting position
         int lineHeight = 60; // Adjust the line height as needed
 
-        for (int i = 1; i <= scores.Length; i++)
+        var topPlayers = GetTopPlayers();
+
+        for (int i = 1; i <= topPlayers.Count; i++)
         {
             if (i <= 10)
             {
                 Vector2 linePosition = new Vector2(basePosition.X, basePosition.Y + i * lineHeight);
-                textRenderer.displayText(scores[i - 1], linePosition, Color.Black, font);
+                string scoreText = $"{i}. {topPlayers[i - 1].Key}: {topPlayers[i - 1].Value} Enemies Killed";
+                textRenderer.displayText(scoreText, linePosition, Color.Black, font);
             }
         }
 

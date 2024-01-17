@@ -49,6 +49,9 @@ class Game
     private Texture loseScreenTexture;
     private bool debugMode = false;
     private float deathTime = 0;
+    private NameScreen nameScreen;
+    private string playerName = "";
+
 
     public Game()
     {
@@ -57,6 +60,7 @@ class Game
         StartMenu = new StartMenu();
         rulesMenu = new RulesMenu();
         creditScreen = new CreditScreen();
+        nameScreen = new NameScreen();
 
         player = new Player(textRenderer, font);
         spear = new Spear();
@@ -91,6 +95,29 @@ class Game
                 showStartMenu = false;
                 // Start the background music when the game starts and loop it
                 Engine.PlayMusic(bgMusic, true, 0);
+                playerName = ""; // Reset player's name
+                nameScreen = new NameScreen();
+            }
+        }
+        else if (nameScreen != null)
+        {
+            // Update the name screen
+            nameScreen.Update();
+
+            // If enter button on the name screen is clicked
+            if (nameScreen.IsEnterButtonClicked())
+            {
+                playerName = nameScreen.GetPlayerName();
+                // Continue with the game, e.g., load the level
+                loadLevel("Game\\levelPractice.txt");
+                // Set the player's name for the scoreboard
+                Scoreboard.SetPlayerName(playerName);
+                nameScreen = null; // Set to null to indicate that name screen is no longer needed
+            }
+
+            if (nameScreen != null)
+            {
+                nameScreen.Render();
             }
         }
         else
