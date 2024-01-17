@@ -1,30 +1,6 @@
-SSSSSSSSSSSSS
-            #
           b     
-###   #######    
-   #            
-SSSSSSSSSSSSS
-       ######
-  g           
-####        
-      #     
-   s        
-     p      
-  gg  *     
-#######     
-         *  
-     ssssp  
-          g 
-            
-            
-   #    m # 
-  g  *      
-    ps      
-            
-            
- #       m # 
-            
-    *  g g g
+###   #######  
+   Q            
 SSSSSSSSSSSSS
            
   g           

@@ -141,14 +141,14 @@ internal class Boss : Entity
         else
         {
 
+            Game.bossDeath = true;
             Game.entities.Remove(this);
+            if (Game.bossDeath)
+            {
+                Game.increaseBossKilled();
+            }
             
-            dead = true;
             //
-        }
-        if (dead)
-        {
-            Game.increaseBossKilled();
         }
     }
 

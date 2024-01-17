@@ -122,11 +122,12 @@ internal class Player : Entity
             }
             else
             {
-                position.X += collisionDetected.getBlock().getVelcoity().X;
+                //comparison
+                playerVelocity.X += collisionDetected.getBlock().getVelcoity().X;
             }
             
             playerVelocity.Y = 0;
-        } else if (position.Y > floorY - size.Y) {
+        } else if (position.Y > floorY - size.Y) { //level seperators
             //position.Y = floorY - size.Y;
             playerVelocity.Y = 0; // Stop downward movement
         } else if (!CollisionManager.checkBlockCollision(this, new Vector2(0, 2), secondsElapsed).getCollided() && position.Y + size.Y < floorY )
