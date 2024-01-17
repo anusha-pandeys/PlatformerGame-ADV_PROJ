@@ -18,7 +18,7 @@ class FileIO
         {
             // Append the text to the file
 
-            writer.WriteLine(i + ")           " + Game.enemiesKilled + " Enemies Killed      |     ");
+            writer.WriteLine(i + ")           " + Game.enemiesKilled + " points      |     ");
         }
     }
 
@@ -27,3 +27,5 @@ class FileIO
         return File.ReadAllLines(filePath);
     }
 }
+
+

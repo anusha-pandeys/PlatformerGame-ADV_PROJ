@@ -28,6 +28,7 @@ internal class NPC : Entity
     public string tag;
     private Boolean dead = false;
     public int level;
+
     public NPC(int level, Vector2 position, Player player, Color npcColor, float followRadius, float speed, string filePath, string tag)
     {
         this.position = position;
@@ -117,13 +118,13 @@ internal class NPC : Entity
             else
             {
                 Game.entities.Remove(this);
-                if (dead)
-                {
-                    Game.enemiesKilled++;
-                }
+                
                 dead = true;
             }
-            //
+            if (dead)
+            {
+                Game.increaseEnemiesKilled();
+            }
         }
     }
 
@@ -142,6 +143,7 @@ internal class NPC : Entity
         distance = CalculateDistance(position, player.Position);
         return distance <= followRadius;
     }
+
 
     private void FollowPlayer()
     {

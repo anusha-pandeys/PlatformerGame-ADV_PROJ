@@ -50,7 +50,7 @@ class Game
     private bool debugMode = false;
     private float deathTime = 0;
     private NameScreen nameScreen;
-    private string playerName = "";
+    private static string playerName = "";
 
 
     public Game()
@@ -96,7 +96,7 @@ class Game
                 // Start the background music when the game starts and loop it
                 Engine.PlayMusic(bgMusic, true, 0);
                 playerName = ""; // Reset player's name
-                nameScreen = new NameScreen();
+
             }
         }
         else if (nameScreen != null)
@@ -108,8 +108,6 @@ class Game
             if (nameScreen.IsEnterButtonClicked())
             {
                 playerName = nameScreen.GetPlayerName();
-                // Continue with the game, e.g., load the level
-                loadLevel("Game\\levelPractice.txt");
                 // Set the player's name for the scoreboard
                 Scoreboard.SetPlayerName(playerName);
                 nameScreen = null; // Set to null to indicate that name screen is no longer needed
@@ -250,6 +248,7 @@ class Game
 
         RenderGrid(Engine.Renderer2);
     }
+
 
     private void DisplayPlayerCoordinates()
     {
@@ -459,8 +458,11 @@ class Game
         return player;
     }
 
-    public void increaseEnemiesKilled()
+
+    public static void increaseEnemiesKilled()
     {
         enemiesKilled++;
+        Scoreboard.UpdatePlayerScore(playerName, 10);
     }
+
 }

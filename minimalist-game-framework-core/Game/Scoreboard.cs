@@ -74,7 +74,7 @@ internal class Scoreboard
             if (i <= 10)
             {
                 Vector2 linePosition = new Vector2(basePosition.X, basePosition.Y + i * lineHeight);
-                string scoreText = $"{i}. {topPlayers[i - 1].Key}: {topPlayers[i - 1].Value} Enemies Killed";
+                string scoreText = $"{i}. {topPlayers[i - 1].Key}: {topPlayers[i - 1].Value} points";
                 textRenderer.displayText(scoreText, linePosition, Color.Black, font);
             }
         }
