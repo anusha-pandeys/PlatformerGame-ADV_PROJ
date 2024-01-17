@@ -113,6 +113,7 @@ class Game
                 // Set the player's name for the scoreboard
                 Scoreboard.SetPlayerName(playerName);
                 nameScreen = null; // Set to null to indicate that name screen is no longer needed
+                //
             }
 
             if (nameScreen != null)
