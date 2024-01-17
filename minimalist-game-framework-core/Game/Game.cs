@@ -65,7 +65,7 @@ class Game
         player = new Player(textRenderer, font);
         spear = new Spear();
 
-        loadLevel("Game\\levelPractice.txt");
+        loadLevel("Game\\bossPractice.txt");
 
         loseScreenTexture = Engine.LoadTexture(System.IO.Path.GetFullPath("Assets\\LoseScreen.png"));
         bgMusic = Engine.LoadMusic("bgm.mp3");
@@ -452,10 +452,16 @@ class Game
     }
 
 
-    public static void increaseEnemiesKilled()
+    public static void increaseGhostsKilled()
     {
         enemiesKilled++;
         Scoreboard.UpdatePlayerScore(playerName, 10);
+    }
+
+    public static void increaseBossKilled()
+    {
+        enemiesKilled++;
+        Scoreboard.UpdatePlayerScore(playerName, 100);
     }
 
 }

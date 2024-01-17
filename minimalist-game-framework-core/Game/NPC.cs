@@ -123,7 +123,7 @@ internal class NPC : Entity
             }
             if (dead)
             {
-                Game.increaseEnemiesKilled();
+                Game.increaseGhostsKilled();
             }
         }
     }
