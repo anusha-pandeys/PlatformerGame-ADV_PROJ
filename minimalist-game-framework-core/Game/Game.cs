@@ -80,7 +80,7 @@ class Game
 
 
         SDL.SDL_PumpEvents();
-
+        Engine.PlayMusic(bgMusic, true, 0);
         if (showStartMenu)
         {
             StartMenu.Update();
@@ -90,7 +90,7 @@ class Game
             {
                 showStartMenu = false;
                 // Start the background music when the game starts and loop it
-                Engine.PlayMusic(bgMusic, true, 0);
+                
             }
         }
         else

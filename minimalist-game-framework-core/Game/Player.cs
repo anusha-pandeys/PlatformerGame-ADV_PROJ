@@ -31,7 +31,7 @@ internal class Player : Entity
     private Texture playerTexture;
     private Bounds2 animBounds;
     private Boolean run = false;
-    private Boolean direction = false;
+    public Boolean direction = false;
     private float timeOrig = 0.0f;
     private float animationTime = 0.2f;
     private Boolean onGround = true;
@@ -114,6 +114,8 @@ internal class Player : Entity
         {
             blockBelow = true;
             jumps = 0;
+
+            position.Y += collisionDetected.getDistanceY();
             if (collisionDetected.getBlock().slide)
             {
                 position.X += 10f;
@@ -122,6 +124,7 @@ internal class Player : Entity
             {
                 position.X += collisionDetected.getBlock().getVelcoity().X;
             }
+            
             playerVelocity.Y = 0;
         } else if (position.Y > floorY - size.Y) {
             //position.Y = floorY - size.Y;

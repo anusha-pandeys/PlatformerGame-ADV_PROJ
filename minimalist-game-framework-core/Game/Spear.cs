@@ -20,6 +20,7 @@ internal class Spear : Entity
     private bool ableToDamage = true;
     private Texture spearTexture;
     public int degree = 0;
+    private int direction = 1;
     public Spear()
     {
         string relativePath = "Assets\\spear.png";
@@ -37,9 +38,16 @@ internal class Spear : Entity
     public void spearLoop()
     {
         timeSinceLastShot += Engine.TimeDelta;
+        if(!Game.player.direction)
+        {
+            direction = -1;
+        } else if (Game.player.direction)
+        {
+            direction = 1;
+        }
         if(IsClickedRight() && timeSinceLastShot < shootCooldown)
         {
-            degree -= 10;   
+            degree -= 10*direction;   
         } 
         if(timeSinceLastShot > shootCooldown)
         {
@@ -71,18 +79,31 @@ internal class Spear : Entity
             if (currentState == 0 && canTransition(1))
             {
                 Engine.PlaySound(spearMusic, false, 0);
-                dx = 10f;
+                dx = 10f*direction;
             }
             this.position.X += dx;
             this.position.Y = Game.player.Position.Y + Game.player.size.Y / 2;
         }
-        if ((this.position.X >= (Game.player.position.X + 100f)
+        if (((this.position.X >= (Game.player.position.X + 100f))
             && currentState == 1 && canTransition(2)))
         {
             dx = -10f;
+            
         }
+        if (((this.position.X <= (Game.player.position.X - 100f))
+            && currentState == 1 && canTransition(2)))
+        {
+            dx = 10f;
 
-        else if ((this.position.X <= (Game.player.position.X)))
+        } 
+
+        else if ((this.position.X <= (Game.player.position.X)) && Game.player.direction)
+        {
+            this.position.X = Game.player.position.X;
+            dx = 0f;
+            currentState = 0;
+            ableToDamage = true;
+        } else if ((this.position.X >= (Game.player.position.X)) && !Game.player.direction)
         {
             this.position.X = Game.player.position.X;
             dx = 0f;
@@ -144,7 +165,15 @@ internal class Spear : Entity
 
     protected override void Draw(Vector2 position, Vector2 size)
     {
-        Engine.DrawTexture(spearTexture, position, null, size, scaleMode: TextureScaleMode.Nearest, rotation: degree);
+        if(!Game.player.direction)
+        {
+            Engine.DrawTexture(spearTexture, position, null, size, scaleMode: TextureScaleMode.Nearest, rotation: degree, 
+                mirror: TextureMirror.Horizontal);
+        } else
+        {
+            Engine.DrawTexture(spearTexture, position, null, size, scaleMode: TextureScaleMode.Nearest, rotation: degree);
+        }
+        
     }
 
     public bool IsClickedLeft()
