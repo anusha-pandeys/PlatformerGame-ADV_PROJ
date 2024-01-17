@@ -39,7 +39,7 @@ internal class Player : Entity
     private Boolean jumped = false;
     public float floorY;
     public int level = 1;
-    private int jumps;
+    public int jumps;
     private Music runSound;
 
     public Player(TextRenderer text, Font font)
@@ -49,7 +49,7 @@ internal class Player : Entity
         this.text = text;
         this.font = font;
         this.playerColor = originalColor;
-        this.player = new Collidable(this, "player");
+        //this.player = new Collidable(this, "player");
         chargeBar = new ChargeBar("playerChargeBar", new Vector2(30,30), 10, new Vector2(100, 50));
         Game.entities.Add(this);
         blockBelow = false;
@@ -114,14 +114,13 @@ internal class Player : Entity
         {
             blockBelow = true;
             jumps = 0;
-            //position.Y -= collisionDetected.getDistanceY();
             if (collisionDetected.getBlock().slide)
             {
                 position.X += 10f;
             }
             else
             {
-                playerVelocity.X += collisionDetected.getBlock().getVelcoity().X;
+                position.X += collisionDetected.getBlock().getVelcoity().X;
             }
             playerVelocity.Y = 0;
         } else if (position.Y > floorY - size.Y) {

@@ -39,7 +39,7 @@ internal class NPC : Entity
         this.followRadius = followRadius;
         this.speed = speed;
         Game.entities.Add(this);
-        this.npc = new Collidable(this, "npc");
+        //this.npc = new Collidable(this, "npc");
         healthBar = new HealthBar("npcHealthBar", new Vector2(this.position.X, this.position.Y), 100,
             new Vector2(70f, 30f));
         this.tag = tag;

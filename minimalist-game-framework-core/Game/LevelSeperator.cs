@@ -41,6 +41,7 @@ internal class LevelSeperator : Entity
         CollisionObject collisionDetected = CollisionManager.checkCollisions("player", "oneWay", new Vector2(0, 10f));
         if (collisionDetected.getCollided())
         {
+            Game.player.jumps = 0;
             return true;
         }
 

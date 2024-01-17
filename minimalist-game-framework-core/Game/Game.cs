@@ -192,15 +192,16 @@ class Game
                 entities.Clear();
                 CollisionManager.blocks.Clear();
                 CollisionManager.collidables.Clear();
+                CollisionManager.AddObj("player", player);
+                CollisionManager.AddObj("spear", spear);
+                entities.Add(player);
+                entities.Add(spear);
                 loadLevel("Game\\reload.txt");
                 loadLevel("Game\\levelPractice.txt");
                 playerDeath = false;
                 showStartMenu = true;
                 Game.player.setCharge(50);
-                CollisionManager.AddObj("player", player);
-                CollisionManager.AddObj("spear", spear);
-                entities.Add(player);
-                entities.Add(spear);
+                
             }
 
         }
@@ -339,7 +340,9 @@ class Game
                     Vector2 position = new Vector2(x * Blocks.size.X, Resolution.Y - (newY * Blocks.size.Y));
                     numGreyNPC++;
                     string tag = "greynpc" + numGreyNPC.ToString();
-                    greyNPCs.Add(new NPC(level, position, player, Color.Gray, 200f, 1.0f, "Assets\\greyGhost.png", tag));
+                    NPC npc = new NPC(level, position, player, Color.Gray, 200f, 1.0f, "Assets\\greyGhost.png", tag);
+                    CollisionManager.AddObj(tag, npc);
+                    greyNPCs.Add(npc);
                 }
                 else if (lines[y][x] == 'r')
                 {
@@ -359,13 +362,6 @@ class Game
         {
             CollisionManager.AddObj("npc1", r);
         }
-        int i = 0;
-        foreach (var g in greyNPCs)
-        {
-            i++;
-            string tags = "greynpc" + i.ToString();
-            CollisionManager.AddObj(tags, g);
-        }
         foreach (var f in fires)
         {
             CollisionManager.AddObj("fire", f);
@@ -373,8 +369,6 @@ class Game
         }
 
         loadEntities();
-        //DIFF SIXES OF SLIDE LADDER??
-
     }
 
     public void loadEntities()
